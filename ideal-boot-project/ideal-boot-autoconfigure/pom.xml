@@ -20,7 +20,7 @@
   <parent>
     <groupId>cn.idealframework.boot</groupId>
     <artifactId>ideal-boot-project</artifactId>
-    <version>2.5.5.20211012</version>
+    <version>2.5.5-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <artifactId>ideal-boot-autoconfigure</artifactId>
@@ -30,85 +30,85 @@
     <dependency>
       <groupId>cn.idealframework</groupId>
       <artifactId>ideal-core</artifactId>
-      <version>2.5.5.20211012</version>
+      <version>2.5.5-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>cn.idealframework</groupId>
       <artifactId>ideal-authentication</artifactId>
-      <version>2.5.5.20211012</version>
+      <version>2.5.5-SNAPSHOT</version>
       <optional>true</optional>
     </dependency>
     <dependency>
       <groupId>cn.idealframework</groupId>
       <artifactId>ideal-cache</artifactId>
-      <version>2.5.5.20211012</version>
+      <version>2.5.5-SNAPSHOT</version>
       <optional>true</optional>
     </dependency>
     <dependency>
       <groupId>cn.idealframework</groupId>
       <artifactId>ideal-event</artifactId>
-      <version>2.5.5.20211012</version>
+      <version>2.5.5-SNAPSHOT</version>
       <optional>true</optional>
     </dependency>
     <dependency>
       <groupId>cn.idealframework</groupId>
       <artifactId>ideal-lock</artifactId>
-      <version>2.5.5.20211012</version>
+      <version>2.5.5-SNAPSHOT</version>
       <optional>true</optional>
     </dependency>
     <dependency>
       <groupId>cn.idealframework</groupId>
       <artifactId>ideal-operation</artifactId>
-      <version>2.5.5.20211012</version>
+      <version>2.5.5-SNAPSHOT</version>
       <optional>true</optional>
     </dependency>
     <!--  ideal-boot-starters  -->
     <dependency>
       <groupId>cn.idealframework.boot</groupId>
       <artifactId>ideal-boot-starter-module-authentication</artifactId>
-      <version>2.5.5.20211012</version>
+      <version>2.5.5-SNAPSHOT</version>
       <optional>true</optional>
     </dependency>
     <dependency>
       <groupId>cn.idealframework.boot</groupId>
       <artifactId>ideal-boot-starter-module-cache</artifactId>
-      <version>2.5.5.20211012</version>
+      <version>2.5.5-SNAPSHOT</version>
       <optional>true</optional>
     </dependency>
     <dependency>
       <groupId>cn.idealframework.boot</groupId>
       <artifactId>ideal-boot-starter-module-event</artifactId>
-      <version>2.5.5.20211012</version>
+      <version>2.5.5-SNAPSHOT</version>
       <optional>true</optional>
     </dependency>
     <dependency>
       <groupId>cn.idealframework.boot</groupId>
       <artifactId>ideal-boot-starter-module-lock</artifactId>
-      <version>2.5.5.20211012</version>
+      <version>2.5.5-SNAPSHOT</version>
       <optional>true</optional>
     </dependency>
     <dependency>
       <groupId>cn.idealframework.boot</groupId>
       <artifactId>ideal-boot-starter-module-operation</artifactId>
-      <version>2.5.5.20211012</version>
+      <version>2.5.5-SNAPSHOT</version>
       <optional>true</optional>
     </dependency>
     <dependency>
       <groupId>cn.idealframework.boot</groupId>
       <artifactId>ideal-boot-starter-module-snowflake</artifactId>
-      <version>2.5.5.20211012</version>
+      <version>2.5.5-SNAPSHOT</version>
       <optional>true</optional>
     </dependency>
     <dependency>
       <groupId>cn.idealframework.boot</groupId>
       <artifactId>ideal-boot-starter-module-trace</artifactId>
-      <version>2.5.5.20211012</version>
+      <version>2.5.5-SNAPSHOT</version>
       <optional>true</optional>
     </dependency>
     <dependency>
       <groupId>cn.idealframework.boot</groupId>
       <artifactId>ideal-boot-starter-module-web</artifactId>
-      <version>2.5.5.20211012</version>
+      <version>2.5.5-SNAPSHOT</version>
       <optional>true</optional>
     </dependency>
 
