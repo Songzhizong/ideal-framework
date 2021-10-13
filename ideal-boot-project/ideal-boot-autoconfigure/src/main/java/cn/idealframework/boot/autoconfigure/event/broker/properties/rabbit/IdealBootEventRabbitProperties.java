@@ -25,10 +25,10 @@ import lombok.Setter;
 @Setter
 public class IdealBootEventRabbitProperties {
   /** 交换区 */
-  private String exchange = "ideal.event.exchange";
+  private String exchange = "event.exchange";
 
   /** 消费队列前缀 */
-  private String queuePrefix = "ideal.event.queue";
+  private String queuePrefix = "event.queue";
 
   /** 消费者预取消息数 */
   private int prefetchCount = 0;
