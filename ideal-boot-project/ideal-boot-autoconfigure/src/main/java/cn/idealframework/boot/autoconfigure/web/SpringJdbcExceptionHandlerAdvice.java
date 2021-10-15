@@ -62,7 +62,7 @@ public class SpringJdbcExceptionHandlerAdvice {
    */
   @ExceptionHandler(DataIntegrityViolationException.class)
   public ResponseEntity<Object> dataIntegrityViolationExceptionHandler(
-      @Nonnull DataIntegrityViolationException exception) {
+    @Nonnull DataIntegrityViolationException exception) {
     String message = exception.getMessage();
     Throwable cause = exception.getCause();
     if (cause instanceof ConstraintViolationException) {
@@ -72,7 +72,6 @@ public class SpringJdbcExceptionHandlerAdvice {
       int errorCode = sqlException.getErrorCode();
       // 数据重复,唯一索引冲突
       if (errorCode == 1062) {
-        log.info(constraintName + " 已存在");
         message = constraintName + "已存在";
       }
     }
@@ -91,7 +90,7 @@ public class SpringJdbcExceptionHandlerAdvice {
   @Nonnull
   @ExceptionHandler(InvalidDataAccessApiUsageException.class)
   public ResponseEntity<Object> invalidDataAccessApiUsageExceptionHandler(
-      @Nonnull InvalidDataAccessApiUsageException ex) {
+    @Nonnull InvalidDataAccessApiUsageException ex) {
     String message = ex.getMessage();
     Throwable cause = ex.getCause();
     if (cause != null) {

@@ -59,7 +59,7 @@ public class SpringOrmExceptionHandlerAdvice {
    */
   @ExceptionHandler(ObjectOptimisticLockingFailureException.class)
   public ResponseEntity<Object> objectOptimisticLockingFailureExceptionHandler(
-      @Nonnull ObjectOptimisticLockingFailureException e) {
+    @Nonnull ObjectOptimisticLockingFailureException e) {
     log.info("乐观锁冲突: " + e.getMessage());
     BasicResult res = new BasicResult();
     res.setSuccess(false);
