@@ -15,7 +15,7 @@
  */
 package cn.idealframework.event.tuple;
 
-import cn.idealframework.event.message.EventMessageBuilder;
+import cn.idealframework.event.message.EventSupplier;
 import cn.idealframework.lang.Lists;
 import lombok.Getter;
 
@@ -28,36 +28,36 @@ import java.util.List;
  * @author 宋志宗 on 2021/4/27
  */
 @Getter
-public class NullableEventBuilderTuple<R> {
+public class NullableEventTuple<R> {
   /** 方法返回结果 */
   @Nullable
   private final R result;
 
   /** 方法返回事件列表 */
   @Nonnull
-  private final List<EventMessageBuilder> eventBuilders;
+  private final List<EventSupplier> suppliers;
 
-  protected NullableEventBuilderTuple(@Nullable R result,
-                                      @Nonnull List<EventMessageBuilder> eventBuilders) {
+  protected NullableEventTuple(@Nullable R result,
+                               @Nonnull List<EventSupplier> suppliers) {
     this.result = result;
-    this.eventBuilders = eventBuilders;
+    this.suppliers = suppliers;
   }
 
   @Nonnull
-  public static <R> NullableEventBuilderTuple<R> of(@Nullable R result,
-                                                    @Nonnull List<EventMessageBuilder> builders) {
-    return new NullableEventBuilderTuple<>(result, builders);
+  public static <R> NullableEventTuple<R> of(@Nullable R result,
+                                             @Nonnull List<EventSupplier> suppliers) {
+    return new NullableEventTuple<>(result, suppliers);
   }
 
   @Nonnull
-  public static <R> NullableEventBuilderTuple<R> of(@Nullable R result,
-                                                    @Nonnull EventMessageBuilder builder) {
-    return new NullableEventBuilderTuple<>(result, Lists.of(builder));
+  public static <R> NullableEventTuple<R> of(@Nullable R result,
+                                             @Nonnull EventSupplier supplier) {
+    return new NullableEventTuple<>(result, Lists.of(supplier));
   }
 
   @Nonnull
-  public static <R> NullableEventBuilderTuple<R> of(@Nullable R result,
-                                                    @Nonnull EventMessageBuilder... builders) {
-    return new NullableEventBuilderTuple<>(result, Arrays.asList(builders));
+  public static <R> NullableEventTuple<R> of(@Nullable R result,
+                                             @Nonnull EventSupplier... suppliers) {
+    return new NullableEventTuple<>(result, Arrays.asList(suppliers));
   }
 }

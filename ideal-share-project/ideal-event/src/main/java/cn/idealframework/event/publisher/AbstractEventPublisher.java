@@ -19,7 +19,7 @@ import cn.idealframework.event.listener.LocalEventProcessor;
 import cn.idealframework.event.listener.LocalEventProcessorFactory;
 import cn.idealframework.event.message.EventHeaders;
 import cn.idealframework.event.message.EventMessage;
-import cn.idealframework.event.message.EventMessageSupplier;
+import cn.idealframework.event.message.EventSupplier;
 import cn.idealframework.event.persistence.EventMessageRepository;
 import cn.idealframework.lang.CollectionUtils;
 
@@ -40,7 +40,7 @@ public abstract class AbstractEventPublisher implements EventPublisher {
   }
 
   @Override
-  public void publish(@Nonnull Collection<EventMessageSupplier> suppliers) {
+  public void publish(@Nonnull Collection<EventSupplier> suppliers) {
     if (CollectionUtils.isEmpty(suppliers)) {
       return;
     }
@@ -52,9 +52,9 @@ public abstract class AbstractEventPublisher implements EventPublisher {
   }
 
   @Nonnull
-  private List<EventMessage<?>> localPublish(@Nonnull Collection<EventMessageSupplier> suppliers) {
+  private List<EventMessage<?>> localPublish(@Nonnull Collection<EventSupplier> suppliers) {
     List<EventMessage<?>> messages = new ArrayList<>(suppliers.size());
-    for (EventMessageSupplier supplier : suppliers) {
+    for (EventSupplier supplier : suppliers) {
       EventMessage<?> message = supplier.get();
       messages.add(message);
       String topic = message.getTopic();

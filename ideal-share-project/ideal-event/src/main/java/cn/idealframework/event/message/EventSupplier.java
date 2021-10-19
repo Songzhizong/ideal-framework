@@ -20,7 +20,7 @@ import javax.annotation.Nonnull;
 /**
  * @author 宋志宗 on 2021/10/19
  */
-public interface EventMessageSupplier {
+public interface EventSupplier {
 
   @Nonnull
   EventMessage<?> get();

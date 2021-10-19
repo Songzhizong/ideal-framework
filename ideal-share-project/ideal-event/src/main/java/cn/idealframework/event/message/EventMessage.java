@@ -26,7 +26,7 @@ import java.beans.Transient;
  *
  * @author 宋志宗 on 2021/4/22
  */
-public interface EventMessage<T> extends EventMessageSupplier {
+public interface EventMessage<T> extends EventSupplier {
   @Nonnull
   static <T extends DomainEvent> EventMessage<T> of(@Nonnull T event) {
     return SimpleEventMessage.of(event);

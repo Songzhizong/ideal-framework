@@ -15,7 +15,7 @@
  */
 package cn.idealframework.event.publisher;
 
-import cn.idealframework.event.message.EventMessageSupplier;
+import cn.idealframework.event.message.EventSupplier;
 
 import javax.annotation.Nonnull;
 import java.util.Collection;
@@ -33,5 +33,5 @@ public interface EventPublisher {
    * @param suppliers EventMessageSupplier Collection
    * @author 宋志宗 on 2021/10/19
    */
-  void publish(@Nonnull Collection<EventMessageSupplier> suppliers);
+  void publish(@Nonnull Collection<EventSupplier> suppliers);
 }

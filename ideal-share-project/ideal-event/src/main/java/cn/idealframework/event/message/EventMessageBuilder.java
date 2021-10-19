@@ -22,7 +22,7 @@ import javax.annotation.Nonnull;
  *
  * @author 宋志宗 on 2021/4/22
  */
-public interface EventMessageBuilder extends EventMessageSupplier {
+public interface EventMessageBuilder extends EventSupplier {
 
   /**
    * @return 领域事件消息
