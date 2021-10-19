@@ -25,6 +25,7 @@ import cn.idealframework.lang.StringUtils;
 import cn.idealframework.trace.*;
 import cn.idealframework.trace.impl.IDGeneratorTraceIdGenerator;
 import cn.idealframework.trace.impl.UUIDTraceIdGenerator;
+import cn.idealframework.util.IpUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.apachecommons.CommonsLog;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -84,6 +85,7 @@ public class IdealBootTraceAutoConfigure {
       TraceCollector traceCollector,
     @Nullable @Autowired(required = false)
       PreFilterHandler preFilterHandler) {
+    IpUtils.getLocalAddress();
     if (traceCollector == null) {
       log.warn("TraceCollector is null");
     }
