@@ -52,10 +52,10 @@ public class IdealBootEventTransactionAutoConfigure {
   public TransactionalEventPublisher transactionalEventPublisher(@Nonnull JdbcTemplate jdbcTemplate,
                                                                  @Nonnull EventPublisher eventPublisher,
                                                                  @Nullable @Autowired(required = false)
-                                                                     EventMessageRepository eventMessageRepository) {
+                                                                   EventMessageRepository eventMessageRepository) {
     IdealBootEventBrokerProperties.BrokerType type = properties.getBroker().getType();
     if (type == IdealBootEventBrokerProperties.BrokerType.LOCAL
-        || type == IdealBootEventBrokerProperties.BrokerType.LOG) {
+      || type == IdealBootEventBrokerProperties.BrokerType.LOG) {
       log.info("Broker type is log or local, using EventPublisher");
       return eventPublisher::publish;
     }
@@ -69,7 +69,7 @@ public class IdealBootEventTransactionAutoConfigure {
                                                          @Nonnull DataSource dataSource) {
     IdealBootEventBrokerProperties.BrokerType type = properties.getBroker().getType();
     if (type == IdealBootEventBrokerProperties.BrokerType.LOCAL
-        || type == IdealBootEventBrokerProperties.BrokerType.LOG) {
+      || type == IdealBootEventBrokerProperties.BrokerType.LOG) {
       log.info("Broker type is log or local, with no need for AutomaticEventPublisher");
       return null;
     }

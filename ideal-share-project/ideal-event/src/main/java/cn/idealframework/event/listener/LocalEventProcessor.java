@@ -16,7 +16,6 @@
 package cn.idealframework.event.listener;
 
 import cn.idealframework.event.condition.EventCondition;
-import cn.idealframework.event.message.DomainEvent;
 import cn.idealframework.event.message.EventHeaders;
 import cn.idealframework.event.message.EventMessage;
 
@@ -32,5 +31,5 @@ public interface LocalEventProcessor {
 
   boolean match(@Nullable EventHeaders headers);
 
-  void invoke(@Nonnull EventMessage<? extends DomainEvent> message) throws Exception;
+  void invoke(@Nonnull EventMessage<?> message) throws Exception;
 }

@@ -18,20 +18,10 @@ package cn.idealframework.event.message;
 import javax.annotation.Nonnull;
 
 /**
- * 领域事件消息构建器
- *
- * @author 宋志宗 on 2021/4/22
+ * @author 宋志宗 on 2021/10/19
  */
-public interface EventMessageBuilder extends EventMessageSupplier {
-
-  /**
-   * @return 领域事件消息
-   */
-  EventMessage<? extends DomainEvent> build();
+public interface EventMessageSupplier {
 
   @Nonnull
-  @Override
-  default EventMessage<? extends DomainEvent> get() {
-    return this.build();
-  }
+  EventMessage<?> get();
 }

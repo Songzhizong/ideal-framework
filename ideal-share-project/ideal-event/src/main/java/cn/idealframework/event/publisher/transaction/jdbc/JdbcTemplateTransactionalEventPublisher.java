@@ -15,7 +15,6 @@
  */
 package cn.idealframework.event.publisher.transaction.jdbc;
 
-import cn.idealframework.event.message.DomainEvent;
 import cn.idealframework.event.message.EventMessage;
 import cn.idealframework.event.persistence.EventMessageRepository;
 import cn.idealframework.event.publisher.AbstractEventPublisher;
@@ -32,11 +31,13 @@ import java.util.Collection;
 import java.util.List;
 
 /**
+ * 使用JdbcTemplate将消息持久化到数据库, 与本地事务保持一致
+ *
  * @author 宋志宗 on 2021/4/30
  */
 @CommonsLog
 public class JdbcTemplateTransactionalEventPublisher
-    extends AbstractEventPublisher implements TransactionalEventPublisher {
+  extends AbstractEventPublisher implements TransactionalEventPublisher {
   private final JdbcTemplate jdbcTemplate;
   private final int[] argTypes = new int[]{Types.VARCHAR, Types.BIGINT};
 
@@ -47,10 +48,10 @@ public class JdbcTemplateTransactionalEventPublisher
   }
 
   @Override
-  public void directPublish(@Nonnull Collection<EventMessage<? extends DomainEvent>> messages) {
+  public void brokerPublish(@Nonnull Collection<EventMessage<?>> messages) {
     String sql = "insert into ideal_event_publish_temp (event_info, timestamp) values (?, ?)";
     List<Object[]> batchArgs = new ArrayList<>();
-    for (EventMessage<? extends DomainEvent> message : messages) {
+    for (EventMessage<?> message : messages) {
       String eventInfo = JsonUtils.toJsonStringIgnoreNull(message);
       long timestamp = System.currentTimeMillis();
       Object[] objects = {eventInfo, timestamp};

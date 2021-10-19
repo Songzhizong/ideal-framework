@@ -15,7 +15,6 @@
  */
 package cn.idealframework.event.broker.kafka;
 
-import cn.idealframework.event.message.DomainEvent;
 import cn.idealframework.event.message.EventMessage;
 import cn.idealframework.event.persistence.EventMessageRepository;
 import cn.idealframework.event.publisher.AbstractEventPublisher;
@@ -70,8 +69,8 @@ public class KafkaEventPublisher extends AbstractEventPublisher {
   }
 
   @Override
-  public void directPublish(@Nonnull Collection<EventMessage<? extends DomainEvent>> messages) {
-    for (EventMessage<? extends DomainEvent> message : messages) {
+  public void brokerPublish(@Nonnull Collection<EventMessage<?>> messages) {
+    for (EventMessage<?> message : messages) {
       String entityId = message.getAggregateId();
       String messageStr = JsonUtils.toJsonStringIgnoreNull(message);
       String kafkaTopic = defaultEventTopic;

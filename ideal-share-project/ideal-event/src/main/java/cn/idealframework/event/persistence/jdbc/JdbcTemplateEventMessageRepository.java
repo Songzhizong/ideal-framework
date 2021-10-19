@@ -15,7 +15,6 @@
  */
 package cn.idealframework.event.persistence.jdbc;
 
-import cn.idealframework.event.message.DomainEvent;
 import cn.idealframework.event.message.EventHeaders;
 import cn.idealframework.event.message.EventMessage;
 import cn.idealframework.event.persistence.EventMessageRepository;
@@ -39,12 +38,12 @@ public class JdbcTemplateEventMessageRepository implements EventMessageRepositor
   private final JdbcTemplate jdbcTemplate;
 
   @Override
-  public void saveAll(@Nonnull Collection<EventMessage<? extends DomainEvent>> messages) {
+  public void saveAll(@Nonnull Collection<EventMessage<?>> messages) {
     String sql = "insert into  ideal_event_store" +
       " (uuid, topic, aggregate_type, aggregate_id, headers, payload, event_time)" +
       " values (?, ?, ?, ?, ?, ?, ?)";
     List<Object[]> args = new ArrayList<>();
-    for (EventMessage<? extends DomainEvent> message : messages) {
+    for (EventMessage<?> message : messages) {
       Object[] objects = new Object[7];
       objects[0] = message.uuid();
       objects[1] = message.getTopic();

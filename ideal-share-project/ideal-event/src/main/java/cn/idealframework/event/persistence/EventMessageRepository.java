@@ -15,7 +15,6 @@
  */
 package cn.idealframework.event.persistence;
 
-import cn.idealframework.event.message.DomainEvent;
 import cn.idealframework.event.message.EventMessage;
 
 import javax.annotation.Nonnull;
@@ -34,7 +33,7 @@ public interface EventMessageRepository {
    * @param messages 事件消息列表
    * @author 宋志宗 on 2021/7/1
    */
-  void saveAll(@Nonnull Collection<EventMessage<? extends DomainEvent>> messages);
+  void saveAll(@Nonnull Collection<EventMessage<?>> messages);
 
   /**
    * 按topic删除过期的消息

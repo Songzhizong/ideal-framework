@@ -17,7 +17,6 @@ package cn.idealframework.event.listener.impl;
 
 import cn.idealframework.event.condition.EventCondition;
 import cn.idealframework.event.listener.LocalEventProcessor;
-import cn.idealframework.event.message.DomainEvent;
 import cn.idealframework.event.message.EventHeaders;
 import cn.idealframework.event.message.EventMessage;
 import lombok.extern.apachecommons.CommonsLog;
@@ -66,7 +65,7 @@ public class MethodLocalEventProcessor implements LocalEventProcessor {
   }
 
   @Override
-  public void invoke(@Nonnull EventMessage<? extends DomainEvent> message) throws Exception {
+  public void invoke(@Nonnull EventMessage<?> message) throws Exception {
     this.method.invoke(this.target, message);
   }
 }

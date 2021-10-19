@@ -17,7 +17,6 @@ package cn.idealframework.event.publisher;
 
 import cn.idealframework.event.listener.EventDeliverer;
 import cn.idealframework.event.message.DeliverEventMessage;
-import cn.idealframework.event.message.DomainEvent;
 import cn.idealframework.event.message.EventMessage;
 import cn.idealframework.event.message.impl.SimpleDelivererEvent;
 import cn.idealframework.event.persistence.EventMessageRepository;
@@ -36,21 +35,21 @@ import java.util.Collection;
  */
 @CommonsLog
 @SuppressWarnings("unused")
-public class InMemoryEventPublisher extends AbstractEventPublisher {
+public class LocalEventPublisher extends AbstractEventPublisher {
   private static final TypeReference<SimpleDelivererEvent> TYPE_REFERENCE
-      = new TypeReference<SimpleDelivererEvent>() {
+    = new TypeReference<SimpleDelivererEvent>() {
   };
   private final EventDeliverer eventDeliverer;
 
-  public InMemoryEventPublisher(@Nonnull EventDeliverer eventDeliverer,
-                                @Nullable EventMessageRepository eventMessageRepository) {
+  public LocalEventPublisher(@Nonnull EventDeliverer eventDeliverer,
+                             @Nullable EventMessageRepository eventMessageRepository) {
     super(eventMessageRepository);
     this.eventDeliverer = eventDeliverer;
   }
 
 
   @Override
-  public void directPublish(@Nonnull Collection<EventMessage<? extends DomainEvent>> messages) {
+  public void brokerPublish(@Nonnull Collection<EventMessage<?>> messages) {
     for (EventMessage<?> message : messages) {
       String messageString = JsonUtils.toJsonString(message);
       log.debug("Publish event message: " + messageString);

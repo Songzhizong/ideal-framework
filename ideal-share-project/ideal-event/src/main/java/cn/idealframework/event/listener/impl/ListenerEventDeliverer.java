@@ -79,7 +79,7 @@ public class ListenerEventDeliverer implements EventDeliverer {
         if (log.isDebugEnabled()) {
           long consuming = System.currentTimeMillis() - startTime;
           log.debug("Event message deliver to " + handler.getName()
-              + ". topic: " + topic + " uuid: " + uuid + " consuming: " + consuming);
+            + ". topic: " + topic + " uuid: " + uuid + " consuming: " + consuming);
         }
       } catch (Exception exception) {
         // 消费失败释放幂等key
@@ -110,16 +110,16 @@ public class ListenerEventDeliverer implements EventDeliverer {
       Collection<RemoteEventProcessor> values = processorMap.values();
       AtomicBoolean atomicBoolean = new AtomicBoolean(false);
       List<RemoteEventProcessor> filterHandlers = values.stream().
-          filter(handler -> {
-            boolean match = handler.match(headers);
-            if (!match) {
-              atomicBoolean.set(true);
-              log.debug("Failed match. listener: " + handler.getName()
-                  + " topic: " + topic + " event uuid: " + uuid);
-            }
-            return match;
-          })
-          .collect(Collectors.toList());
+        filter(handler -> {
+          boolean match = handler.match(headers);
+          if (!match) {
+            atomicBoolean.set(true);
+            log.debug("Failed match. listener: " + handler.getName()
+              + " topic: " + topic + " event uuid: " + uuid);
+          }
+          return match;
+        })
+        .collect(Collectors.toList());
       if (atomicBoolean.get() && log.isDebugEnabled() && headers != null) {
         log.debug("Event headers: " + JsonUtils.toJsonString(headers));
       }

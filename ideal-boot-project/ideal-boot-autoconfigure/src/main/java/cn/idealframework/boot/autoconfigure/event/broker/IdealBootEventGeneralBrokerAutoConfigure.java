@@ -21,7 +21,7 @@ import cn.idealframework.boot.starter.module.event.EventModule;
 import cn.idealframework.event.listener.EventDeliverer;
 import cn.idealframework.event.persistence.EventMessageRepository;
 import cn.idealframework.event.publisher.EventPublisher;
-import cn.idealframework.event.publisher.InMemoryEventPublisher;
+import cn.idealframework.event.publisher.LocalEventPublisher;
 import cn.idealframework.event.publisher.LogOnlyEventPublisher;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.apachecommons.CommonsLog;
@@ -42,9 +42,9 @@ import javax.annotation.Nullable;
 @EnableConfigurationProperties(IdealBootEventProperties.class)
 @ConditionalOnClass({EventPublisher.class, EventModule.class})
 @ConditionalOnExpression(
-    "'${ideal.event.broker.type:LOCAL}'.equalsIgnoreCase('LOCAL')" +
-        "||'${ideal.event.broker.type:LOCAL}'.equalsIgnoreCase('LOG')" +
-        "||'${ideal.event.broker.type:LOCAL}'.equalsIgnoreCase('CUSTOM')"
+  "'${ideal.event.broker.type:LOCAL}'.equalsIgnoreCase('LOCAL')" +
+    "||'${ideal.event.broker.type:LOCAL}'.equalsIgnoreCase('LOG')" +
+    "||'${ideal.event.broker.type:LOCAL}'.equalsIgnoreCase('CUSTOM')"
 )
 public class IdealBootEventGeneralBrokerAutoConfigure {
   private final IdealBootEventProperties properties;
@@ -54,7 +54,7 @@ public class IdealBootEventGeneralBrokerAutoConfigure {
   @ConditionalOnMissingBean
   public EventPublisher eventPublisher(EventDeliverer eventDeliverer,
                                        @Nullable @Autowired(required = false)
-                                           EventMessageRepository eventMessageRepository) {
+                                         EventMessageRepository eventMessageRepository) {
     IdealBootEventBrokerProperties broker = properties.getBroker();
     IdealBootEventBrokerProperties.BrokerType type = broker.getType();
     if (type == IdealBootEventBrokerProperties.BrokerType.CUSTOM) {
@@ -66,6 +66,6 @@ public class IdealBootEventGeneralBrokerAutoConfigure {
       return new LogOnlyEventPublisher(eventMessageRepository);
     }
     log.info("Use local EventPublisher");
-    return new InMemoryEventPublisher(eventDeliverer, eventMessageRepository);
+    return new LocalEventPublisher(eventDeliverer, eventMessageRepository);
   }
 }

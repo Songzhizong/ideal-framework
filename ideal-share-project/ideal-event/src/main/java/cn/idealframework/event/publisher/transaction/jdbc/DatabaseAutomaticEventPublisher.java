@@ -15,7 +15,6 @@
  */
 package cn.idealframework.event.publisher.transaction.jdbc;
 
-import cn.idealframework.event.message.DomainEvent;
 import cn.idealframework.event.message.EventMessage;
 import cn.idealframework.event.message.impl.GeneralEventMessage;
 import cn.idealframework.event.publisher.AbstractEventPublisher;
@@ -97,15 +96,15 @@ public class DatabaseAutomaticEventPublisher implements AutomaticEventPublisher 
               sleepFlag.set(true);
             } else {
               long startTimeMillis = System.currentTimeMillis();
-              List<EventMessage<? extends DomainEvent>> messages = eventTemps.stream()
-                  .map(temp -> {
-                    String eventInfo = temp.getEventInfo();
-                    return JsonUtils.parse(eventInfo, GeneralEventMessage.class);
-                  }).collect(Collectors.toList());
-              eventPublisher.directPublish(messages);
+              List<EventMessage<?>> messages = eventTemps.stream()
+                .map(temp -> {
+                  String eventInfo = temp.getEventInfo();
+                  return JsonUtils.parse(eventInfo, GeneralEventMessage.class);
+                }).collect(Collectors.toList());
+              eventPublisher.brokerPublish(messages);
               List<Long> tempIds = eventTemps.stream()
-                  .map(EventTempDo::getId)
-                  .collect(Collectors.toList());
+                .map(EventTempDo::getId)
+                .collect(Collectors.toList());
               this.deletePublishedTemps(connection, tempIds);
               long consuming = System.currentTimeMillis() - startTimeMillis;
               log.debug("Read " + size + " messages from the database and publish them, It takes " + consuming + " milliseconds");

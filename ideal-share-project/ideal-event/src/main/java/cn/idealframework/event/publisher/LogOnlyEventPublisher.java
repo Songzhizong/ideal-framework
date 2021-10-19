@@ -15,7 +15,6 @@
  */
 package cn.idealframework.event.publisher;
 
-import cn.idealframework.event.message.DomainEvent;
 import cn.idealframework.event.message.EventMessage;
 import cn.idealframework.event.persistence.EventMessageRepository;
 import cn.idealframework.json.JsonUtils;
@@ -38,7 +37,7 @@ public class LogOnlyEventPublisher extends AbstractEventPublisher {
   }
 
   @Override
-  public void directPublish(@Nonnull Collection<EventMessage<? extends DomainEvent>> messages) {
+  public void brokerPublish(@Nonnull Collection<EventMessage<?>> messages) {
     log.info("Publish event message:\n" + JsonUtils.toPrettyJsonString(messages));
   }
 }

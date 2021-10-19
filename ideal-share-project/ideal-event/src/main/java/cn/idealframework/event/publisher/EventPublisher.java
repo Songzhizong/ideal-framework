@@ -15,15 +15,10 @@
  */
 package cn.idealframework.event.publisher;
 
-import cn.idealframework.event.message.DomainEvent;
-import cn.idealframework.event.message.EventMessage;
-import cn.idealframework.event.message.EventMessageBuilder;
-import cn.idealframework.lang.CollectionUtils;
+import cn.idealframework.event.message.EventMessageSupplier;
 
 import javax.annotation.Nonnull;
 import java.util.Collection;
-import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * 事件发布器接口
@@ -33,26 +28,10 @@ import java.util.stream.Collectors;
 public interface EventPublisher {
 
   /**
-   * 批量发布事件消息
+   * 批量发布
    *
-   * @param messages 事件信息列表
-   * @author 宋志宗 on 2021/4/22
+   * @param suppliers EventMessageSupplier Collection
+   * @author 宋志宗 on 2021/10/19
    */
-  void publish(@Nonnull Collection<EventMessage<? extends DomainEvent>> messages);
-
-
-  /**
-   * 批量发布事件消息构建器
-   *
-   * @param eventsBuilders 事件消息构建器列表
-   * @author 宋志宗 on 2021/4/27
-   */
-  default void publishAll(@Nonnull Collection<EventMessageBuilder> eventsBuilders) {
-    if (CollectionUtils.isEmpty(eventsBuilders)) {
-      return;
-    }
-    List<EventMessage<? extends DomainEvent>> messages = eventsBuilders.stream()
-      .map(EventMessageBuilder::build).collect(Collectors.toList());
-    publish(messages);
-  }
+  void publish(@Nonnull Collection<EventMessageSupplier> suppliers);
 }

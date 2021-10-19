@@ -15,7 +15,6 @@
  */
 package cn.idealframework.event.broker.rabbit;
 
-import cn.idealframework.event.message.DomainEvent;
 import cn.idealframework.event.message.EventMessage;
 import cn.idealframework.event.persistence.EventMessageRepository;
 import cn.idealframework.event.publisher.AbstractEventPublisher;
@@ -46,8 +45,8 @@ public class RabbitEventPublisher extends AbstractEventPublisher {
   }
 
   @Override
-  public void directPublish(@Nonnull Collection<EventMessage<? extends DomainEvent>> messages) {
-    for (EventMessage<? extends DomainEvent> eventMessage : messages) {
+  public void brokerPublish(@Nonnull Collection<EventMessage<?>> messages) {
+    for (EventMessage<?> eventMessage : messages) {
       String topic = eventMessage.getTopic();
       String jsonString = JsonUtils.toJsonStringIgnoreNull(eventMessage);
       Message message = MessageBuilder.withBody(jsonString.getBytes(StandardCharsets.UTF_8)).build();

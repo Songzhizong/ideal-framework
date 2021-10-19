@@ -16,6 +16,7 @@
 package cn.idealframework.event.listener;
 
 import cn.idealframework.event.condition.EventCondition;
+import cn.idealframework.event.message.DomainEvent;
 import cn.idealframework.event.message.EventMessage;
 
 import javax.annotation.Nonnull;
@@ -26,7 +27,7 @@ import javax.annotation.Nullable;
  *
  * @author 宋志宗 on 2021/4/22
  */
-public interface LocalEventListener<T> {
+public interface LocalEventListener<T extends DomainEvent> {
 
   /**
    * @return 监听主题

@@ -78,8 +78,8 @@ public class EventConditionImpl implements EventCondition {
       Group group = groups.get(i);
       Set<Item> items = group.getItems();
       String itemExpression = items.stream()
-          .map(Item::toExpression)
-          .collect(Collectors.joining("&"));
+        .map(Item::toExpression)
+        .collect(Collectors.joining("&"));
       sb.append(itemExpression);
       if (i == groups.size() - 1) {
         stringBuilder.append(sb);
