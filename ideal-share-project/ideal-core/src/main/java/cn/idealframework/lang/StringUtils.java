@@ -67,6 +67,13 @@ public class StringUtils {
     return true;
   }
 
+  public static boolean contains(final CharSequence seq, final CharSequence searchSeq) {
+    if (seq == null || searchSeq == null) {
+      return false;
+    }
+    return CharSequenceUtils.indexOf(seq, searchSeq, 0) >= 0;
+  }
+
   public static String reverse(final String str) {
     if (str == null) {
       return null;
