@@ -24,7 +24,7 @@ import java.beans.Transient;
  *
  * @author 宋志宗 on 2021/4/22
  */
-public interface DomainEvent {
+public interface DomainEvent extends EventSupplier {
   /**
    * @return 事件类型
    * @author 宋志宗 on 2021/4/22
@@ -48,4 +48,10 @@ public interface DomainEvent {
   @Nullable
   @Transient
   String getAggregateId();
+
+  @Nonnull
+  @Override
+  default EventMessage<?> get() {
+    return EventMessage.of(this);
+  }
 }

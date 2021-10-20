@@ -2,13 +2,14 @@
 
 ### ⚠️ Compatibility
 
-- `EventMessageTuple`更名为`EventTuple`，事件类型修改为`EventSupplier`
-- `NullableEventMessageTuple`更名为`NullableEventTuple`，事件类型修改为`EventSupplier`
-- 移除`EventPublisher`原有方法，新增`void publish(@Nonnull Collection<EventSupplier> suppliers);`
+- `EventMessageTuple`更名为`EventTuple`，事件类型修改为`EventSupplier`。
+- `NullableEventMessageTuple`更名为`NullableEventTuple`，事件类型修改为`EventSupplier`。
+- 移除`EventPublisher`原有方法，新增`void publish(@Nonnull Collection<EventSupplier> suppliers);`。
 
 ### ⭐ New Features
 
-- `EventPublisher`发布事件现不区分`EventMessage`和`EventMessageBuilder`，统一发布他们的父接口`EventSupplier`
+- `EventPublisher`发布事件现不区分`EventMessage`和`EventMessageBuilder`，统一发布他们的父接口`EventSupplier`。
+- `DomainEvent`继承接口`EventSupplier`，现可直接发布`DomainEvent`的实现类。因为`DomainEvent`中不包含事件头，因此在需要携带事件头的场景仍需通过`EventMessage`或`EventMessageBuilder`实现。
 
 ### 🐞 Bug Fixes
 
