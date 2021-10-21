@@ -18,6 +18,7 @@ package cn.idealframework.event.message;
 import cn.idealframework.event.message.impl.EventHeadersImpl;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.Set;
 
@@ -33,21 +34,23 @@ public interface EventHeaders {
 
   boolean isEmpty();
 
-  Set<Object> get(@Nonnull String property);
+  Set<String> get(@Nonnull String property);
 
-  EventHeaders addString(@Nonnull String property, @Nonnull String value);
+  @Nonnull
+  EventHeaders add(@Nonnull String property, @Nonnull String value);
 
-  EventHeaders addAllString(@Nonnull String property, @Nonnull Collection<String> values);
+  @Nonnull
+  EventHeaders addAll(@Nonnull String property, @Nonnull Collection<String> values);
 
-  EventHeaders addAllString(@Nonnull String property, @Nonnull String... values);
+  @Nonnull
+  EventHeaders addAll(@Nonnull String property, @Nullable String... values);
 
-  EventHeaders addNumber(@Nonnull String property, long value);
+  @Nonnull
+  EventHeaders set(@Nonnull String property, @Nonnull String value);
 
-  EventHeaders addAllNumber(@Nonnull String property, @Nonnull Collection<Long> values);
+  @Nonnull
+  EventHeaders setAll(@Nonnull String property, @Nonnull Collection<String> values);
 
-  EventHeaders addAllNumber(@Nonnull String property, @Nonnull long... values);
-
-  boolean containsNumber(@Nonnull String property, long value);
-
-  boolean containsString(@Nonnull String property, @Nonnull String value);
+  @Nonnull
+  EventHeaders setAll(@Nonnull String property, @Nullable String... values);
 }

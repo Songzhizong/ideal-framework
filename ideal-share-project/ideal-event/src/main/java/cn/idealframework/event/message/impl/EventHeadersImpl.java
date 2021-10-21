@@ -21,16 +21,15 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.Serializable;
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * 事件头
  *
  * @author 宋志宗 on 2020/5/26
  */
-public class EventHeadersImpl implements EventHeaders, Map<String, Set<Object>>, Serializable {
+public class EventHeadersImpl implements EventHeaders, Map<String, Set<String>>, Serializable {
   private static final long serialVersionUID = 117500675943825408L;
-  private final Map<String, Set<Object>> targetMap;
+  private final Map<String, Set<String>> targetMap = new LinkedHashMap<>();
 
   @Nonnull
   public static EventHeadersImpl create() {
@@ -38,109 +37,63 @@ public class EventHeadersImpl implements EventHeaders, Map<String, Set<Object>>,
   }
 
   public EventHeadersImpl() {
-    this.targetMap = new LinkedHashMap<>();
   }
 
-  @Override
   @Nonnull
-  public EventHeaders addString(@Nonnull String key, @Nonnull String value) {
-    Set<Object> values = this.targetMap.computeIfAbsent(key, k -> new LinkedHashSet<>());
-    values.add(value);
+  @Override
+  public EventHeaders add(@Nonnull String property, @Nonnull String value) {
+    Set<String> strings = targetMap.computeIfAbsent(property, k -> new LinkedHashSet<>());
+    strings.add(value);
     return this;
   }
 
-  @Override
   @Nonnull
-  public EventHeaders addAllString(@Nonnull String key, @Nonnull Collection<String> values) {
-    Set<Object> currentValues = this.targetMap.computeIfAbsent(key, k -> new LinkedHashSet<>());
-    currentValues.addAll(values);
+  @Override
+  public EventHeaders addAll(@Nonnull String property, @Nonnull Collection<String> values) {
+    Set<String> strings = targetMap.computeIfAbsent(property, k -> new LinkedHashSet<>());
+    strings.addAll(values);
     return this;
   }
 
-  @Override
-  public EventHeaders addAllString(@Nonnull String property, @Nonnull String... values) {
-    return this.addAllString(property, Arrays.asList(values));
-  }
-
-  @Override
   @Nonnull
-  public EventHeaders addNumber(@Nonnull String key, long value) {
-    Set<Object> values = this.targetMap.computeIfAbsent(key, k -> new LinkedHashSet<>());
-    values.add(value);
+  @Override
+  public EventHeaders addAll(@Nonnull String property, @Nullable String... values) {
+    if (values == null || values.length == 0) {
+      return this;
+    }
+    Set<String> strings = targetMap.computeIfAbsent(property, k -> new LinkedHashSet<>());
+    strings.addAll(Arrays.asList(values));
     return this;
   }
 
-  @Override
   @Nonnull
-  public EventHeaders addAllNumber(@Nonnull String key, @Nonnull Collection<Long> values) {
-    Set<Object> currentValues = this.targetMap.computeIfAbsent(key, k -> new LinkedHashSet<>());
-    List<Long> collect = values.stream().map(Number::longValue).collect(Collectors.toList());
-    currentValues.addAll(collect);
+  @Override
+  public EventHeaders set(@Nonnull String property, @Nonnull String value) {
+    LinkedHashSet<String> strings = new LinkedHashSet<>();
+    strings.add(value);
+    targetMap.put(property, strings);
     return this;
   }
 
+  @Nonnull
   @Override
-  public EventHeaders addAllNumber(@Nonnull String property, @Nonnull long... values) {
-    List<Long> list = new ArrayList<>(values.length);
-    for (long value : values) {
-      list.add(value);
-    }
-    return this.addAllNumber(property, list);
+  public EventHeaders setAll(@Nonnull String property, @Nonnull Collection<String> values) {
+    LinkedHashSet<String> strings = new LinkedHashSet<>(values);
+    targetMap.put(property, strings);
+    return this;
   }
 
+  @Nonnull
   @Override
-  public boolean containsNumber(@Nonnull String property, long value) {
-    Set<Object> objects = this.get(property);
-    if (objects == null || objects.isEmpty()) {
-      return false;
+  public EventHeaders setAll(@Nonnull String property, @Nullable String... values) {
+    LinkedHashSet<String> strings;
+    if (values == null || values.length == 0) {
+      strings = new LinkedHashSet<>();
+    } else {
+      strings = new LinkedHashSet<>(Arrays.asList(values));
     }
-    for (Object object : objects) {
-      if (object instanceof Long) {
-        if (value == (long) object) {
-          return true;
-        }
-      } else if (object instanceof Number) {
-        if (value == ((Number) object).longValue()) {
-          return true;
-        }
-      } else if (object instanceof CharSequence) {
-        CharSequence charSequence = (CharSequence) object;
-        String string = charSequence.toString();
-        String stringValue = String.valueOf(value);
-        if (stringValue.equals(string)) {
-          return true;
-        }
-      }
-    }
-    return false;
-  }
-
-  @Override
-  public boolean containsString(@Nonnull String property, @Nonnull String value) {
-    Set<Object> objects = this.get(property);
-    if (objects == null || objects.isEmpty()) {
-      return false;
-    }
-    if (objects.contains(value)) {
-      return true;
-    }
-    for (Object object : objects) {
-      if (object instanceof String) {
-        if (value.equals(object)) {
-          return true;
-        }
-      } else if (object instanceof CharSequence) {
-        CharSequence charSequence = (CharSequence) object;
-        if (value.equals(charSequence.toString())) {
-          return true;
-        }
-      } else {
-        if (value.equals(object.toString())) {
-          return true;
-        }
-      }
-    }
-    return false;
+    targetMap.put(property, strings);
+    return this;
   }
 
   // Map implementation
@@ -156,7 +109,7 @@ public class EventHeadersImpl implements EventHeaders, Map<String, Set<Object>>,
   }
 
   @Override
-  public Set<Object> get(@Nonnull String property) {
+  public Set<String> get(@Nonnull String property) {
     return this.targetMap.get(property);
   }
 
@@ -171,23 +124,23 @@ public class EventHeadersImpl implements EventHeaders, Map<String, Set<Object>>,
   }
 
   @Override
-  public Set<Object> get(Object key) {
+  public Set<String> get(Object key) {
     return this.targetMap.get(key);
   }
 
   @Nullable
   @Override
-  public Set<Object> put(String key, Set<Object> value) {
+  public Set<String> put(String key, Set<String> value) {
     return this.targetMap.put(key, value);
   }
 
   @Override
-  public Set<Object> remove(Object key) {
+  public Set<String> remove(Object key) {
     return this.targetMap.remove(key);
   }
 
   @Override
-  public void putAll(@Nonnull Map<? extends String, ? extends Set<Object>> m) {
+  public void putAll(@Nonnull Map<? extends String, ? extends Set<String>> m) {
     this.targetMap.putAll(m);
   }
 
@@ -204,13 +157,13 @@ public class EventHeadersImpl implements EventHeaders, Map<String, Set<Object>>,
 
   @Nonnull
   @Override
-  public Collection<Set<Object>> values() {
+  public Collection<Set<String>> values() {
     return this.targetMap.values();
   }
 
   @Nonnull
   @Override
-  public Set<Entry<String, Set<Object>>> entrySet() {
+  public Set<Entry<String, Set<String>>> entrySet() {
     return this.targetMap.entrySet();
   }
 }

@@ -1,5 +1,21 @@
 <h1>更新日志</h1>
 
+# 2.5.5.2021.10.21
+
+### ⚠️ Compatibility
+
+- `EventHeaders`中的`value`类型修改为`String`
+
+### ⭐ New Features
+
+- 添加cron工具类`Cron`和`CronExpression`
+
+### 🐞 Bug Fixes
+
+### 🔨 Dependency Upgrades
+
+
+
 # 2.5.5.20211020
 
 ### ⚠️ Compatibility
