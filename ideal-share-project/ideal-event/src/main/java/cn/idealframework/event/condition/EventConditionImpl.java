@@ -56,7 +56,7 @@ public class EventConditionImpl implements EventCondition {
       boolean flag = true;
       for (Item item : items) {
         String property = item.getProperty();
-        Set<Object> values = headers.get(property);
+        Set<String> values = headers.get(property);
         if (values == null || !item.match(values)) {
           flag = false;
         }

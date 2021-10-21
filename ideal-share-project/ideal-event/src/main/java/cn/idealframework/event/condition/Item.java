@@ -23,7 +23,6 @@ import javax.annotation.Nonnull;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 /**
  * @author 宋志宗 on 2021/4/26
@@ -87,8 +86,12 @@ public class Item {
     if (operator == Operator.EQUAL) {
       return new Item(key, operator, value);
     }
-    String[] values = StringUtils.split(value, ",");
-    return new Item(key, operator, values);
+    //noinspection ConstantConditions
+    if (operator == Operator.IN) {
+      String[] values = StringUtils.split(value, ",");
+      return new Item(key, operator, values);
+    }
+    throw new RuntimeException("未知操作符: " + operator.name());
   }
 
   @Nonnull
@@ -112,22 +115,19 @@ public class Item {
     return property + operatorValue + valueValue;
   }
 
-  public boolean match(@Nonnull Set<Object> values) {
+  public boolean match(@Nonnull Set<String> values) {
     if (values.isEmpty()) {
       return false;
     }
     if (operator == Operator.GREATER || operator == Operator.LESS) {
       boolean flag = false;
-      for (Object value : values) {
+      for (String value : values) {
         long condition = ((Number) this.getValue()).longValue();
         long target;
-        if (value instanceof Number) {
-          target = ((Number) value).longValue();
-        } else if (value instanceof CharSequence) {
-          target = Long.parseLong(((CharSequence) value).toString());
-        } else {
-          String className = value.getClass().getName();
-          throw new IllegalArgumentException("Illegal header value type: " + className);
+        try {
+          target = Long.parseLong(value);
+        } catch (NumberFormatException e) {
+          continue;
         }
         if (operator == Operator.GREATER && target > condition) {
           flag = true;
@@ -142,17 +142,15 @@ public class Item {
     }
     if (operator == Operator.EQUAL) {
       String condition = (String) this.getValue();
-      Set<String> collect = values.stream().map(Object::toString).collect(Collectors.toSet());
-      if (!collect.contains(condition)) {
+      if (!values.contains(condition)) {
         return false;
       }
     }
     if (operator == Operator.IN) {
-      Set<String> collect = values.stream().map(Object::toString).collect(Collectors.toSet());
       String[] condition = (String[]) this.value;
       boolean flag = false;
       for (String s : condition) {
-        if (collect.contains(s)) {
+        if (values.contains(s)) {
           flag = true;
           break;
         }
