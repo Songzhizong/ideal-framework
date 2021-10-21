@@ -1,6 +1,10 @@
 <h1>更新日志</h1>
 
-# developer
+# 2.5.5.2021.10.21
+
+### ⚠️ Compatibility
+
+- `EventHeaders`中的`value`类型修改为`String`
 
 ### ⭐ New Features
 

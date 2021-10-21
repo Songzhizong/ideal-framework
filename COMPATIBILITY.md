@@ -1,5 +1,11 @@
 # 兼容性变更
 
+# 2.5.5.2021.10.21
+
+### ⚠️ Compatibility
+
+- `EventHeaders`中的`value`类型修改为`String`
+
 ## 2.5.5.20211020
 
 ### ⚠️ Compatibility
