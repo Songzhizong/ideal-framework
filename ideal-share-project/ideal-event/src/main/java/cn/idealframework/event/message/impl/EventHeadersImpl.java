@@ -75,6 +75,27 @@ public class EventHeadersImpl implements EventHeaders, Map<String, Set<String>>,
     return this;
   }
 
+  @Nonnull
+  @Override
+  public EventHeaders setAll(@Nonnull String property, @Nonnull Collection<String> values) {
+    LinkedHashSet<String> strings = new LinkedHashSet<>(values);
+    targetMap.put(property, strings);
+    return this;
+  }
+
+  @Nonnull
+  @Override
+  public EventHeaders setAll(@Nonnull String property, @Nullable String... values) {
+    LinkedHashSet<String> strings;
+    if (values == null || values.length == 0) {
+      strings = new LinkedHashSet<>();
+    } else {
+      strings = new LinkedHashSet<>(Arrays.asList(values));
+    }
+    targetMap.put(property, strings);
+    return this;
+  }
+
   // Map implementation
 
   @Override

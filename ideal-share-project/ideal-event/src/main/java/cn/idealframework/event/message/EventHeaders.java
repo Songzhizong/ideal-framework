@@ -47,4 +47,10 @@ public interface EventHeaders {
 
   @Nonnull
   EventHeaders set(@Nonnull String property, @Nonnull String value);
+
+  @Nonnull
+  EventHeaders setAll(@Nonnull String property, @Nonnull Collection<String> values);
+
+  @Nonnull
+  EventHeaders setAll(@Nonnull String property, @Nullable String... values);
 }
