@@ -82,7 +82,7 @@ public class IdealBootEventRabbitBrokerAutoConfigure implements ApplicationRunne
   public RabbitConsumer rabbitConsumer(EventDeliverer eventDeliverer) {
     IdealBootEventRabbitProperties rabbit = properties.getBroker().getRabbit();
     String queuePrefix = rabbit.getQueuePrefix();
-    return new RabbitConsumer(queuePrefix, eventDeliverer);
+    return new RabbitConsumer(queuePrefix, eventDeliverer, rabbit.isEnableLocalModel());
   }
 
   @Bean

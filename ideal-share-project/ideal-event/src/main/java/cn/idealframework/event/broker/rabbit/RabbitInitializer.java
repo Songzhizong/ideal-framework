@@ -60,8 +60,8 @@ public class RabbitInitializer implements EventListenerInitializedListener {
       map.forEach((listenerName, h) -> {
         Queue queue;
         if (enableLocalModel) {
-          listenerName = UUID.randomUUID().toString().replace("-", "");
-          String queueName = RabbitEventUtils.generateQueueName(queuePrefix, listenerName);
+          String uuid = UUID.randomUUID().toString().replace("-", "");
+          String queueName = RabbitEventUtils.generateQueueName(queuePrefix, listenerName) + "-" + uuid;
           queue = new Queue(queueName, false, false, true);
           QUEUE_NAMES.add(queueName);
         } else {
