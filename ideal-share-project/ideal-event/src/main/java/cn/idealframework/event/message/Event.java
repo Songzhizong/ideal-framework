@@ -33,7 +33,7 @@ public interface Event extends EventSupplier {
 
   @Nonnull
   @Override
-  default EventMessage<?> get() {
+  default EventMessage<?> getEventMessage() {
     return EventMessage.of(this);
   }
 }

@@ -31,7 +31,7 @@ public interface EventMessageBuilder extends EventSupplier {
 
   @Nonnull
   @Override
-  default EventMessage<? extends DomainEvent> get() {
+  default EventMessage<? extends DomainEvent> getEventMessage() {
     return this.build();
   }
 }

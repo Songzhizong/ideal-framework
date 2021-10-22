@@ -81,7 +81,7 @@ public interface EventMessage<T> extends EventSupplier {
 
   @Nonnull
   @Override
-  default EventMessage<?> get() {
+  default EventMessage<?> getEventMessage() {
     return this;
   }
 }

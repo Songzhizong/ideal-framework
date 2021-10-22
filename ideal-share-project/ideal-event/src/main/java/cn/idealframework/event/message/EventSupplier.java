@@ -23,5 +23,5 @@ import javax.annotation.Nonnull;
 public interface EventSupplier {
 
   @Nonnull
-  EventMessage<?> get();
+  EventMessage<?> getEventMessage();
 }
