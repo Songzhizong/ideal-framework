@@ -18,10 +18,7 @@ package cn.idealframework.boot.autoconfigure.event.broker;
 import cn.idealframework.boot.autoconfigure.event.IdealBootEventProperties;
 import cn.idealframework.boot.autoconfigure.event.broker.properties.rabbit.IdealBootEventRabbitProperties;
 import cn.idealframework.boot.starter.module.event.EventModule;
-import cn.idealframework.event.broker.rabbit.IdealRabbitMessageListenerContainer;
-import cn.idealframework.event.broker.rabbit.RabbitConsumer;
-import cn.idealframework.event.broker.rabbit.RabbitEventPublisher;
-import cn.idealframework.event.broker.rabbit.RabbitInitializer;
+import cn.idealframework.event.broker.rabbit.*;
 import cn.idealframework.event.listener.EventDeliverer;
 import cn.idealframework.event.listener.EventListenerInitializer;
 import cn.idealframework.event.persistence.EventMessageRepository;
@@ -99,7 +96,7 @@ public class IdealBootEventRabbitBrokerAutoConfigure implements ApplicationRunne
 
   @Override
   public void run(ApplicationArguments args) {
-    String[] queues = RabbitInitializer.QUEUE_NAMES.toArray(new String[0]);
+    String[] queues = RabbitEventUtils.getAllQueueName().toArray(new String[0]);
     log.info("Listen queues: " + JsonUtils.toJsonString(queues));
     listenerContainer.addQueueNames(queues);
   }

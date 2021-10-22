@@ -52,11 +52,7 @@ public class RabbitConsumer implements ChannelAwareMessageListener {
   public void onMessage(@Nonnull Message message, @Nonnull Channel channel) throws Exception {
     long deliveryTag = message.getMessageProperties().getDeliveryTag();
     String consumerQueue = message.getMessageProperties().getConsumerQueue();
-    String listenerName = RabbitEventUtils.getListenerNameByQueueName(queuePrefix, consumerQueue);
-    if (enableLocalModel) {
-      int lastIndexOf = listenerName.lastIndexOf("-");
-      listenerName = listenerName.substring(0, lastIndexOf);
-    }
+    String listenerName = RabbitEventUtils.getListenerNameByQueueName(queuePrefix, consumerQueue, enableLocalModel);
     byte[] body = message.getBody();
     String value = new String(body, StandardCharsets.UTF_8);
     log.debug("Queue : " + consumerQueue + " message value: " + value);

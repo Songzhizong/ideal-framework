@@ -24,16 +24,12 @@ import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.core.TopicExchange;
 
 import javax.annotation.Nonnull;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 /**
  * @author 宋志宗 on 2021/4/25
  */
 public class RabbitInitializer implements EventListenerInitializedListener {
-  public static final List<String> QUEUE_NAMES = new ArrayList<>();
   private final AmqpAdmin amqpAdmin;
   private final String queuePrefix;
   private final String publishExchange;
@@ -58,16 +54,13 @@ public class RabbitInitializer implements EventListenerInitializedListener {
       TopicExchange exchange = new TopicExchange(publishExchange);
       amqpAdmin.declareExchange(exchange);
       map.forEach((listenerName, h) -> {
+        String queueName = RabbitEventUtils
+          .generateQueueName(queuePrefix, listenerName, enableLocalModel);
         Queue queue;
         if (enableLocalModel) {
-          String uuid = UUID.randomUUID().toString().replace("-", "");
-          String queueName = RabbitEventUtils.generateQueueName(queuePrefix, listenerName) + "-" + uuid;
           queue = new Queue(queueName, false, false, true);
-          QUEUE_NAMES.add(queueName);
         } else {
-          String queueName = RabbitEventUtils.generateQueueName(queuePrefix, listenerName);
           queue = new Queue(queueName);
-          QUEUE_NAMES.add(queueName);
         }
         amqpAdmin.declareQueue(queue);
         amqpAdmin.declareBinding(BindingBuilder.bind(queue).to(exchange).with(topic));

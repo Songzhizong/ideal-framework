@@ -16,22 +16,50 @@
 package cn.idealframework.event.broker.rabbit;
 
 import javax.annotation.Nonnull;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author 宋志宗 on 2021/4/25
  */
 public final class RabbitEventUtils {
+  private static final Map<String, String> QUEUE_NAME_MAP = new ConcurrentHashMap<>();
 
   private RabbitEventUtils() {
   }
 
   @Nonnull
-  public static String generateQueueName(@Nonnull String queuePrefix, @Nonnull String listenerName) {
-    return queuePrefix + listenerName;
+  public static List<String> getAllQueueName() {
+    return new ArrayList<>(QUEUE_NAME_MAP.values());
   }
 
   @Nonnull
-  public static String getListenerNameByQueueName(@Nonnull String queuePrefix, @Nonnull String queueName) {
-    return queueName.substring(queuePrefix.length());
+  public static String generateQueueName(@Nonnull String queuePrefix,
+                                         @Nonnull String listenerName,
+                                         boolean enableLocalModel) {
+    String queueName = queuePrefix + listenerName;
+    return QUEUE_NAME_MAP.computeIfAbsent(queueName, k -> {
+      if (enableLocalModel) {
+        String uuid = UUID.randomUUID().toString().replace("-", "");
+        return queueName + "-" + uuid;
+      } else {
+        return queueName;
+      }
+    });
+  }
+
+  @Nonnull
+  public static String getListenerNameByQueueName(@Nonnull String queuePrefix,
+                                                  @Nonnull String queueName,
+                                                  boolean enableLocalModel) {
+    String listenerName = queueName.substring(queuePrefix.length());
+    if (enableLocalModel) {
+      int lastIndexOf = listenerName.lastIndexOf("-");
+      listenerName = listenerName.substring(0, lastIndexOf);
+    }
+    return listenerName;
   }
 }
