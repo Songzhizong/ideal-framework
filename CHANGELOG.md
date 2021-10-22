@@ -8,6 +8,8 @@
 
 ### 🔨 Dependency Upgrades
 
+- spring boot升级到 2.5.6
+
 
 
 # 2.5.5.2021.10.21

@@ -20,7 +20,7 @@
   <parent>
     <groupId>cn.idealframework.boot</groupId>
     <artifactId>ideal-boot-starters</artifactId>
-    <version>2.5.5-SNAPSHOT</version>
+    <version>2.5.6-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <artifactId>ideal-boot-starter-operation</artifactId>
@@ -29,17 +29,17 @@
     <dependency>
       <groupId>cn.idealframework</groupId>
       <artifactId>ideal-operation</artifactId>
-      <version>2.5.5-SNAPSHOT</version>
+      <version>2.5.6-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>cn.idealframework.boot</groupId>
       <artifactId>ideal-boot-starter</artifactId>
-      <version>2.5.5-SNAPSHOT</version>
+      <version>2.5.6-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>cn.idealframework.boot</groupId>
       <artifactId>ideal-boot-starter-module-operation</artifactId>
-      <version>2.5.5-SNAPSHOT</version>
+      <version>2.5.6-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>org.springframework.boot</groupId>
