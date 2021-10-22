@@ -15,10 +15,7 @@
  */
 package cn.idealframework.event.message.impl;
 
-import cn.idealframework.event.message.DomainEvent;
-import cn.idealframework.event.message.EventHeaders;
-import cn.idealframework.event.message.EventHeadersDeserializer;
-import cn.idealframework.event.message.EventMessage;
+import cn.idealframework.event.message.*;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import lombok.Getter;
 import lombok.Setter;
@@ -80,30 +77,56 @@ public class SimpleEventMessage<T> implements EventMessage<T> {
   }
 
   @Nonnull
-  public static <T extends DomainEvent> SimpleEventMessage<T> of(@Nonnull T event) {
-    return new SimpleEventMessage<>(
-      null,
-      event.getTopic(),
-      event.getAggregateType(),
-      event.getAggregateId(),
-      EventHeaders.create(),
-      event,
-      System.currentTimeMillis()
-    );
+  public static <T extends Event> SimpleEventMessage<T> of(@Nonnull T event) {
+    if (event instanceof DomainEvent) {
+      DomainEvent domainEvent = (DomainEvent) event;
+      return new SimpleEventMessage<>(
+        null,
+        domainEvent.getTopic(),
+        domainEvent.getAggregateType(),
+        domainEvent.getAggregateId(),
+        EventHeaders.create(),
+        event,
+        System.currentTimeMillis()
+      );
+    } else {
+      return new SimpleEventMessage<>(
+        null,
+        event.getTopic(),
+        null,
+        null,
+        EventHeaders.create(),
+        event,
+        System.currentTimeMillis()
+      );
+    }
   }
 
   @Nonnull
-  public static <T extends DomainEvent> SimpleEventMessage<T> of(@Nonnull T event,
-                                                                 @Nullable EventHeaders headers) {
-    return new SimpleEventMessage<>(
-      null,
-      event.getTopic(),
-      event.getAggregateType(),
-      event.getAggregateId(),
-      headers,
-      event,
-      System.currentTimeMillis()
-    );
+  public static <T extends Event> SimpleEventMessage<T> of(@Nonnull T event,
+                                                           @Nullable EventHeaders headers) {
+    if (event instanceof DomainEvent) {
+      DomainEvent domainEvent = (DomainEvent) event;
+      return new SimpleEventMessage<>(
+        null,
+        domainEvent.getTopic(),
+        domainEvent.getAggregateType(),
+        domainEvent.getAggregateId(),
+        headers,
+        event,
+        System.currentTimeMillis()
+      );
+    } else {
+      return new SimpleEventMessage<>(
+        null,
+        event.getTopic(),
+        null,
+        null,
+        headers,
+        event,
+        System.currentTimeMillis()
+      );
+    }
   }
 
   @Nonnull

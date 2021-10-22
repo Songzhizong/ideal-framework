@@ -28,13 +28,13 @@ import java.beans.Transient;
  */
 public interface EventMessage<T> extends EventSupplier {
   @Nonnull
-  static <T extends DomainEvent> EventMessage<T> of(@Nonnull T event) {
+  static <T extends Event> EventMessage<T> of(@Nonnull T event) {
     return SimpleEventMessage.of(event);
   }
 
   @Nonnull
-  static <T extends DomainEvent> EventMessage<T> of(@Nonnull T event,
-                                                    @Nullable EventHeaders headers) {
+  static <T extends Event> EventMessage<T> of(@Nonnull T event,
+                                              @Nullable EventHeaders headers) {
     return SimpleEventMessage.of(event, headers);
   }
 

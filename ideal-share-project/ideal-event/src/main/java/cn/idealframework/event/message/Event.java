@@ -15,29 +15,25 @@
  */
 package cn.idealframework.event.message;
 
-import javax.annotation.Nullable;
+import javax.annotation.Nonnull;
 import java.beans.Transient;
 
 /**
- * 领域事件接口
- *
- * @author 宋志宗 on 2021/4/22
+ * @author 宋志宗 on 2021/10/22
  */
-public interface DomainEvent extends Event {
+public interface Event extends EventSupplier {
 
   /**
-   * @return 聚合类型
+   * @return 事件类型
    * @author 宋志宗 on 2021/4/22
    */
-  @Nullable
+  @Nonnull
   @Transient
-  String getAggregateType();
+  String getTopic();
 
-  /**
-   * @return 聚合的唯一id
-   * @author 宋志宗 on 2021/4/22
-   */
-  @Nullable
-  @Transient
-  String getAggregateId();
+  @Nonnull
+  @Override
+  default EventMessage<?> get() {
+    return EventMessage.of(this);
+  }
 }
