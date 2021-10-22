@@ -4,6 +4,8 @@
 
 ### ⭐ New Features
 
+- 使用RabbitMQ作为事件代理时, 支持自动删除队列. 通过`ideal.event.broker.rabbit.auto-delete-queue`进行配置, 默认`false`不开启.
+
 ### 🐞 Bug Fixes
 
 ### 🔨 Dependency Upgrades
