@@ -37,13 +37,13 @@ public class RabbitInitializer implements EventListenerInitializedListener {
   private final AmqpAdmin amqpAdmin;
   private final String queuePrefix;
   private final String publishExchange;
-  private final boolean autoDeleteQueue;
+  private final boolean enableLocalModel;
 
   public RabbitInitializer(@Nonnull AmqpAdmin amqpAdmin,
                            @Nonnull String queuePrefix,
                            @Nonnull String publishExchange,
-                           boolean autoDeleteQueue) {
-    this.autoDeleteQueue = autoDeleteQueue;
+                           boolean enableLocalModel) {
+    this.enableLocalModel = enableLocalModel;
     if (!queuePrefix.endsWith(".")) {
       queuePrefix = queuePrefix + ".";
     }
@@ -59,7 +59,7 @@ public class RabbitInitializer implements EventListenerInitializedListener {
       amqpAdmin.declareExchange(exchange);
       map.forEach((listenerName, h) -> {
         Queue queue;
-        if (autoDeleteQueue) {
+        if (enableLocalModel) {
           listenerName = UUID.randomUUID().toString().replace("-", "");
           String queueName = RabbitEventUtils.generateQueueName(queuePrefix, listenerName);
           queue = new Queue(queueName, false, false, true);

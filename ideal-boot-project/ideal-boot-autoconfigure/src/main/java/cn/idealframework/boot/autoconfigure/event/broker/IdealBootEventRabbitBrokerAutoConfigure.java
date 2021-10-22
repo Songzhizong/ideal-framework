@@ -64,7 +64,7 @@ public class IdealBootEventRabbitBrokerAutoConfigure implements ApplicationRunne
     IdealBootEventRabbitProperties rabbit = properties.getBroker().getRabbit();
     String queuePrefix = rabbit.getQueuePrefix();
     String exchange = rabbit.getExchange();
-    RabbitInitializer rabbitInitializer = new RabbitInitializer(amqpAdmin, queuePrefix, exchange, rabbit.isAutoDeleteQueue());
+    RabbitInitializer rabbitInitializer = new RabbitInitializer(amqpAdmin, queuePrefix, exchange, rabbit.isEnableLocalModel());
     eventListenerInitializer.addCompleteListener(rabbitInitializer);
     return rabbitInitializer;
   }

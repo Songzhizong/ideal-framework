@@ -30,7 +30,10 @@ public class IdealBootEventRabbitProperties {
   /** 消费队列前缀 */
   private String queuePrefix = "event.queue";
 
-  private boolean autoDeleteQueue = false;
+  /**
+   * 是否开启本地模式
+   */
+  private boolean enableLocalModel = false;
 
   /** 消费者预取消息数 */
   private int prefetchCount = 0;
