@@ -16,6 +16,7 @@
 package cn.idealframework.event.message;
 
 import javax.annotation.Nonnull;
+import java.beans.Transient;
 
 /**
  * @author 宋志宗 on 2021/10/19
@@ -23,5 +24,6 @@ import javax.annotation.Nonnull;
 public interface EventSupplier {
 
   @Nonnull
+  @Transient
   EventMessage<?> getEventMessage();
 }
