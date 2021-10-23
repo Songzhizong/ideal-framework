@@ -23,6 +23,10 @@ import java.lang.reflect.Array;
 public class ArrayUtils {
   public static final int INDEX_NOT_FOUND = -1;
   public static final String[] EMPTY_STRING_ARRAY = new String[0];
+  /**
+   * An empty immutable {@code char} array.
+   */
+  public static final char[] EMPTY_CHAR_ARRAY = new char[0];
 
   public static boolean isEmpty(final Object[] array) {
     return getLength(array) == 0;
