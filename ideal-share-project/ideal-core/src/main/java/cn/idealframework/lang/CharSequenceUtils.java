@@ -20,7 +20,10 @@ package cn.idealframework.lang;
  */
 public class CharSequenceUtils {
 
+  static final int TO_STRING_LIMIT = 16;
   private static final int NOT_FOUND = -1;
+
+  //-----------------------------------------------------------------------
 
   /**
    * <p>{@code CharSequenceUtils} instances should NOT be constructed in
@@ -51,8 +54,6 @@ public class CharSequenceUtils {
   public static CharSequence subSequence(final CharSequence cs, final int start) {
     return cs == null ? null : cs.subSequence(start, cs.length());
   }
-
-  //-----------------------------------------------------------------------
 
   /**
    * Returns the index within {@code cs} of the first occurrence of the
@@ -203,8 +204,6 @@ public class CharSequenceUtils {
     return NOT_FOUND;
   }
 
-  static final int TO_STRING_LIMIT = 16;
-
   /**
    * Used by the lastIndexOf(CharSequence methods) as a green implementation of lastIndexOf
    *
@@ -234,6 +233,7 @@ public class CharSequenceUtils {
       start = len1;
     }
 
+    //noinspection ConstantConditions
     if (start < 0 || len2 < 0 || len2 > len1) {
       return NOT_FOUND;
     }

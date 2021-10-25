@@ -28,18 +28,14 @@ import java.util.regex.Pattern;
 @SuppressWarnings({"unused", "SpellCheckingInspection", "GrazieInspection"})
 public class StringUtils {
 
-  private static final int STRING_BUILDER_SIZE = 256;
-
   /**
    * A String for a space character.
    */
   public static final String SPACE = " ";
-
   /**
    * The empty String {@code ""}.
    */
   public static final String EMPTY = "";
-
   /**
    * A String for linefeed LF ("\n").
    *
@@ -47,7 +43,6 @@ public class StringUtils {
    * for Character and String Literals</a>
    */
   public static final String LF = "\n";
-
   /**
    * A String for carriage return CR ("\r").
    *
@@ -55,12 +50,11 @@ public class StringUtils {
    * for Character and String Literals</a>
    */
   public static final String CR = "\r";
-
   /**
    * Represents a failed index search.
    */
   public static final int INDEX_NOT_FOUND = -1;
-
+  private static final int STRING_BUILDER_SIZE = 256;
   /**
    * <p>The maximum size to which the padding constant(s) can expand.</p>
    */
@@ -70,6 +64,17 @@ public class StringUtils {
    * Pattern used in {@link #stripAccents(String)}.
    */
   private static final Pattern STRIP_ACCENTS_PATTERN = Pattern.compile("\\p{InCombiningDiacriticalMarks}+"); //$NON-NLS-1$
+
+  /**
+   * <p>{@code StringUtils} instances should NOT be constructed in
+   * standard programming. Instead, the class should be used as
+   * {@code StringUtils.trim(" foo ");}.</p>
+   *
+   * <p>This constructor is public to permit tools that require a JavaBean
+   * instance to operate.</p>
+   */
+  public StringUtils() {
+  }
 
   /**
    * <p>Abbreviates a String using ellipses. This will turn
@@ -3385,7 +3390,6 @@ public class StringUtils {
     List<?> subList = list.subList(startIndex, endIndex);
     return join(subList.iterator(), separator);
   }
-
 
   /**
    * <p>
@@ -7315,16 +7319,5 @@ public class StringUtils {
    */
   public static String valueOf(char[] value) {
     return value == null ? null : String.valueOf(value);
-  }
-
-  /**
-   * <p>{@code StringUtils} instances should NOT be constructed in
-   * standard programming. Instead, the class should be used as
-   * {@code StringUtils.trim(" foo ");}.</p>
-   *
-   * <p>This constructor is public to permit tools that require a JavaBean
-   * instance to operate.</p>
-   */
-  public StringUtils() {
   }
 }
