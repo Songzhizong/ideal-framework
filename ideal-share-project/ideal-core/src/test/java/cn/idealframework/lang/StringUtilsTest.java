@@ -13,31 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cn.idealframework.event.message;
+package cn.idealframework.lang;
 
-import javax.annotation.Nullable;
-import java.beans.Transient;
+import org.junit.Assert;
+import org.junit.Test;
 
 /**
- * 领域事件接口
- *
- * @author 宋志宗 on 2021/4/22
+ * @author 宋志宗 on 2021/10/25
  */
-public interface DomainEvent extends Event {
+public class StringUtilsTest {
 
-  /**
-   * @return 聚合类型
-   * @author 宋志宗 on 2021/4/22
-   */
-  @Nullable
-  @Transient
-  String getAggregateType();
-
-  /**
-   * @return 聚合的唯一id
-   * @author 宋志宗 on 2021/4/22
-   */
-  @Nullable
-  @Transient
-  String getAggregateId();
+  @Test
+  public void testJoin() {
+    String[] s = {null, "1", null, "3", "4", null};
+    String join = StringUtils.join(s, ",");
+    System.out.println(join);
+    Assert.assertEquals(",1,,3,4,", join);
+  }
 }

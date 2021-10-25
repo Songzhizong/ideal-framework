@@ -55,7 +55,7 @@ public abstract class AbstractEventPublisher implements EventPublisher {
   private List<EventMessage<?>> localPublish(@Nonnull Collection<EventSupplier> suppliers) {
     List<EventMessage<?>> messages = new ArrayList<>(suppliers.size());
     for (EventSupplier supplier : suppliers) {
-      EventMessage<?> message = supplier.get();
+      EventMessage<?> message = supplier.getEventMessage();
       messages.add(message);
       String topic = message.getTopic();
       EventHeaders headers = message.getHeaders();

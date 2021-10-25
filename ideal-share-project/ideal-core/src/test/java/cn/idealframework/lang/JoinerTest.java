@@ -28,12 +28,12 @@ public class JoinerTest {
   @Test
   public void test() {
     String s1 = "{1,2,3,5}";
-    String s2 = "{1,2,3,null,5}";
+    String s2 = "{,1,2,3,,5,}";
 
     Joiner skipNull = Joiner.builder(",").prefix("{").postfix("}").skipNull().build();
     Joiner joiner = Joiner.builder(",").prefix("{").postfix("}").build();
 
-    List<String> stringList = Lists.of("1", "2", "3", null, "5");
+    List<String> stringList = Lists.of(null, "1", "2", "3", null, "5", null);
     String join1 = skipNull.join(stringList);
     Assert.assertEquals(s1, join1);
 
@@ -41,7 +41,7 @@ public class JoinerTest {
     Assert.assertEquals(s2, join2);
 
 
-    List<Integer> intList = Lists.of(1, 2, 3, null, 5);
+    List<Integer> intList = Lists.of(null, 1, 2, 3, null, 5, null);
     String join3 = skipNull.join(intList);
     Assert.assertEquals(s1, join3);
 

@@ -41,7 +41,7 @@ public class ServletUtils {
       int index = ip.indexOf(',');
       if (index > -1) {
         String substring = ip.substring(0, index);
-        if (StringUtils.notEqualsIgnoreCase(substring, UNKNOWN)) {
+        if (!StringUtils.equalsIgnoreCase(substring, UNKNOWN)) {
           return substring;
         }
       } else {

@@ -1,5 +1,22 @@
 <h1>更新日志</h1>
 
+# 2.5.6.2021.10.25
+
+### ⭐ New Features
+
+- 为RabbitMQ事件代理添加本地开发模式. 通过`ideal.event.broker.rabbit.enable-local-model`进行配置, 默认`false`不开启.
+  本地开发模式的Listener会在RabbitMQ创建一个随机名称的自动删除队列, 以支持多个客户端消费相同的消息.
+- `ArrayUtils`、`StringUtils`、`RandomUtils`、`RandomStringUtils`添加一些新方法.
+
+### 🐞 Bug Fixes
+
+- 修复Joiner.joinSkipNull()首个元素为null时不能正确跳过的问题
+- Joiner.join()出现null元素时,以空字符串拼接而非字符串`null`
+
+### 🔨 Dependency Upgrades
+
+- spring boot升级到 2.5.6
+
 # 2.5.5.2021.10.21
 
 ### ⚠️ Compatibility

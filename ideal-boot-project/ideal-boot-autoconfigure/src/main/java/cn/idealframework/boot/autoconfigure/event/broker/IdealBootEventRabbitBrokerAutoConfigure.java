@@ -21,8 +21,6 @@ import cn.idealframework.boot.starter.module.event.EventModule;
 import cn.idealframework.event.broker.rabbit.*;
 import cn.idealframework.event.listener.EventDeliverer;
 import cn.idealframework.event.listener.EventListenerInitializer;
-import cn.idealframework.event.listener.RemoteEventProcessor;
-import cn.idealframework.event.listener.RemoteEventProcessorFactory;
 import cn.idealframework.event.persistence.EventMessageRepository;
 import cn.idealframework.event.publisher.EventPublisher;
 import cn.idealframework.json.JsonUtils;
@@ -41,9 +39,6 @@ import org.springframework.context.annotation.Bean;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
 /**
  * @author 宋志宗 on 2021/7/1
@@ -66,7 +61,7 @@ public class IdealBootEventRabbitBrokerAutoConfigure implements ApplicationRunne
     IdealBootEventRabbitProperties rabbit = properties.getBroker().getRabbit();
     String queuePrefix = rabbit.getQueuePrefix();
     String exchange = rabbit.getExchange();
-    RabbitInitializer rabbitInitializer = new RabbitInitializer(amqpAdmin, queuePrefix, exchange);
+    RabbitInitializer rabbitInitializer = new RabbitInitializer(amqpAdmin, queuePrefix, exchange, rabbit.isEnableLocalModel());
     eventListenerInitializer.addCompleteListener(rabbitInitializer);
     return rabbitInitializer;
   }
@@ -84,7 +79,7 @@ public class IdealBootEventRabbitBrokerAutoConfigure implements ApplicationRunne
   public RabbitConsumer rabbitConsumer(EventDeliverer eventDeliverer) {
     IdealBootEventRabbitProperties rabbit = properties.getBroker().getRabbit();
     String queuePrefix = rabbit.getQueuePrefix();
-    return new RabbitConsumer(queuePrefix, eventDeliverer);
+    return new RabbitConsumer(queuePrefix, eventDeliverer, rabbit.isEnableLocalModel());
   }
 
   @Bean
@@ -101,16 +96,8 @@ public class IdealBootEventRabbitBrokerAutoConfigure implements ApplicationRunne
 
   @Override
   public void run(ApplicationArguments args) {
-    IdealBootEventRabbitProperties rabbit = properties.getBroker().getRabbit();
-    String queuePrefix = rabbit.getQueuePrefix();
-    if (!queuePrefix.endsWith(".")) {
-      queuePrefix = queuePrefix + ".";
-    }
-    Map<String, Map<String, RemoteEventProcessor>> all = RemoteEventProcessorFactory.getAll();
-    List<String> queueNames = new ArrayList<>();
-    String finalQueuePrefix = queuePrefix;
-    all.forEach((t, m) -> m.forEach((n, h) -> queueNames.add(RabbitEventUtils.generateQueueName(finalQueuePrefix, n))));
-    log.info("Listen queues: " + JsonUtils.toJsonString(queueNames));
-    listenerContainer.addQueueNames(queueNames.toArray(new String[0]));
+    String[] queues = RabbitEventUtils.getAllQueueName().toArray(new String[0]);
+    log.info("Listen queues: " + JsonUtils.toJsonString(queues));
+    listenerContainer.addQueueNames(queues);
   }
 }

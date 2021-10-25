@@ -21,6 +21,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.Iterator;
+import java.util.List;
 
 /**
  * 连接器
@@ -50,6 +51,12 @@ public class Joiner {
   }
 
   @Nonnull
+  public static <T> String join(@Nonnull T[] ts, @Nonnull String separator) {
+    List<T> ts1 = Arrays.asList(ts);
+    return join(ts1, separator);
+  }
+
+  @Nonnull
   public static String join(@Nonnull Iterable<?> parts, @Nonnull String separator) {
     StringBuilder stringBuilder = new StringBuilder();
     Iterator<?> iterator = parts.iterator();
@@ -64,6 +71,13 @@ public class Joiner {
     StringBuilder stringBuilder = new StringBuilder();
     Iterator<?> iterator = parts.iterator();
     return appendTo(stringBuilder, iterator, separator, prefix, postfix, false).toString();
+  }
+
+
+  @Nonnull
+  public static <T> String joinSkipNull(@Nonnull T[] ts, @Nonnull String separator) {
+    List<T> ts1 = Arrays.asList(ts);
+    return joinSkipNull(ts1, separator);
   }
 
   @Nonnull
@@ -97,10 +111,11 @@ public class Joiner {
       CharSequence part = toString(parts.next());
       if (part == null) {
         if (!skipNull) {
-          stringBuilder.append("null");
+          stringBuilder.append(separator);
         }
       } else {
         stringBuilder.append(part);
+        stringBuilder.append(separator);
       }
     }
     while (parts.hasNext()) {
@@ -108,13 +123,13 @@ public class Joiner {
       if (part == null) {
         if (!skipNull) {
           stringBuilder.append(separator);
-          stringBuilder.append("null");
         }
       } else {
-        stringBuilder.append(separator);
         stringBuilder.append(part);
+        stringBuilder.append(separator);
       }
     }
+    stringBuilder.deleteCharAt(stringBuilder.length() - 1);
     if (postfix != null) {
       stringBuilder.append(postfix);
     }
