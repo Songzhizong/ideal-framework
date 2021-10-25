@@ -36,11 +36,11 @@ public class ServletUtils {
    */
   public static String getOriginalIp(@Nonnull HttpServletRequest request) {
     String ip = request.getHeader("X-Real-IP");
-    if (StringUtils.isNotBlank(ip) && StringUtils.notEqualsIgnoreCase(ip, UNKNOWN)) {
+    if (StringUtils.isNotBlank(ip) && !StringUtils.equalsIgnoreCase(ip, UNKNOWN)) {
       return ip;
     }
     ip = request.getHeader("X-Forwarded-For");
-    if (StringUtils.isNotBlank(ip) && StringUtils.notEqualsIgnoreCase(ip, UNKNOWN)) {
+    if (StringUtils.isNotBlank(ip) && !StringUtils.equalsIgnoreCase(ip, UNKNOWN)) {
       int index = ip.indexOf(',');
       if (index > -1) {
         return ip.substring(0, index);
