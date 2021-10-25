@@ -20,7 +20,7 @@
   <parent>
     <groupId>cn.idealframework.boot</groupId>
     <artifactId>ideal-boot-starters</artifactId>
-    <version>2.5.6.2021.10.25</version>
+    <version>2.5.6-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <artifactId>ideal-boot-starter-event</artifactId>
@@ -29,17 +29,17 @@
     <dependency>
       <groupId>cn.idealframework</groupId>
       <artifactId>ideal-event</artifactId>
-      <version>2.5.6.2021.10.25</version>
+      <version>2.5.6-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>cn.idealframework.boot</groupId>
       <artifactId>ideal-boot-starter</artifactId>
-      <version>2.5.6.2021.10.25</version>
+      <version>2.5.6-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>cn.idealframework.boot</groupId>
       <artifactId>ideal-boot-starter-module-event</artifactId>
-      <version>2.5.6.2021.10.25</version>
+      <version>2.5.6-SNAPSHOT</version>
     </dependency>
   </dependencies>
 </project>

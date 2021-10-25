@@ -1,5 +1,15 @@
 <h1>更新日志</h1>
 
+# developer
+
+### ⭐ New Features
+
+### 🐞 Bug Fixes
+
+### 🔨 Dependency Upgrades
+
+
+
 # 2.5.6.2021.10.25
 
 ### ⭐ New Features
@@ -16,6 +26,8 @@
 ### 🔨 Dependency Upgrades
 
 - spring boot升级到 2.5.6
+
+
 
 # 2.5.5.2021.10.21
 
