@@ -9,6 +9,9 @@
 
 ### 🐞 Bug Fixes
 
+- 修复Joiner.joinSkipNull()首个元素为null时不能正确跳过的问题
+- Joiner.join()出现null元素时,以空字符串拼接而非字符串`null`
+
 ### 🔨 Dependency Upgrades
 
 - spring boot升级到 2.5.6
