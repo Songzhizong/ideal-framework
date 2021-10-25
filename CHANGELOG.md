@@ -4,7 +4,8 @@
 
 ### ⭐ New Features
 
-- 为RabbitMQ事件代理添加本地开发模式. 通过`ideal.event.broker.rabbit.enable-local-model`进行配置, 默认`false`不开启. 本地开发模式会在RabbitMQ创建一个随机名称的自动删除队列, 以支持多个客户端消费相同的消息.
+- 为RabbitMQ事件代理添加本地开发模式. 通过`ideal.event.broker.rabbit.enable-local-model`进行配置, 默认`false`不开启. 本地开发模式的Listener会在RabbitMQ创建一个随机名称的自动删除队列, 以支持多个客户端消费相同的消息.
+- `ArrayUtils`、`StringUtils`、`RandomUtils`、`RandomStringUtils`添加一些新方法.
 
 ### 🐞 Bug Fixes
 
