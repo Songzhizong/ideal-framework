@@ -182,9 +182,6 @@ public final class Asserts {
     throw new AssertException(message);
   }
 
-  private Asserts() {
-  }
-
   public static class AssertException extends VisibleRuntimeException {
 
     public AssertException(@Nonnull String message) {
@@ -194,5 +191,8 @@ public final class Asserts {
     public AssertException() {
       super(400, "");
     }
+  }
+
+  private Asserts() {
   }
 }
