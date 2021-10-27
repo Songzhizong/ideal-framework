@@ -318,6 +318,33 @@ public final class Lists {
     return result;
   }
 
+  /**
+   * 对集合进行分块
+   *
+   * @param list 集合
+   * @param size 块大小
+   * @author 宋志宗 on 2021/10/27
+   */
+  @Nonnull
+  public static <E> List<List<E>> chunked(@Nonnull List<E> list, int size) {
+    return CollectionUtils.chunked(list, size);
+  }
+
+
+  /**
+   * 对集合进行分块并转换
+   *
+   * @param list      集合
+   * @param size      块大小
+   * @param transform 转换函数
+   * @author 宋志宗 on 2021/10/27
+   */
+  @Nonnull
+  public static <E, R> List<List<R>> chunked(@Nonnull List<E> list,
+                                             int size, @Nonnull Function<E, R> transform) {
+    return CollectionUtils.chunked(list, size, transform);
+  }
+
   private Lists() {
   }
 }

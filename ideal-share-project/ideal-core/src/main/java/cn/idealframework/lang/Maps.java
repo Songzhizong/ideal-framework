@@ -24,6 +24,7 @@ import java.util.Map;
 /**
  * @author 宋志宗 on 2021/7/9
  */
+@SuppressWarnings("DuplicatedCode")
 public final class Maps {
 
   @Nonnull
@@ -98,6 +99,94 @@ public final class Maps {
     map.put(k4, v4);
     map.put(k5, v5);
     map.put(k6, v6);
+    return Collections.unmodifiableMap(map);
+  }
+
+  @Nonnull
+  public static <K, V> Map<K, V> of(@Nonnull K k1, @Nonnull V v1,
+                                    @Nonnull K k2, @Nonnull V v2,
+                                    @Nonnull K k3, @Nonnull V v3,
+                                    @Nonnull K k4, @Nonnull V v4,
+                                    @Nonnull K k5, @Nonnull V v5,
+                                    @Nonnull K k6, @Nonnull V v6,
+                                    @Nonnull K k7, @Nonnull V v7) {
+    Map<K, V> map = new HashMap<>(16);
+    map.put(k1, v1);
+    map.put(k2, v2);
+    map.put(k3, v3);
+    map.put(k4, v4);
+    map.put(k5, v5);
+    map.put(k6, v6);
+    map.put(k7, v7);
+    return Collections.unmodifiableMap(map);
+  }
+
+  @Nonnull
+  public static <K, V> Map<K, V> of(@Nonnull K k1, @Nonnull V v1,
+                                    @Nonnull K k2, @Nonnull V v2,
+                                    @Nonnull K k3, @Nonnull V v3,
+                                    @Nonnull K k4, @Nonnull V v4,
+                                    @Nonnull K k5, @Nonnull V v5,
+                                    @Nonnull K k6, @Nonnull V v6,
+                                    @Nonnull K k7, @Nonnull V v7,
+                                    @Nonnull K k8, @Nonnull V v8) {
+    Map<K, V> map = new HashMap<>(16);
+    map.put(k1, v1);
+    map.put(k2, v2);
+    map.put(k3, v3);
+    map.put(k4, v4);
+    map.put(k5, v5);
+    map.put(k6, v6);
+    map.put(k7, v7);
+    map.put(k8, v8);
+    return Collections.unmodifiableMap(map);
+  }
+
+  @Nonnull
+  public static <K, V> Map<K, V> of(@Nonnull K k1, @Nonnull V v1,
+                                    @Nonnull K k2, @Nonnull V v2,
+                                    @Nonnull K k3, @Nonnull V v3,
+                                    @Nonnull K k4, @Nonnull V v4,
+                                    @Nonnull K k5, @Nonnull V v5,
+                                    @Nonnull K k6, @Nonnull V v6,
+                                    @Nonnull K k7, @Nonnull V v7,
+                                    @Nonnull K k8, @Nonnull V v8,
+                                    @Nonnull K k9, @Nonnull V v9) {
+    Map<K, V> map = new HashMap<>(16);
+    map.put(k1, v1);
+    map.put(k2, v2);
+    map.put(k3, v3);
+    map.put(k4, v4);
+    map.put(k5, v5);
+    map.put(k6, v6);
+    map.put(k7, v7);
+    map.put(k8, v8);
+    map.put(k9, v9);
+    return Collections.unmodifiableMap(map);
+  }
+
+  @Nonnull
+  public static <K, V> Map<K, V> of(@Nonnull K k1, @Nonnull V v1,
+                                    @Nonnull K k2, @Nonnull V v2,
+                                    @Nonnull K k3, @Nonnull V v3,
+                                    @Nonnull K k4, @Nonnull V v4,
+                                    @Nonnull K k5, @Nonnull V v5,
+                                    @Nonnull K k6, @Nonnull V v6,
+                                    @Nonnull K k7, @Nonnull V v7,
+                                    @Nonnull K k8, @Nonnull V v8,
+                                    @Nonnull K k9, @Nonnull V v9,
+                                    @Nonnull K k10, @Nonnull V v10) {
+    Map<K, V> map = new HashMap<>(16);
+    map.put(k1, v1);
+    map.put(k2, v2);
+    map.put(k3, v3);
+    map.put(k4, v4);
+    map.put(k5, v5);
+    map.put(k6, v6);
+    map.put(k7, v7);
+    map.put(k8, v8);
+    map.put(k9, v9);
+    map.put(k10, v10);
     return Collections.unmodifiableMap(map);
   }
 
