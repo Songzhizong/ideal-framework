@@ -52,6 +52,17 @@ public class Result<T> extends BasicResult {
   }
 
   @Nonnull
+  public static <T> Result<T> create(boolean success, int code,
+                                     @Nullable String message, @Nullable T data) {
+    Result<T> res = new Result<>();
+    res.setSuccess(success);
+    res.setCode(code);
+    res.setMessage(message);
+    res.setData(data);
+    return res;
+  }
+
+  @Nonnull
   public static <T> Result<T> success(@Nullable String message) {
     Result<T> res = new Result<>();
     res.setSuccess(true);

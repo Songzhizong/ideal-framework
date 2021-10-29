@@ -4,11 +4,12 @@
 
 ### ⭐ New Features
 
+- 集合类新增chunked方法, 用于集合分块
+- Result新增create方法
+
 ### 🐞 Bug Fixes
 
 ### 🔨 Dependency Upgrades
-
-
 
 # 2.5.6.2021.10.25
 
