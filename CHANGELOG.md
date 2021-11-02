@@ -6,6 +6,9 @@
 
 - 集合类新增chunked方法, 用于集合分块
 - Result新增create方法
+- Maps工具类添加更多的of方法
+- 新增Pair类
+- 添加jpa converter
 
 ### 🐞 Bug Fixes
 
