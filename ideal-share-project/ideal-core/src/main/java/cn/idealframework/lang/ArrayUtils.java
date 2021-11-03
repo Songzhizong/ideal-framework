@@ -15,6 +15,7 @@
  */
 package cn.idealframework.lang;
 
+import javax.annotation.Nonnull;
 import java.lang.reflect.Array;
 
 /**
@@ -285,4 +286,9 @@ public class ArrayUtils {
     return !isEmpty(array);
   }
 
+  @Nonnull
+  @SafeVarargs
+  public static <T> T[] of(T... ts) {
+    return ts;
+  }
 }
