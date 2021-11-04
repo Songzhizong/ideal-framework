@@ -49,10 +49,10 @@ public class RabbitInitializer implements EventListenerInitializedListener {
   }
 
   public void initialize() {
+    TopicExchange exchange = new TopicExchange(publishExchange);
+    amqpAdmin.declareExchange(exchange);
     Map<String, Map<String, RemoteEventProcessor>> all = RemoteEventProcessorFactory.getAll();
     all.forEach((topic, map) -> {
-      TopicExchange exchange = new TopicExchange(publishExchange);
-      amqpAdmin.declareExchange(exchange);
       map.forEach((listenerName, h) -> {
         String queueName = RabbitEventUtils
           .generateQueueName(queuePrefix, listenerName, enableLocalModel);

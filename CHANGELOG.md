@@ -12,6 +12,8 @@
 
 ### 🐞 Bug Fixes
 
+- 修复RabbitMQ event broker启动时无法自动创建exchange的问题
+
 ### 🔨 Dependency Upgrades
 
 # 2.5.6.2021.10.25
