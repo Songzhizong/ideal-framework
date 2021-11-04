@@ -52,7 +52,7 @@ public class RabbitInitializer implements EventListenerInitializedListener {
     TopicExchange exchange = new TopicExchange(publishExchange);
     amqpAdmin.declareExchange(exchange);
     Map<String, Map<String, RemoteEventProcessor>> all = RemoteEventProcessorFactory.getAll();
-    all.forEach((topic, map) -> {
+    all.forEach((topic, map) ->
       map.forEach((listenerName, h) -> {
         String queueName = RabbitEventUtils
           .generateQueueName(queuePrefix, listenerName, enableLocalModel);
@@ -64,8 +64,8 @@ public class RabbitInitializer implements EventListenerInitializedListener {
         }
         amqpAdmin.declareQueue(queue);
         amqpAdmin.declareBinding(BindingBuilder.bind(queue).to(exchange).with(topic));
-      });
-    });
+      })
+    );
   }
 
   @Override
