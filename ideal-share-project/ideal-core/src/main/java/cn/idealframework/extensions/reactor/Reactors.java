@@ -15,7 +15,12 @@
  */
 package cn.idealframework.extensions.reactor;
 
+import cn.idealframework.trace.TraceContext;
+import cn.idealframework.trace.TraceContextHolder;
+import cn.idealframework.trace.WebClientTraceUtils;
+import lombok.extern.apachecommons.CommonsLog;
 import org.springframework.http.client.reactive.ReactorClientHttpConnector;
+import org.springframework.web.reactive.function.client.ClientRequest;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.util.DefaultUriBuilderFactory;
 import reactor.netty.http.client.HttpClient;
@@ -34,6 +39,8 @@ import java.util.function.Consumer;
  *
  * @author 宋志宗 on 2021/9/17
  */
+@SuppressWarnings("unused")
+@CommonsLog
 public final class Reactors {
 
   @Nonnull
@@ -88,7 +95,17 @@ public final class Reactors {
   public static WebClient.Builder webClientBuilder(@Nonnull HttpClient httpClient,
                                                    @Nullable WebClientOptions options) {
     WebClient.Builder builder = WebClient.builder()
-      .clientConnector(new ReactorClientHttpConnector(httpClient));
+      .clientConnector(new ReactorClientHttpConnector(httpClient))
+      .filter((request, next) -> {
+        TraceContext context = TraceContextHolder.current().orElse(null);
+        if (context != null) {
+          ClientRequest clientRequest = ClientRequest.from(request)
+            .headers(headers -> WebClientTraceUtils.setTraceHeaders(headers, context))
+            .build();
+          return next.exchange(clientRequest);
+        }
+        return next.exchange(request);
+      });
     if (options != null) {
       // URI 编码方式
       DefaultUriBuilderFactory.EncodingMode encodingMode = options.getEncodingMode();
@@ -123,22 +140,10 @@ public final class Reactors {
     ConnectionProvider.Builder builder = ConnectionProvider
       .builder(options.getName())
       .maxConnections(options.getMaxConnections());
-//    Duration evictionInterval = options.getEvictionInterval();
-//    if (evictionInterval != null && !evictionInterval.isZero()) {
-//      builder.evictInBackground(evictionInterval);
-//    }
     Integer pendingAcquireMaxCount = options.getPendingAcquireMaxCount();
     if (pendingAcquireMaxCount != null && pendingAcquireMaxCount > 0) {
       builder.pendingAcquireMaxCount(pendingAcquireMaxCount);
     }
-//    Duration maxIdleTime = options.getMaxIdleTime();
-//    if (maxIdleTime != null && !maxIdleTime.isZero()) {
-//      builder.maxIdleTime(maxIdleTime);
-//    }
-//    Duration maxLifeTime = options.getMaxLifeTime();
-//    if (maxLifeTime != null && !maxLifeTime.isZero()) {
-//      builder.maxLifeTime(maxLifeTime);
-//    }
     ConnectionProvider connectionProvider = builder.build();
     HttpClient httpClient = HttpClient.create(connectionProvider)
       .keepAlive(options.isKeepAlive())

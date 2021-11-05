@@ -26,13 +26,18 @@ import java.util.function.Consumer;
 public final class WebClientTraceUtils {
 
   @Nonnull
-  public static Consumer<TraceContext> setTraceHeaders(HttpHeaders httpHeaders) {
+  public static Consumer<TraceContext> setTraceHeaders(@Nonnull HttpHeaders httpHeaders) {
     return traceContext -> {
-      String traceId = traceContext.getTraceId();
-      String spanId = traceContext.generateNextSpanId();
-      httpHeaders.set(TraceConstants.HTTP_HEADER_TRACE_ID, traceId);
-      httpHeaders.set(TraceConstants.HTTP_HEADER_SPAN_ID, spanId);
+      setTraceHeaders(httpHeaders, traceContext);
     };
+  }
+
+  public static void setTraceHeaders(@Nonnull HttpHeaders httpHeaders,
+                                     @Nonnull TraceContext traceContext) {
+    String traceId = traceContext.getTraceId();
+    String spanId = traceContext.generateNextSpanId();
+    httpHeaders.set(TraceConstants.HTTP_HEADER_TRACE_ID, traceId);
+    httpHeaders.set(TraceConstants.HTTP_HEADER_SPAN_ID, spanId);
   }
 
   private WebClientTraceUtils() {
