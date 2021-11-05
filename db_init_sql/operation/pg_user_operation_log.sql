@@ -2,7 +2,7 @@ CREATE SEQUENCE "public"."ideal_user_operation_log_id_sequence" INCREMENT 1 MINV
 
 CREATE TABLE "public"."ideal_user_operation_log"
 (
-  "id"             int8                                         NOT NULL DEFAULT nextval('ideal_user_operation_log_id_sequence'::regclass),
+  "id" int8 NOT NULL DEFAULT nextval('ideal_user_operation_log_id_sequence'::regclass),
   "trace_id"       varchar(64) COLLATE "pg_catalog"."default"   NOT NULL,
   "system"         varchar(64) COLLATE "pg_catalog"."default"   NOT NULL,
   "operation"      varchar(100) COLLATE "pg_catalog"."default"  NOT NULL,
@@ -13,7 +13,7 @@ CREATE TABLE "public"."ideal_user_operation_log"
   "username"       varchar(64) COLLATE "pg_catalog"."default"   NOT NULL,
   "client_ip"      varchar(255) COLLATE "pg_catalog"."default"  NOT NULL,
   "user_agent"     varchar(255) COLLATE "pg_catalog"."default"  NOT NULL,
-  "success"        int4                                         NOT NULL,
+  "success" int4 NOT NULL,
   "message"        varchar(4096) COLLATE "pg_catalog"."default" NOT NULL,
   "operation_time" timestamp(6)                                 NOT NULL
 );
@@ -49,27 +49,27 @@ COMMENT
 CREATE
   INDEX "tenant_id" ON "public"."ideal_user_operation_log" USING btree
   (
-   "tenant_id"
-   COLLATE "pg_catalog"."default"
-   "pg_catalog"."text_ops" ASC
-   NULLS LAST
-    );
+  "tenant_id"
+  COLLATE "pg_catalog"."default"
+  "pg_catalog"."text_ops" ASC
+  NULLS LAST
+  );
 CREATE
   INDEX "trace_id" ON "public"."ideal_user_operation_log" USING btree
   (
-   "trace_id"
-   COLLATE "pg_catalog"."default"
-   "pg_catalog"."text_ops" ASC NULLS
-   LAST
-    );
+  "trace_id"
+  COLLATE "pg_catalog"."default"
+  "pg_catalog"."text_ops" ASC NULLS
+  LAST
+  );
 CREATE
   INDEX "user_id" ON "public"."ideal_user_operation_log" USING btree
   (
-   "user_id"
-   COLLATE "pg_catalog"."default"
-   "pg_catalog"."text_ops" ASC NULLS
-   LAST
-    );
+  "user_id"
+  COLLATE "pg_catalog"."default"
+  "pg_catalog"."text_ops" ASC NULLS
+  LAST
+  );
 
 ALTER TABLE "public"."ideal_user_operation_log"
   ADD CONSTRAINT "ideal_user_operation_log_pkey" PRIMARY KEY ("id");
