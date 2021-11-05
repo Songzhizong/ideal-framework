@@ -1,5 +1,25 @@
 <h1>更新日志</h1>
 
+# 2.5.6.2021.11.05
+
+### ⭐ New Features
+
+- 通过Reactors创建webClient支持链路日志埋点
+- 集合类新增chunked方法, 用于集合分块
+- Result新增create方法
+- Maps工具类添加更多的of方法
+- 新增Pair类
+- 添加jpa converter
+
+### 🐞 Bug Fixes
+
+- 修复RabbitMQ event broker启动时无法自动创建exchange的问题
+
+### 🔨 Dependency Upgrades
+
+- vertx -> 4.2.1
+- redisson -> 3.16.4
+
 # 2.5.6.2021.10.25
 
 ### ⭐ New Features

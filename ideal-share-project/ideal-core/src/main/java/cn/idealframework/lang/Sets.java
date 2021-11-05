@@ -17,10 +17,7 @@ package cn.idealframework.lang;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @author 宋志宗 on 2021/7/8
@@ -139,5 +136,10 @@ public final class Sets {
     }
     HashSet<E> hashSet = new HashSet<>(Arrays.asList(elements));
     return Collections.unmodifiableSet(hashSet);
+  }
+
+  @Nonnull
+  public static <E> List<List<E>> chunked(@Nonnull Set<E> set, int size) {
+    return CollectionUtils.chunked(set, size);
   }
 }

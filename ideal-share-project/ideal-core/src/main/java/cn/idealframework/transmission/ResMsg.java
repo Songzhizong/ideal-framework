@@ -53,8 +53,8 @@ public interface ResMsg {
   enum StandardResMsg implements ResMsg {
     SUCCESS(200, 200, "Success"),
     BAD_REQUEST(200, 400, "Bad request"),
-    UNAUTHORIZED(200, 401, "Unauthorized"),
-    FORBIDDEN(200, 403, "Forbidden"),
+    UNAUTHORIZED(401, 401, "Unauthorized"),
+    FORBIDDEN(403, 403, "Forbidden"),
     NOT_FOUND(200, 404, "Not found"),
     METHOD_NOT_ALLOWED(200, 405, "Method Not Allowed"),
     INTERNAL_SERVER_ERROR(200, 500, "Internal Server Error"),
@@ -63,6 +63,7 @@ public interface ResMsg {
     private final int httpStatus;
 
     private final int code;
+
     @Nonnull
     private final String message;
 

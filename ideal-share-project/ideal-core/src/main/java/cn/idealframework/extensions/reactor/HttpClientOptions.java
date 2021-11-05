@@ -34,24 +34,12 @@ public class HttpClientOptions {
   @Nonnull
   private String name = "httpClient";
 
-//  /** 检测并清除池中空闲连接的间隔时间, 默认0不检测 */
-//  @Nullable
-//  private Duration evictionInterval = Duration.ZERO;
-
   /** 最大连接数 */
   private int maxConnections = 512;
 
   /** 等待队列大小, 默认情况下为最大连接数x2 */
   @Nullable
   private Integer pendingAcquireMaxCount;
-
-//  /** 最大空闲时间, 默认没有 */
-//  @Nullable
-//  private Duration maxIdleTime;
-//
-//  /** 最大存活时间, 默认没有 */
-//  @Nullable
-//  private Duration maxLifeTime;
 
   /** 请求超时时间 */
   @Nullable

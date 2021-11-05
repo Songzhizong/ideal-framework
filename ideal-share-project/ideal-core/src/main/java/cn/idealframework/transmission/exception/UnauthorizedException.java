@@ -32,6 +32,9 @@ public class UnauthorizedException extends VisibleRuntimeException {
     super(401, ResMsg.UNAUTHORIZED.code(), ResMsg.UNAUTHORIZED.message());
   }
 
+  public UnauthorizedException(@Nonnull String message) {
+    super(401, ResMsg.UNAUTHORIZED.code(), message);
+  }
 
   public UnauthorizedException(int code, @Nonnull String message) {
     super(401, code, message);
