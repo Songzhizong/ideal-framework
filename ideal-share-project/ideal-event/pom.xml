@@ -20,7 +20,7 @@
   <parent>
     <artifactId>ideal-share-project</artifactId>
     <groupId>cn.idealframework</groupId>
-    <version>2.5.6-SNAPSHOT</version>
+    <version>2.5.6.2021.11.05</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <artifactId>ideal-event</artifactId>
@@ -29,7 +29,7 @@
     <dependency>
       <groupId>cn.idealframework</groupId>
       <artifactId>ideal-core</artifactId>
-      <version>2.5.6-SNAPSHOT</version>
+      <version>2.5.6.2021.11.05</version>
     </dependency>
     <dependency>
       <groupId>com.github.ben-manes.caffeine</groupId>
