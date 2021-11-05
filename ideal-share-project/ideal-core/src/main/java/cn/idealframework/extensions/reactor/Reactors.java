@@ -15,12 +15,8 @@
  */
 package cn.idealframework.extensions.reactor;
 
-import cn.idealframework.trace.TraceContext;
-import cn.idealframework.trace.TraceContextHolder;
-import cn.idealframework.trace.WebClientTraceUtils;
 import lombok.extern.apachecommons.CommonsLog;
 import org.springframework.http.client.reactive.ReactorClientHttpConnector;
-import org.springframework.web.reactive.function.client.ClientRequest;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.util.DefaultUriBuilderFactory;
 import reactor.netty.http.client.HttpClient;
@@ -96,16 +92,7 @@ public final class Reactors {
                                                    @Nullable WebClientOptions options) {
     WebClient.Builder builder = WebClient.builder()
       .clientConnector(new ReactorClientHttpConnector(httpClient))
-      .filter((request, next) -> {
-        TraceContext context = TraceContextHolder.current().orElse(null);
-        if (context != null) {
-          ClientRequest clientRequest = ClientRequest.from(request)
-            .headers(headers -> WebClientTraceUtils.setTraceHeaders(headers, context))
-            .build();
-          return next.exchange(clientRequest);
-        }
-        return next.exchange(request);
-      });
+      .filter(TraceExchangeFilterFunction.getInstance());
     if (options != null) {
       // URI 编码方式
       DefaultUriBuilderFactory.EncodingMode encodingMode = options.getEncodingMode();

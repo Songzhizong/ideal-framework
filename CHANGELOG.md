@@ -4,6 +4,7 @@
 
 ### ⭐ New Features
 
+- 通过Reactors创建webClient支持链路日志埋点
 - 集合类新增chunked方法, 用于集合分块
 - Result新增create方法
 - Maps工具类添加更多的of方法
