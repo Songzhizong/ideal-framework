@@ -1,5 +1,13 @@
 <h1>更新日志</h1>
 
+# developer
+
+### ⭐ New Features
+
+### 🐞 Bug Fixes
+
+### 🔨 Dependency Upgrades
+
 # 2.5.6.2021.11.05
 
 ### ⭐ New Features
@@ -51,8 +59,6 @@
 
 ### 🔨 Dependency Upgrades
 
-
-
 # 2.5.5.20211020
 
 ### ⚠️ Compatibility
@@ -64,13 +70,12 @@
 ### ⭐ New Features
 
 - `EventPublisher`发布事件现不区分`EventMessage`和`EventMessageBuilder`，统一发布他们的父接口`EventSupplier`。
-- `DomainEvent`继承接口`EventSupplier`，现可直接发布`DomainEvent`的实现类。因为`DomainEvent`中不包含事件头，因此在需要携带事件头的场景仍需通过`EventMessage`或`EventMessageBuilder`实现。
+- `DomainEvent`继承接口`EventSupplier`，现可直接发布`DomainEvent`的实现类。因为`DomainEvent`
+  中不包含事件头，因此在需要携带事件头的场景仍需通过`EventMessage`或`EventMessageBuilder`实现。
 
 ### 🐞 Bug Fixes
 
 ### 🔨 Dependency Upgrades
-
-
 
 # 2.5.5.20211012
 
