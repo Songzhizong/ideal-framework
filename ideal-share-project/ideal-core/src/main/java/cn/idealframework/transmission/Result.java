@@ -183,6 +183,7 @@ public class Result<T> extends BasicResult {
   @Transient
   public T requiredData() {
     T data = getData();
+    throwWhenFailure();
     if (data == null) {
       throw new NullPointerException("data is null");
     }
