@@ -4,6 +4,10 @@
 
 ### ⭐ New Features
 
+- trace log默认不记录响应结果
+- Result类返回失败将会反映在http状态码上
+- `BasicResult`添加`onFailureThrow`方法, 当返回失败时可调用此方法抛出`ResultException`以在服务间传递异常.
+
 ### 🐞 Bug Fixes
 
 ### 🔨 Dependency Upgrades
