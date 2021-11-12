@@ -30,8 +30,8 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpSession;
 import java.lang.reflect.Method;
 import java.util.*;
@@ -108,7 +108,7 @@ public class TraceInfoAspect {
           traceInfo.setRequest(getReqArgs(joinPoint, annotation));
         }
         if (proceed != null) {
-          if (annotation == null || annotation.recordResp()) {
+          if (annotation != null && annotation.recordResp()) {
             if (!(proceed instanceof DeferredResult)) {
               traceInfo.setResponse(proceed);
             }
@@ -125,7 +125,7 @@ public class TraceInfoAspect {
                                          @Nullable TracePoint annotation) {
     int[] ints = null;
     if (annotation == null) {
-      ints = new int[0];
+      ints = ArrayUtils.EMPTY_INT_ARRAY;
     }
     if (annotation != null && !annotation.excludeAllArgs()) {
       ints = annotation.exclusionArgs();
@@ -137,10 +137,10 @@ public class TraceInfoAspect {
         if (!ArrayUtils.contains(ints, i)) {
           Object arg = args[i];
           if (arg != null) {
-            if (arg instanceof HttpServletRequest) {
+            if (arg instanceof ServletRequest) {
               continue;
             }
-            if (arg instanceof HttpServletResponse) {
+            if (arg instanceof ServletResponse) {
               continue;
             }
             if (arg instanceof HttpSession) {
