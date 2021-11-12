@@ -102,6 +102,7 @@ public class Result<T> extends BasicResult {
   public static <T> Result<T> failure(@Nonnull ResMsg resMsg) {
     Result<T> res = new Result<>();
     res.setSuccess(false);
+    res.setHttpStatus(res.getHttpStatus());
     res.setCode(resMsg.code());
     res.setMessage(resMsg.message());
     return res;
@@ -146,6 +147,7 @@ public class Result<T> extends BasicResult {
     }
     Result<T> res = new Result<>();
     res.setSuccess(false);
+    res.setHttpStatus(500);
     res.setCode(ResMsg.INTERNAL_SERVER_ERROR.code());
     res.setMessage(t.getMessage());
     return res;
@@ -156,6 +158,7 @@ public class Result<T> extends BasicResult {
     Result<T> res = new Result<>();
     res.setSuccess(false);
     res.setCode(ResMsg.INTERNAL_SERVER_ERROR.code());
+    res.setHttpStatus(500);
     res.setMessage(message);
     return res;
   }
@@ -183,7 +186,6 @@ public class Result<T> extends BasicResult {
   @Transient
   public T requiredData() {
     T data = getData();
-    throwWhenFailure();
     if (data == null) {
       throw new NullPointerException("data is null");
     }

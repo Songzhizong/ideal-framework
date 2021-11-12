@@ -43,6 +43,8 @@ public class BasicResult implements ResMsg, Serializable {
 
   private boolean success = true;
 
+  private int httpStatus = 200;
+
   private int code = 200;
 
   @Nonnull
@@ -68,12 +70,14 @@ public class BasicResult implements ResMsg, Serializable {
   /**
    * 当调用失败时抛出 {@link ResultException}
    */
-  public void throwWhenFailure() throws ResultException {
+  public void onFailureThrow() throws ResultException {
     if (isFailure()) {
+      int httpStatus = getHttpStatus();
       int code = getCode();
       String message = getMessage();
-      log.info("Result is failure, code: " + code + " message: " + message);
-      throw new ResultException(code, message);
+      log.info("Result is failure, httpStatus: "
+        + httpStatus + " code: " + code + " message: " + message);
+      throw new ResultException(httpStatus, code, message);
     }
   }
 

@@ -61,9 +61,10 @@ public class NettyExceptionHandlerAdvice {
     log.info("http请求超时: " + exception.getMessage());
     BasicResult res = new BasicResult();
     res.setSuccess(false);
+    res.setHttpStatus(ResMsg.INTERNAL_SERVER_ERROR.httpStatus());
     res.setCode(ResMsg.INTERNAL_SERVER_ERROR.code());
     res.setMessage("请求超时");
     TraceContextHolder.current().ifPresent(context -> res.setTraceId(context.getTraceId()));
-    return new ResponseEntity<>(res, RESPONSE_HEADERS, HttpStatus.OK);
+    return new ResponseEntity<>(res, RESPONSE_HEADERS, HttpStatus.INTERNAL_SERVER_ERROR);
   }
 }

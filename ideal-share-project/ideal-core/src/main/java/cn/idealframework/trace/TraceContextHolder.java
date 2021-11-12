@@ -70,16 +70,6 @@ public final class TraceContextHolder {
     return Optional.ofNullable(TRACE_CONTEXT_THREAD_LOCAL.get());
   }
 
-  @Nonnull
-  public static TraceContext requiredCurrent() {
-    TraceContext context = TRACE_CONTEXT_THREAD_LOCAL.get();
-    if (context != null) {
-      return context;
-    }
-    log.warn("TraceContext未初始化");
-    throw new TraceContextUnInitException();
-  }
-
   private TraceContextHolder() {
   }
 }

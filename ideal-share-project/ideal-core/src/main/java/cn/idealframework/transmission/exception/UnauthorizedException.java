@@ -29,7 +29,7 @@ public class UnauthorizedException extends VisibleRuntimeException {
   public static UnauthorizedException INSTANCE = new UnauthorizedException();
 
   public UnauthorizedException() {
-    super(401, ResMsg.UNAUTHORIZED.code(), ResMsg.UNAUTHORIZED.message());
+    super(ResMsg.UNAUTHORIZED);
   }
 
   public UnauthorizedException(@Nonnull String message) {

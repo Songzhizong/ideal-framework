@@ -26,6 +26,6 @@ public class AuthenticateException extends VisibleException {
   private static final long serialVersionUID = 4663984579590874694L;
 
   public AuthenticateException(@Nonnull String message) {
-    super(401, message);
+    super(401, 401, message);
   }
 }

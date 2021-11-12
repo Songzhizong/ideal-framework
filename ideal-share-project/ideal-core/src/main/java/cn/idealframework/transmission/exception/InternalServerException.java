@@ -26,6 +26,10 @@ public class InternalServerException extends VisibleRuntimeException {
   private static final long serialVersionUID = -8902215592749726908L;
 
   public InternalServerException(@Nonnull String message) {
-    super(ResMsg.INTERNAL_SERVER_ERROR.code(), message);
+    super(ResMsg.INTERNAL_SERVER_ERROR.httpStatus(), ResMsg.INTERNAL_SERVER_ERROR.code(), message);
+  }
+
+  public InternalServerException(int code, @Nonnull String message) {
+    super(ResMsg.INTERNAL_SERVER_ERROR.httpStatus(), code, message);
   }
 }

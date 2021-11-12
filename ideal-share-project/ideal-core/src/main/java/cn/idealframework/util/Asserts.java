@@ -16,7 +16,7 @@
 package cn.idealframework.util;
 
 import cn.idealframework.lang.StringUtils;
-import cn.idealframework.transmission.exception.VisibleRuntimeException;
+import cn.idealframework.transmission.exception.BadRequestException;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -182,14 +182,14 @@ public final class Asserts {
     throw new AssertException(message);
   }
 
-  public static class AssertException extends VisibleRuntimeException {
+  public static class AssertException extends BadRequestException {
 
     public AssertException(@Nonnull String message) {
-      super(400, message);
+      super(message);
     }
 
     public AssertException() {
-      super(400, "");
+      super("");
     }
   }
 

@@ -21,7 +21,7 @@ import javax.annotation.Nonnull;
  * @author 宋志宗 on 2021/11/11
  */
 public class ResultException extends VisibleRuntimeException {
-  public ResultException(int code, @Nonnull String message) {
-    super(code, message);
+  public ResultException(int httpStatus, int code, @Nonnull String message) {
+    super(httpStatus, code, message);
   }
 }
