@@ -20,6 +20,7 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 
 import javax.annotation.Nonnull;
+import java.beans.Transient;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.Function;
@@ -84,5 +85,12 @@ public class PageResult<E> extends BasicResult {
       res.setData(data.stream().map(converter).collect(Collectors.toList()));
     }
     return res;
+  }
+
+  @Nonnull
+  @Transient
+  public List<E> getOrThrow() {
+    onFailureThrow();
+    return getData();
   }
 }
