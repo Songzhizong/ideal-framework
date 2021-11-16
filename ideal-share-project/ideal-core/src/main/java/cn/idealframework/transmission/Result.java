@@ -176,6 +176,13 @@ public class Result<T> extends BasicResult {
     return retRes;
   }
 
+  @Nonnull
+  @Transient
+  public T getOrThrow() {
+    onFailureThrow();
+    return requiredData();
+  }
+
   /**
    * 如果断言响应结果不可能为空可以调用此方法获取响应数据, 如果为空则会抛出{@link NullPointerException}
    *
