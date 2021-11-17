@@ -37,6 +37,7 @@
     <vertx.version>4.2.1</vertx.version>
     <commons-io.version>2.11.0</commons-io.version>
     <commons-logging.version>1.2</commons-logging.version>
+    <easypoi.version>4.4.0</easypoi.version>
     <jsr305.version>3.0.2</jsr305.version>
     <lombok.version>1.18.22</lombok.version>
     <redisson.version>3.16.4</redisson.version>
@@ -82,6 +83,11 @@
         <groupId>commons-logging</groupId>
         <artifactId>commons-logging</artifactId>
         <version>${commons-logging.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>cn.afterturn</groupId>
+        <artifactId>easypoi-spring-boot-starter</artifactId>
+        <version>${easypoi.version}</version>
       </dependency>
       <dependency>
         <groupId>com.google.code.findbugs</groupId>
