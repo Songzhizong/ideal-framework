@@ -14,6 +14,8 @@
 ### 🔨 Dependency Upgrades
 
 - 添加easypoi版本管理
+- spring.boot升级到2.5.7
+- kotlin升级到1.6.0
 
 # 2.5.6.2021.11.05
 
