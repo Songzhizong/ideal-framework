@@ -139,6 +139,81 @@ public final class Sets {
   }
 
   @Nonnull
+  public static <E> Set<E> merge(@Nonnull Collection<? extends E> c1,
+                                 @Nonnull Collection<? extends E> c2) {
+    Set<E> result = new HashSet<>();
+    result.addAll(c1);
+    result.addAll(c2);
+    return result;
+  }
+
+  @Nonnull
+  public static <E> Set<E> merge(@Nonnull Collection<? extends E> c1,
+                                 @Nonnull Collection<? extends E> c2,
+                                 @Nonnull Collection<? extends E> c3) {
+    Set<E> result = new HashSet<>();
+    result.addAll(c1);
+    result.addAll(c2);
+    result.addAll(c3);
+    return result;
+  }
+
+  @Nonnull
+  public static <E> Set<E> merge(@Nonnull Collection<? extends E> c1,
+                                 @Nonnull Collection<? extends E> c2,
+                                 @Nonnull Collection<? extends E> c3,
+                                 @Nonnull Collection<? extends E> c4) {
+    Set<E> result = new HashSet<>();
+    result.addAll(c1);
+    result.addAll(c2);
+    result.addAll(c3);
+    result.addAll(c4);
+    return result;
+  }
+
+  @Nonnull
+  public static <E> Set<E> merge(@Nonnull Collection<? extends E> c1,
+                                 @Nonnull Collection<? extends E> c2,
+                                 @Nonnull Collection<? extends E> c3,
+                                 @Nonnull Collection<? extends E> c4,
+                                 @Nonnull Collection<? extends E> c5) {
+    Set<E> result = new HashSet<>();
+    result.addAll(c1);
+    result.addAll(c2);
+    result.addAll(c3);
+    result.addAll(c4);
+    result.addAll(c5);
+    return result;
+  }
+
+  @Nonnull
+  public static <E> Set<E> merge(@Nonnull Collection<? extends E> c1,
+                                 @Nonnull Collection<? extends E> c2,
+                                 @Nonnull Collection<? extends E> c3,
+                                 @Nonnull Collection<? extends E> c4,
+                                 @Nonnull Collection<? extends E> c5,
+                                 @Nonnull Collection<? extends E> c6) {
+    Set<E> result = new HashSet<>();
+    result.addAll(c1);
+    result.addAll(c2);
+    result.addAll(c3);
+    result.addAll(c4);
+    result.addAll(c5);
+    result.addAll(c6);
+    return result;
+  }
+
+  @Nonnull
+  @SafeVarargs
+  public static <E> Set<E> merge(@Nonnull Collection<? extends E>... cs) {
+    Set<E> result = new HashSet<>();
+    for (Collection<? extends E> c : cs) {
+      result.addAll(c);
+    }
+    return result;
+  }
+
+  @Nonnull
   public static <E> List<List<E>> chunked(@Nonnull Set<E> set, int size) {
     return CollectionUtils.chunked(set, size);
   }
