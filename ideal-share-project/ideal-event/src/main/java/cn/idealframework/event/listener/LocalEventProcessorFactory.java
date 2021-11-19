@@ -16,6 +16,7 @@
 package cn.idealframework.event.listener;
 
 import cn.idealframework.lang.Lists;
+import cn.idealframework.util.Asserts;
 import lombok.extern.apachecommons.CommonsLog;
 
 import javax.annotation.Nonnull;
@@ -37,6 +38,7 @@ public final class LocalEventProcessorFactory {
   public static void register(@Nonnull String topic,
                               @Nonnull String listenerName,
                               @Nonnull LocalEventProcessor processor) {
+    Asserts.notBlank(topic, "监听器监听的主题名称不能为空");
     List<LocalEventProcessor> list = LOCAL_PROCESSORS_MAPPING.computeIfAbsent(topic, k -> new ArrayList<>());
     list.add(processor);
     log.info("Register event processor: " + listenerName);

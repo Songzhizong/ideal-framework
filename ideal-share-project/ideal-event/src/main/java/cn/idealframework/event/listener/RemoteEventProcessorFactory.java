@@ -15,6 +15,7 @@
  */
 package cn.idealframework.event.listener;
 
+import cn.idealframework.util.Asserts;
 import lombok.extern.apachecommons.CommonsLog;
 
 import javax.annotation.Nonnull;
@@ -52,6 +53,8 @@ public final class RemoteEventProcessorFactory {
   public static void register(@Nonnull String topic,
                               @Nonnull String listenerName,
                               @Nonnull RemoteEventProcessor processor) {
+    Asserts.notBlank(topic, "监听器监听的主题名称不能为空");
+    Asserts.notBlank(topic, "远程监听器名称不能为空");
     Map<String, RemoteEventProcessor> listenerMap
       = REMOTE_PROCESSOR_MAPPING.computeIfAbsent(topic, k -> new HashMap<>(8));
     RemoteEventProcessor previous = listenerMap.put(listenerName, processor);
