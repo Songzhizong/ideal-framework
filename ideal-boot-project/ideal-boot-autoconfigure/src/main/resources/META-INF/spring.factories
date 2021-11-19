@@ -14,6 +14,7 @@ org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
   cn.idealframework.boot.autoconfigure.event.transaction.IdealBootEventNoneTransactionAutoConfigure,\
   cn.idealframework.boot.autoconfigure.event.persistent.IdealBootEventPersistentAutoConfigure,\
   cn.idealframework.boot.autoconfigure.event.broker.IdealBootEventRabbitBrokerAutoConfigure,\
+  cn.idealframework.boot.autoconfigure.event.broker.IdealBootEventRabbitBrokerRunner,\
   cn.idealframework.boot.autoconfigure.event.idempotent.IdealBootEventRedisIdempotentAutoConfigure,\
   cn.idealframework.boot.autoconfigure.event.transaction.IdealBootEventAutomaticEventPublisherRunner,\
   cn.idealframework.boot.autoconfigure.event.transaction.IdealBootEventTransactionAutoConfigure,\
