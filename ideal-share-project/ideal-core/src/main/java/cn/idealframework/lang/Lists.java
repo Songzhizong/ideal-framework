@@ -35,6 +35,11 @@ public final class Lists {
   }
 
   @Nonnull
+  public static <E> List<E> unmodifiable(@Nonnull List<E> list) {
+    return Collections.unmodifiableList(list);
+  }
+
+  @Nonnull
   public static <E> List<E> of() {
     return Collections.emptyList();
   }

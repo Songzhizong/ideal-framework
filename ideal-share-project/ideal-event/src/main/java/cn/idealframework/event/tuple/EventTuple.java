@@ -16,6 +16,7 @@
 package cn.idealframework.event.tuple;
 
 import cn.idealframework.event.message.EventSupplier;
+import cn.idealframework.event.message.EventSuppliers;
 import cn.idealframework.lang.Lists;
 import lombok.Getter;
 
@@ -75,6 +76,11 @@ public class EventTuple<R> {
     List<EventSupplier> merge = Lists.merge(eventBuilders, suppliers);
     this.setSuppliers(merge);
     return this;
+  }
+
+  @Nonnull
+  public EventSuppliers toEventSuppliers() {
+    return EventSuppliers.of(this);
   }
 
   private void setSuppliers(@Nonnull List<EventSupplier> suppliers) {
