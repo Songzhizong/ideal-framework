@@ -137,6 +137,38 @@ public final class Lists {
   }
 
   @Nonnull
+  public static <E> List<E> ofArray(@Nonnull E[] intArray) {
+    return Arrays.asList(intArray);
+  }
+
+  @Nonnull
+  public static List<Character> ofArray(@Nonnull char[] charArray) {
+    List<Character> res = new ArrayList<>(charArray.length);
+    for (char i : charArray) {
+      res.add(i);
+    }
+    return unmodifiable(res);
+  }
+
+  @Nonnull
+  public static List<Integer> ofArray(@Nonnull int[] intArray) {
+    List<Integer> res = new ArrayList<>(intArray.length);
+    for (int i : intArray) {
+      res.add(i);
+    }
+    return unmodifiable(res);
+  }
+
+  @Nonnull
+  public static List<Long> ofArray(@Nonnull long[] longArray) {
+    List<Long> res = new ArrayList<>(longArray.length);
+    for (long i : longArray) {
+      res.add(i);
+    }
+    return unmodifiable(res);
+  }
+
+  @Nonnull
   public static <E> ArrayList<E> arrayList(E e) {
     ArrayList<E> list = new ArrayList<>();
     list.add(e);
