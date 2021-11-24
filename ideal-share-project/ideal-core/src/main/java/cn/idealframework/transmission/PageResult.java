@@ -88,7 +88,7 @@ public class PageResult<E> extends BasicResult {
 
   @Nonnull
   @SuppressWarnings("DuplicatedCode")
-  public static <E> PageResult<E> page(@Nonnull PageInfo<E> pageInfo) {
+  public static <E> PageResult<E> of(@Nonnull PageInfo<E> pageInfo) {
     PageResult<E> res = new PageResult<>();
     res.setPage(pageInfo.getPageNumber());
     res.setSize(pageInfo.getPageSize());
@@ -116,6 +116,23 @@ public class PageResult<E> extends BasicResult {
       res.setData(data.stream().map(converter).collect(Collectors.toList()));
     }
     return res;
+  }
+
+  @Nonnull
+  public PageInfo<E> toPage() {
+    PageInfo<E> pageInfo = new PageInfo<>();
+    pageInfo.setPageNumber(getPage());
+    pageInfo.setPageSize(getSize());
+    pageInfo.setTotalElements(getTotal());
+    pageInfo.setTotalPages(getTotalPages());
+    pageInfo.setContent(getData());
+    return pageInfo;
+  }
+
+  @Nonnull
+  public PageInfo<E> toPageOrThrow() throws ResultException {
+    onFailureThrow();
+    return toPage();
   }
 
   @Nonnull
