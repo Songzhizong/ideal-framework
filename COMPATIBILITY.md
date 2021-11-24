@@ -1,5 +1,11 @@
 # 兼容性变更
 
+# developer
+
+### ⚠️ Compatibility
+
+- `PageResult`中的page方法名称修改为of
+
 # 2.5.5.2021.10.21
 
 ### ⚠️ Compatibility
