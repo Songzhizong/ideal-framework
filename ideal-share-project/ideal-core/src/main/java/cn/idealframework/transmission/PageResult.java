@@ -16,6 +16,7 @@
 package cn.idealframework.transmission;
 
 import cn.idealframework.lang.Lists;
+import cn.idealframework.transmission.exception.ResultException;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -119,7 +120,7 @@ public class PageResult<E> extends BasicResult {
 
   @Nonnull
   @Transient
-  public List<E> getOrThrow() {
+  public List<E> getOrThrow() throws ResultException {
     onFailureThrow();
     return getData();
   }

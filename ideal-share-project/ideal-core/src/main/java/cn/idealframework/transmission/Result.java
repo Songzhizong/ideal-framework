@@ -15,6 +15,7 @@
  */
 package cn.idealframework.transmission;
 
+import cn.idealframework.transmission.exception.ResultException;
 import cn.idealframework.transmission.exception.VisibleException;
 import cn.idealframework.transmission.exception.VisibleRuntimeException;
 import lombok.Getter;
@@ -178,7 +179,7 @@ public class Result<T> extends BasicResult {
 
   @Nonnull
   @Transient
-  public T getOrThrow() {
+  public T getOrThrow() throws ResultException {
     onFailureThrow();
     return requiredData();
   }
