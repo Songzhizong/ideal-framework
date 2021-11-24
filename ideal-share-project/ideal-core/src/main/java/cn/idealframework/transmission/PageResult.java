@@ -15,12 +15,14 @@
  */
 package cn.idealframework.transmission;
 
+import cn.idealframework.lang.Lists;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
 import javax.annotation.Nonnull;
 import java.beans.Transient;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.Function;
@@ -53,6 +55,34 @@ public class PageResult<E> extends BasicResult {
 
   public PageResult() {
     super();
+  }
+
+  @Nonnull
+  public static <E> PageResult<E> empty(@Nonnull Paging paging) {
+    PageResult<E> res = new PageResult<>();
+    res.setPage(paging.getPageNumber());
+    res.setSize(paging.getPageSize());
+    res.setTotal(0);
+    res.setTotalPages(1);
+    res.setData(new ArrayList<>());
+    res.setSuccess(true);
+    res.setCode(ResMsg.SUCCESS.code());
+    res.setMessage(ResMsg.SUCCESS.message());
+    return res;
+  }
+
+  @Nonnull
+  public static <E> PageResult<E> singleton(@Nonnull Paging paging, @Nonnull E element) {
+    PageResult<E> res = new PageResult<>();
+    res.setPage(paging.getPageNumber());
+    res.setSize(paging.getPageSize());
+    res.setTotal(1);
+    res.setTotalPages(1);
+    res.setData(Lists.arrayList(element));
+    res.setSuccess(true);
+    res.setCode(ResMsg.SUCCESS.code());
+    res.setMessage(ResMsg.SUCCESS.message());
+    return res;
   }
 
   @Nonnull
