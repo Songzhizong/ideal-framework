@@ -19,10 +19,12 @@ import cn.idealframework.event.tuple.EventTuple;
 import cn.idealframework.lang.ArrayUtils;
 import cn.idealframework.lang.Lists;
 import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 import javax.annotation.Nonnull;
+import java.beans.Transient;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -34,6 +36,7 @@ import java.util.List;
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public final class EventSuppliers {
   @Nonnull
+  @Getter(AccessLevel.PROTECTED)
   private List<EventSupplier> suppliers;
 
   @Nonnull
@@ -65,7 +68,12 @@ public final class EventSuppliers {
 
   @Nonnull
   public List<EventSupplier> get() {
-    return suppliers;
+    return getSuppliers();
+  }
+
+  @Transient
+  public boolean isEmpty() {
+    return Lists.isEmpty(getSuppliers());
   }
 
   @Nonnull
@@ -80,6 +88,12 @@ public final class EventSuppliers {
 
   @Nonnull
   public EventSuppliers merge(@Nonnull EventSuppliers suppliers) {
+    if (suppliers.isEmpty()) {
+      return this;
+    }
+    if (this.isEmpty()) {
+      return suppliers;
+    }
     List<EventSupplier> currentSuppliers = this.get();
     List<EventSupplier> otherSuppliers = suppliers.get();
     List<EventSupplier> merge = Lists.merge(currentSuppliers, otherSuppliers);
@@ -89,6 +103,9 @@ public final class EventSuppliers {
 
   @Nonnull
   public EventSuppliers merge(@Nonnull List<EventSupplier> otherSuppliers) {
+    if (Lists.isEmpty(otherSuppliers)) {
+      return this;
+    }
     List<EventSupplier> currentSuppliers = this.get();
     List<EventSupplier> merge = Lists.merge(currentSuppliers, otherSuppliers);
     this.setSuppliers(Lists.unmodifiable(merge));
@@ -97,10 +114,7 @@ public final class EventSuppliers {
 
   @Nonnull
   public EventSuppliers merge(@Nonnull EventTuple<?> eventTuple) {
-    List<EventSupplier> currentSuppliers = this.get();
     List<EventSupplier> otherSuppliers = eventTuple.getSuppliers();
-    List<EventSupplier> merge = Lists.merge(currentSuppliers, otherSuppliers);
-    this.setSuppliers(Lists.unmodifiable(merge));
-    return this;
+    return merge(otherSuppliers);
   }
 }
