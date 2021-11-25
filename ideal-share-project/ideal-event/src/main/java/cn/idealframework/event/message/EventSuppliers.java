@@ -37,6 +37,11 @@ public final class EventSuppliers {
   private List<EventSupplier> suppliers;
 
   @Nonnull
+  public static EventSuppliers empty() {
+    return new EventSuppliers(Lists.of());
+  }
+
+  @Nonnull
   public static EventSuppliers of(EventSupplier supplier) {
     if (supplier == null) {
       return new EventSuppliers(Lists.of());
