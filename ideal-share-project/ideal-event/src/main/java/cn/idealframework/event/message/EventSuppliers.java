@@ -26,7 +26,6 @@ import lombok.Setter;
 import javax.annotation.Nonnull;
 import java.beans.Transient;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -41,29 +40,28 @@ public final class EventSuppliers {
 
   @Nonnull
   public static EventSuppliers empty() {
-    return new EventSuppliers(Lists.of());
+    return new EventSuppliers(new ArrayList<>());
   }
 
   @Nonnull
   public static EventSuppliers of(EventSupplier supplier) {
     if (supplier == null) {
-      return new EventSuppliers(Lists.of());
+      return empty();
     }
-    return new EventSuppliers(Lists.of(supplier));
+    return new EventSuppliers(Lists.arrayList(supplier));
   }
 
   @Nonnull
   public static EventSuppliers of(EventSupplier... suppliers) {
     if (ArrayUtils.isEmpty(suppliers)) {
-      return new EventSuppliers(Lists.of());
+      return empty();
     }
-    return new EventSuppliers(Arrays.asList(suppliers));
+    return new EventSuppliers(Lists.arrayList(suppliers));
   }
 
   @Nonnull
   public static EventSuppliers of(@Nonnull EventTuple<?> eventTuple) {
-    List<EventSupplier> suppliers = eventTuple.getSuppliers();
-    return new EventSuppliers(suppliers);
+    return empty().merge(eventTuple);
   }
 
   @Nonnull
@@ -78,11 +76,7 @@ public final class EventSuppliers {
 
   @Nonnull
   public EventSuppliers add(@Nonnull EventSupplier supplier) {
-    List<EventSupplier> currentSuppliers = this.get();
-    List<EventSupplier> list = new ArrayList<>(currentSuppliers.size() + 1);
-    list.addAll(currentSuppliers);
-    list.add(supplier);
-    this.setSuppliers(Lists.unmodifiable(list));
+    this.getSuppliers().add(supplier);
     return this;
   }
 
@@ -94,10 +88,8 @@ public final class EventSuppliers {
     if (this.isEmpty()) {
       return suppliers;
     }
-    List<EventSupplier> currentSuppliers = this.get();
     List<EventSupplier> otherSuppliers = suppliers.get();
-    List<EventSupplier> merge = Lists.merge(currentSuppliers, otherSuppliers);
-    this.setSuppliers(Lists.unmodifiable(merge));
+    this.getSuppliers().addAll(otherSuppliers);
     return this;
   }
 
@@ -106,9 +98,7 @@ public final class EventSuppliers {
     if (Lists.isEmpty(otherSuppliers)) {
       return this;
     }
-    List<EventSupplier> currentSuppliers = this.get();
-    List<EventSupplier> merge = Lists.merge(currentSuppliers, otherSuppliers);
-    this.setSuppliers(Lists.unmodifiable(merge));
+    this.getSuppliers().addAll(otherSuppliers);
     return this;
   }
 
