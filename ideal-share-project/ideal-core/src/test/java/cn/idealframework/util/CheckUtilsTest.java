@@ -29,8 +29,15 @@ public class CheckUtilsTest {
     Assert.assertTrue(c1);
     boolean c2 = CheckUtils.checkMobile("1825692878");
     Assert.assertFalse(c2);
-    boolean c3 = CheckUtils.checkMobile("12345678901");
+    boolean c3 = CheckUtils.checkMobile("1234567890");
     Assert.assertFalse(c3);
+    boolean c4 = CheckUtils.checkMobile("19530258334");
+    Assert.assertTrue(c4);
+    boolean c5 = CheckUtils.checkMobile("29530258334");
+    Assert.assertFalse(c5);
+    Assert.assertTrue(c4);
+    boolean c6 = CheckUtils.checkMobile("195302583342");
+    Assert.assertFalse(c6);
   }
 
   @Test

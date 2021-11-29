@@ -25,9 +25,8 @@ import java.util.regex.Pattern;
  * @author 宋志宗 on 2021/7/3
  */
 public final class CheckUtils {
-  /** 手机号 */
-  private static final String MOBILE_REGEX
-      = "^((13[0-9])|(14[5,7])|(15[0-3,5-9])|(17[0-8])|(18[0-9])|166|198|199|147)\\d{8}$";
+  /** 手机号, 1开头的11位数字 */
+  private static final String MOBILE_REGEX = "^(1)\\d{10}$";
   private static final Pattern MOBILE_PATTERN = Pattern.compile(MOBILE_REGEX);
 
   /** 账号 以英文字母开头, 长度 >=6  && <=64 */
@@ -36,13 +35,13 @@ public final class CheckUtils {
 
   /** 邮箱 */
   private static final String EMAIL_REGEX
-      = "^[a-zA-Z0-9_.-]+@[a-zA-Z0-9-]+(\\.[a-zA-Z0-9-]+)*\\.[a-zA-Z0-9]{2,6}$";
+    = "^[a-zA-Z0-9_.-]+@[a-zA-Z0-9-]+(\\.[a-zA-Z0-9-]+)*\\.[a-zA-Z0-9]{2,6}$";
   private static final Pattern EMAIL_PATTERN = Pattern.compile(EMAIL_REGEX);
 
   /** 身份证 */
   private static final String ID_CARD_REGEX
-      = "(^[1-9]\\d{5}(18|19|20)\\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\\d{3}[0-9Xx]$)"
-      + "|(^[1-9]\\d{5}\\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\\d{3}$)";
+    = "(^[1-9]\\d{5}(18|19|20)\\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\\d{3}[0-9Xx]$)"
+    + "|(^[1-9]\\d{5}\\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\\d{3}$)";
   private static final Pattern ID_CARD_PATTERN = Pattern.compile(ID_CARD_REGEX);
 
   /**

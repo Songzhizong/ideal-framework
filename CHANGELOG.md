@@ -14,6 +14,8 @@
 
 ### 🐞 Bug Fixes
 
+- 修复部分手机号码无法通过正则校验的问题
+
 ### 🔨 Dependency Upgrades
 
 - 添加easypoi版本管理
