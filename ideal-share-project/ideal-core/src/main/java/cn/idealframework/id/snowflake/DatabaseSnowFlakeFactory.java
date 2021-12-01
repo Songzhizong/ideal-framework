@@ -83,6 +83,16 @@ public class DatabaseSnowFlakeFactory implements SnowflakeFactory, SnowflakeMach
     }));
   }
 
+  @Override
+  public long dataCenterId() {
+    return dataCenterId;
+  }
+
+  @Override
+  public long machineId() {
+    return machineId;
+  }
+
   @Nonnull
   @Override
   public SnowFlake getGenerator(@Nonnull String biz) {

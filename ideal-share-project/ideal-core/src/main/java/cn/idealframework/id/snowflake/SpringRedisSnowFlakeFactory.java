@@ -101,7 +101,7 @@ public class SpringRedisSnowFlakeFactory implements SnowflakeFactory {
     while (true) {
       ++machineId;
       Boolean success = operations
-          .setIfAbsent(prefix + machineId, value, expire);
+        .setIfAbsent(prefix + machineId, value, expire);
       if (success != null && success) {
         log.info("SnowFlake register success: applicationName = " + applicationName + ", machineId = " + machineId);
         break;
@@ -130,14 +130,24 @@ public class SpringRedisSnowFlakeFactory implements SnowflakeFactory {
       return;
     }
     log.info("SnowFlake start automatically renewed, renewed cycle = "
-        + renewalIntervalSeconds + "s, expire = " + expireSeconds + "s");
+      + renewalIntervalSeconds + "s, expire = " + expireSeconds + "s");
     if (executorService == null) {
       executorService = Executors.newSingleThreadScheduledExecutor();
     }
     ValueOperations<String, String> operations = redisTemplate.opsForValue();
     executorService.scheduleAtFixedRate(() -> operations.set(prefix + machineId, value, expire),
-        renewalIntervalSeconds, renewalIntervalSeconds, TimeUnit.SECONDS);
+      renewalIntervalSeconds, renewalIntervalSeconds, TimeUnit.SECONDS);
     automaticallyRenewal = true;
+  }
+
+  @Override
+  public long dataCenterId() {
+    return dataCenterId;
+  }
+
+  @Override
+  public long machineId() {
+    return machineId;
   }
 
   @Nonnull

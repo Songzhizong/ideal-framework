@@ -24,6 +24,10 @@ import javax.annotation.Nonnull;
  */
 public interface SnowflakeFactory extends IDGeneratorFactory {
 
+  long dataCenterId();
+
+  long machineId();
+
   @Nonnull
   @Override
   SnowFlake getGenerator(@Nonnull String biz);

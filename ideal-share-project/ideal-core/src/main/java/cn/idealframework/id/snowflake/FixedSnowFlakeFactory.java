@@ -33,6 +33,16 @@ public class FixedSnowFlakeFactory implements SnowflakeFactory {
   private final long dataCenterId;
   private final long machineId;
 
+  @Override
+  public long dataCenterId() {
+    return dataCenterId;
+  }
+
+  @Override
+  public long machineId() {
+    return machineId;
+  }
+
   @Nonnull
   @Override
   public SnowFlake getGenerator(@Nonnull String biz) {
