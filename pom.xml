@@ -40,7 +40,7 @@
     <easypoi.version>4.4.0</easypoi.version>
     <jsr305.version>3.0.2</jsr305.version>
     <lombok.version>1.18.22</lombok.version>
-    <redisson.version>3.16.4</redisson.version>
+    <redisson.version>3.16.5</redisson.version>
     <zstd-jni.version>1.5.0-4</zstd-jni.version>
 
     <docker-maven-plugin.version>1.2.2</docker-maven-plugin.version>
