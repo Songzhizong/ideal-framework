@@ -27,25 +27,23 @@ public class JoinerTest {
 
   @Test
   public void test() {
-    String s1 = "{1,2,3,5}";
-    String s2 = "{,1,2,3,,5,}";
 
-    Joiner skipNull = Joiner.builder(",").prefix("{").postfix("}").skipNull().build();
-    Joiner joiner = Joiner.builder(",").prefix("{").postfix("}").build();
+    Joiner skipNull = Joiner.builder(", ").prefix("{").postfix("}").skipNull().build();
+    Joiner joiner = Joiner.builder(", ").prefix("{").postfix("}").build();
 
-    List<String> stringList = Lists.of(null, "1", "2", "3", null, "5", null);
+    List<String> stringList = Lists.of(null, "1", "2", "3", null, "5", null, "7");
     String join1 = skipNull.join(stringList);
-    Assert.assertEquals(s1, join1);
+    Assert.assertEquals("{1, 2, 3, 5, 7}", join1);
 
     String join2 = joiner.join(stringList);
-    Assert.assertEquals(s2, join2);
+    Assert.assertEquals("{, 1, 2, 3, , 5, , 7}", join2);
 
 
     List<Integer> intList = Lists.of(null, 1, 2, 3, null, 5, null);
     String join3 = skipNull.join(intList);
-    Assert.assertEquals(s1, join3);
+    Assert.assertEquals("{1, 2, 3, 5}", join3);
 
     String join4 = joiner.join(intList);
-    Assert.assertEquals(s2, join4);
+    Assert.assertEquals("{, 1, 2, 3, , 5, }", join4);
   }
 }

@@ -15,6 +15,7 @@
 ### 🐞 Bug Fixes
 
 - 修复部分手机号码无法通过正则校验的问题
+- 修复Joiner中连接符长度大于1时返回结果与预期不一致的问题
 
 ### 🔨 Dependency Upgrades
 
