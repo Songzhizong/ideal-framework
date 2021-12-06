@@ -27,7 +27,6 @@
   <packaging>pom</packaging>
 
   <modules>
-    <module>ideal-authentication</module>
     <module>ideal-cache</module>
     <module>ideal-core</module>
     <module>ideal-event</module>

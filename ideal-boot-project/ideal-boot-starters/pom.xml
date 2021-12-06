@@ -34,7 +34,6 @@
     <module>ideal-boot-starter-parent</module>
     <module>ideal-boot-starter-snowflake</module>
     <module>ideal-boot-starter-trace</module>
-    <module>ideal-boot-starter-authentication</module>
     <module>ideal-boot-starter-web</module>
     <module>ideal-boot-starter-lock</module>
     <module>ideal-boot-starter-cache</module>

@@ -30,7 +30,6 @@
     <module>ideal-boot-starter-module-operation</module>
     <module>ideal-boot-starter-module-snowflake</module>
     <module>ideal-boot-starter-module-trace</module>
-    <module>ideal-boot-starter-module-authentication</module>
     <module>ideal-boot-starter-module-event</module>
     <module>ideal-boot-starter-module-web</module>
     <module>ideal-boot-starter-module-lock</module>
