@@ -1,7 +1,6 @@
 # Auto Configure
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
   cn.idealframework.boot.autoconfigure.application.IdealBootApplicationAutoConfigure,\
-  cn.idealframework.boot.autoconfigure.authentication.IdealBootAuthenticationAutoConfigure,\
   cn.idealframework.boot.autoconfigure.cache.IdealBootCacheAutoConfigure,\
   cn.idealframework.boot.autoconfigure.cache.IdealBootCaffeineCacheAutoConfigure,\
   cn.idealframework.boot.autoconfigure.cache.IdealBootGuavaCacheAutoConfigure,\
