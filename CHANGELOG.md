@@ -11,11 +11,13 @@
 - `PageResult`中的page方法名称修改为of
 - 添加`EventSuppliers`类简化事件发布
 - Lists新增ofArray方法
+- 统计时间维度枚举类中新增枚举值HOUR
 
 ### 🐞 Bug Fixes
 
 - 修复部分手机号码无法通过正则校验的问题
 - 修复Joiner中连接符长度大于1时返回结果与预期不一致的问题
+- 修复未引入ideal-event模块时可能导致服务启动失败的问题
 
 ### 🔨 Dependency Upgrades
 
