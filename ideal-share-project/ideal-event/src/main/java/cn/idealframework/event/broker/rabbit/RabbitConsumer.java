@@ -41,7 +41,9 @@ public class RabbitConsumer implements ChannelAwareMessageListener {
   private final EventDeliverer eventDeliverer;
   private final boolean enableLocalModel;
 
-  public RabbitConsumer(@Nonnull String queuePrefix, EventDeliverer eventDeliverer, boolean enableLocalModel) {
+  public RabbitConsumer(@Nonnull String queuePrefix,
+                        EventDeliverer eventDeliverer,
+                        boolean enableLocalModel) {
     this.enableLocalModel = enableLocalModel;
     if (!queuePrefix.endsWith(".")) {
       queuePrefix = queuePrefix + ".";
@@ -58,7 +60,8 @@ public class RabbitConsumer implements ChannelAwareMessageListener {
     }
     long deliveryTag = message.getMessageProperties().getDeliveryTag();
     String consumerQueue = message.getMessageProperties().getConsumerQueue();
-    String listenerName = RabbitEventUtils.getListenerNameByQueueName(queuePrefix, consumerQueue, enableLocalModel);
+    String listenerName = RabbitEventUtils
+      .getListenerNameByQueueName(queuePrefix, consumerQueue, enableLocalModel);
     byte[] body = message.getBody();
     String value = new String(body, StandardCharsets.UTF_8);
     if (StringUtils.isBlank(value) || value.charAt(0) != '{') {
