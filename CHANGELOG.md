@@ -8,7 +8,6 @@
 - Result类返回失败将会反映在http状态码上
 - `BasicResult`添加`onFailureThrow`方法, 当返回失败时可调用此方法抛出`ResultException`以在服务间传递异常.
 - 为`Result`和`PageResult`添加`getOrThrow`方法
-- `PageResult`中的page方法名称修改为of
 - 添加`EventSuppliers`类简化事件发布
 - Lists新增ofArray方法
 - 统计时间维度枚举类中新增枚举值HOUR
