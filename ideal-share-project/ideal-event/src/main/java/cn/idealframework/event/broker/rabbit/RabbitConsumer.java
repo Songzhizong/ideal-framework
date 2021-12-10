@@ -63,6 +63,7 @@ public class RabbitConsumer implements ChannelAwareMessageListener {
     String value = new String(body, StandardCharsets.UTF_8);
     if (StringUtils.isBlank(value) || value.charAt(0) != '{') {
       log.warn("消息处理失败, 非json结构");
+      channel.basicAck(deliveryTag, false);
       return;
     }
     log.debug("Queue : " + consumerQueue + " message value: " + value);
@@ -71,6 +72,7 @@ public class RabbitConsumer implements ChannelAwareMessageListener {
       domainEvent = JsonUtils.parse(value, MESSAGE_TYPE_REFERENCE);
     } catch (Exception e) {
       log.warn("反序列化消息出现异常: " + e.getClass().getName() + " " + e.getMessage());
+      channel.basicAck(deliveryTag, false);
       return;
     }
     domainEvent.setListenerName(listenerName);
