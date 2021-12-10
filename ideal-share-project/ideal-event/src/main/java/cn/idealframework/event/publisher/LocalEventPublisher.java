@@ -22,6 +22,7 @@ import cn.idealframework.event.message.impl.SimpleDelivererEvent;
 import cn.idealframework.event.persistence.EventMessageRepository;
 import cn.idealframework.json.JsonUtils;
 import cn.idealframework.json.TypeReference;
+import cn.idealframework.lang.StringUtils;
 import lombok.extern.apachecommons.CommonsLog;
 
 import javax.annotation.Nonnull;
@@ -52,8 +53,18 @@ public class LocalEventPublisher extends AbstractEventPublisher {
   public void brokerPublish(@Nonnull Collection<EventMessage<?>> messages) {
     for (EventMessage<?> message : messages) {
       String messageString = JsonUtils.toJsonString(message);
+      if (StringUtils.isBlank(messageString) || messageString.charAt(0) != '{') {
+        log.warn("消息处理失败, 非json结构");
+        continue;
+      }
       log.debug("Publish event message: " + messageString);
-      DeliverEventMessage deliverMessage = JsonUtils.parse(messageString, TYPE_REFERENCE);
+      DeliverEventMessage deliverMessage = null;
+      try {
+        deliverMessage = JsonUtils.parse(messageString, TYPE_REFERENCE);
+      } catch (Exception e) {
+        log.warn("反序列化消息出现异常: " + e.getClass().getName() + " " + e.getMessage());
+        continue;
+      }
       try {
         eventDeliverer.deliver(deliverMessage);
       } catch (Exception e) {

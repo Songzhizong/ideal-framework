@@ -51,6 +51,10 @@ public class ListenerEventDeliverer implements EventDeliverer {
   public void deliver(@Nonnull DeliverEventMessage message) throws Exception {
     String uuid = message.uuid();
     String topic = message.getTopic();
+    if (StringUtils.isAnyBlank(uuid, topic)) {
+      log.warn("消息处理失败, 非eventMessage结构: " + JsonUtils.toJsonString(message));
+      return;
+    }
     String listenerName = message.getListenerName();
     Collection<RemoteEventProcessor> handlers = getEventHandlers(message, listenerName);
     for (RemoteEventProcessor handler : handlers) {
@@ -72,8 +76,19 @@ public class ListenerEventDeliverer implements EventDeliverer {
         } else {
           payloadString = JsonUtils.toJsonString(payload);
         }
+        char c = payloadString.charAt(0);
+        if (c != '{') {
+          log.warn("消息处理失败, 非json结构");
+          return;
+        }
         JavaType payloadType = handler.getPayloadType();
-        Object param = JacksonUtils.parse(payloadString, payloadType);
+        Object param;
+        try {
+          param = JacksonUtils.parse(payloadString, payloadType);
+        } catch (Exception e) {
+          log.warn("反序列化消息出现异常: " + e.getClass().getName() + " " + e.getMessage());
+          return;
+        }
         SimpleEventContext<Object> context = SimpleEventContext.of(message, param);
         handler.invoke(context);
         if (log.isDebugEnabled()) {
