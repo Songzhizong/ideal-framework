@@ -22,6 +22,7 @@
 ### 🔨 Dependency Upgrades
 
 - 添加easypoi版本管理
+- 添加commons-net依赖管理
 - spring-boot升级到2.6.1
 - spring-cloud升级到2021.0.0
 - kotlin升级到1.6.0
