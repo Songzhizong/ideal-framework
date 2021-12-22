@@ -51,9 +51,9 @@ public class Cron {
   private String week = "?";
   private String month = "*";
   private String day = "*";
-  private String hour = "0";
-  private String minute = "0";
-  private String second = "0";
+  private String hour = "*";
+  private String minute = "*";
+  private String second = "*";
 
   @Override
   public String toString() {
@@ -90,7 +90,6 @@ public class Cron {
   }
 
 
-  @SuppressWarnings("GrazieInspection")
   @Getter
   @Setter
   public static class CronBuilder {
@@ -98,9 +97,9 @@ public class Cron {
     private String week = "?";
     private String month = "*";
     private String day = "*";
-    private String hour = "0";
-    private String minute = "0";
-    private String second = "0";
+    private String hour = "*";
+    private String minute = "*";
+    private String second = "*";
 
     private CronBuilder() {
     }
