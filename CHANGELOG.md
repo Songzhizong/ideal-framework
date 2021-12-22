@@ -23,9 +23,12 @@
 
 - 添加easypoi版本管理
 - 添加commons-net依赖管理
-- spring-boot升级到2.6.1
+- spring-boot升级到2.6.2
 - spring-cloud升级到2021.0.0
-- kotlin升级到1.6.0
+- kotlin升级到1.6.10
+- vertx升级到4.2.3
+- redisson升级到3.16.6
+- zstd-jni升级到1.5.0-5
 
 ### ⚠️ Compatibility
 

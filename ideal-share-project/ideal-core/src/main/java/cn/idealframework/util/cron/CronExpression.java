@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cn.idealframework.util;
+package cn.idealframework.util.cron;
 
 import java.io.Serializable;
 import java.text.ParseException;
@@ -1680,10 +1680,10 @@ public final class CronExpression implements Serializable, Cloneable {
   public Object clone() {
     return new CronExpression(this);
   }
-}
 
-class ValueSet {
-  public int value;
+  public static class ValueSet {
+    public int value;
 
-  public int pos;
+    public int pos;
+  }
 }
