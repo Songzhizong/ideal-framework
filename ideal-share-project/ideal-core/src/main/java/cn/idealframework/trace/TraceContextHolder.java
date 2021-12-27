@@ -29,7 +29,6 @@ import java.util.Optional;
  */
 @CommonsLog
 public final class TraceContextHolder {
-  private static final ThreadLocal<Boolean> MARK_THREAD_LOCAL = new ThreadLocal<>();
   private static final ThreadLocal<TraceContext> TRACE_CONTEXT_THREAD_LOCAL = new ThreadLocal<>();
   @Setter
   @Nonnull
@@ -38,7 +37,6 @@ public final class TraceContextHolder {
 
   @SuppressWarnings("UnusedReturnValue")
   public static TraceContext init(@Nonnull TraceContext context) {
-    MARK_THREAD_LOCAL.set(true);
     TRACE_CONTEXT_THREAD_LOCAL.set(context);
     return context;
   }
@@ -47,7 +45,6 @@ public final class TraceContextHolder {
   public static TraceContext init(@Nonnull String mode,
                                   @Nullable String traceId,
                                   @Nullable String spanId) {
-    MARK_THREAD_LOCAL.set(true);
     if (StringUtils.isBlank(traceId)) {
       traceId = traceIdGenerator.generateTraceId();
       spanId = "1";
@@ -61,28 +58,16 @@ public final class TraceContextHolder {
   }
 
   public static boolean isInitialized() {
-    Boolean aBoolean = MARK_THREAD_LOCAL.get();
-    return aBoolean != null && aBoolean;
+    return TRACE_CONTEXT_THREAD_LOCAL.get() != null;
   }
 
   public static void release() {
-    MARK_THREAD_LOCAL.remove();
     TRACE_CONTEXT_THREAD_LOCAL.remove();
   }
 
   @Nonnull
   public static Optional<TraceContext> current() {
     return Optional.ofNullable(TRACE_CONTEXT_THREAD_LOCAL.get());
-  }
-
-  @Nonnull
-  public static TraceContext requiredCurrent() {
-    TraceContext context = TRACE_CONTEXT_THREAD_LOCAL.get();
-    if (context != null) {
-      return context;
-    }
-    log.warn("TraceContext未初始化");
-    throw new TraceContextUnInitException();
   }
 
   private TraceContextHolder() {

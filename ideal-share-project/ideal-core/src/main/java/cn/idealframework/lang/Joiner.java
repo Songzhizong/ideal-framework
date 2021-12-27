@@ -129,7 +129,8 @@ public class Joiner {
         stringBuilder.append(separator);
       }
     }
-    stringBuilder.deleteCharAt(stringBuilder.length() - 1);
+    int builderLength = stringBuilder.length();
+    stringBuilder.delete(builderLength - separator.length(), builderLength);
     if (postfix != null) {
       stringBuilder.append(postfix);
     }

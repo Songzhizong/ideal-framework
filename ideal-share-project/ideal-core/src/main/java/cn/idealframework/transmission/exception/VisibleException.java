@@ -42,10 +42,6 @@ public class VisibleException extends Exception implements ResMsg {
     this.message = resMsg.message();
   }
 
-  public VisibleException(int code, @Nonnull String message) {
-    this(200, code, message);
-  }
-
   public VisibleException(int httpStatus, int code, @Nonnull String message) {
     super(message);
     this.httpStatus = httpStatus;

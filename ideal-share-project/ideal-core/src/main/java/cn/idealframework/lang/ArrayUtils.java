@@ -28,6 +28,7 @@ public class ArrayUtils {
    * An empty immutable {@code char} array.
    */
   public static final char[] EMPTY_CHAR_ARRAY = new char[0];
+  public static final int[] EMPTY_INT_ARRAY = new int[0];
 
   public static int getLength(final Object array) {
     if (array == null) {

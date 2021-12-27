@@ -13,25 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cn.idealframework.boot.autoconfigure.authentication;
+package cn.idealframework.transmission.exception;
 
-import cn.idealframework.authentication.Certificate;
-import lombok.Getter;
-import lombok.Setter;
-import org.springframework.boot.context.properties.ConfigurationProperties;
-
-import java.util.HashSet;
-import java.util.Set;
+import javax.annotation.Nonnull;
 
 /**
- * @author 宋志宗 on 2021/6/24
+ * @author 宋志宗 on 2021/11/11
  */
-@Getter
-@Setter
-@ConfigurationProperties(prefix = "ideal.authentication")
-public class IdealBootAuthenticationProperties {
-
-  private Set<String> matchPatterns;
-
-  private Set<Certificate> certificates = new HashSet<>();
+public class ResultException extends VisibleRuntimeException {
+  public ResultException(int httpStatus, int code, @Nonnull String message) {
+    super(httpStatus, code, message);
+  }
 }

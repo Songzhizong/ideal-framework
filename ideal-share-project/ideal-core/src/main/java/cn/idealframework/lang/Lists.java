@@ -35,6 +35,11 @@ public final class Lists {
   }
 
   @Nonnull
+  public static <E> List<E> unmodifiable(@Nonnull List<E> list) {
+    return Collections.unmodifiableList(list);
+  }
+
+  @Nonnull
   public static <E> List<E> of() {
     return Collections.emptyList();
   }
@@ -132,6 +137,38 @@ public final class Lists {
   }
 
   @Nonnull
+  public static <E> List<E> ofArray(@Nonnull E[] intArray) {
+    return Arrays.asList(intArray);
+  }
+
+  @Nonnull
+  public static List<Character> ofArray(@Nonnull char[] charArray) {
+    List<Character> res = new ArrayList<>(charArray.length);
+    for (char i : charArray) {
+      res.add(i);
+    }
+    return unmodifiable(res);
+  }
+
+  @Nonnull
+  public static List<Integer> ofArray(@Nonnull int[] intArray) {
+    List<Integer> res = new ArrayList<>(intArray.length);
+    for (int i : intArray) {
+      res.add(i);
+    }
+    return unmodifiable(res);
+  }
+
+  @Nonnull
+  public static List<Long> ofArray(@Nonnull long[] longArray) {
+    List<Long> res = new ArrayList<>(longArray.length);
+    for (long i : longArray) {
+      res.add(i);
+    }
+    return unmodifiable(res);
+  }
+
+  @Nonnull
   public static <E> ArrayList<E> arrayList(E e) {
     ArrayList<E> list = new ArrayList<>();
     list.add(e);
@@ -225,53 +262,87 @@ public final class Lists {
   }
 
   @Nonnull
-  public static <E> List<E> merge(@Nonnull List<? extends E> list1,
-                                  @Nonnull List<? extends E> list2) {
-    int capacity = list1.size() + list2.size();
+  public static <E> List<E> merge(@Nonnull Collection<? extends E> c1,
+                                  @Nonnull Collection<? extends E> c2) {
+    int capacity = c1.size() + c2.size();
     List<E> result = new ArrayList<>(capacity);
-    result.addAll(list1);
-    result.addAll(list2);
+    result.addAll(c1);
+    result.addAll(c2);
     return result;
   }
 
   @Nonnull
-  public static <E> List<E> merge(@Nonnull List<? extends E> list1,
-                                  @Nonnull List<? extends E> list2,
-                                  @Nonnull List<? extends E> list3) {
-    int capacity = list1.size() + list2.size() + list3.size();
+  public static <E> List<E> merge(@Nonnull Collection<? extends E> c1,
+                                  @Nonnull Collection<? extends E> c2,
+                                  @Nonnull Collection<? extends E> c3) {
+    int capacity = c1.size() + c2.size() + c3.size();
     List<E> result = new ArrayList<>(capacity);
-    result.addAll(list1);
-    result.addAll(list2);
-    result.addAll(list3);
+    result.addAll(c1);
+    result.addAll(c2);
+    result.addAll(c3);
     return result;
   }
 
   @Nonnull
-  public static <E> List<E> merge(@Nonnull List<? extends E> list1,
-                                  @Nonnull List<? extends E> list2,
-                                  @Nonnull List<? extends E> list3,
-                                  @Nonnull List<? extends E> list4) {
-    int capacity = list1.size() + list2.size() + list3.size() + list4.size();
+  public static <E> List<E> merge(@Nonnull Collection<? extends E> c1,
+                                  @Nonnull Collection<? extends E> c2,
+                                  @Nonnull Collection<? extends E> c3,
+                                  @Nonnull Collection<? extends E> c4) {
+    int capacity = c1.size() + c2.size() + c3.size() + c4.size();
     List<E> result = new ArrayList<>(capacity);
-    result.addAll(list1);
-    result.addAll(list2);
-    result.addAll(list3);
-    result.addAll(list4);
+    result.addAll(c1);
+    result.addAll(c2);
+    result.addAll(c3);
+    result.addAll(c4);
+    return result;
+  }
+
+  @Nonnull
+  public static <E> List<E> merge(@Nonnull Collection<? extends E> c1,
+                                  @Nonnull Collection<? extends E> c2,
+                                  @Nonnull Collection<? extends E> c3,
+                                  @Nonnull Collection<? extends E> c4,
+                                  @Nonnull Collection<? extends E> c5) {
+    int capacity = c1.size() + c2.size() + c3.size() + c4.size() + c5.size();
+    List<E> result = new ArrayList<>(capacity);
+    result.addAll(c1);
+    result.addAll(c2);
+    result.addAll(c3);
+    result.addAll(c4);
+    result.addAll(c5);
+    return result;
+  }
+
+  @Nonnull
+  public static <E> List<E> merge(@Nonnull Collection<? extends E> c1,
+                                  @Nonnull Collection<? extends E> c2,
+                                  @Nonnull Collection<? extends E> c3,
+                                  @Nonnull Collection<? extends E> c4,
+                                  @Nonnull Collection<? extends E> c5,
+                                  @Nonnull Collection<? extends E> c6) {
+    int capacity = c1.size() + c2.size() + c3.size() + c4.size() + c5.size() + c6.size();
+    List<E> result = new ArrayList<>(capacity);
+    result.addAll(c1);
+    result.addAll(c2);
+    result.addAll(c3);
+    result.addAll(c4);
+    result.addAll(c5);
+    result.addAll(c6);
     return result;
   }
 
   @Nonnull
   @SafeVarargs
-  public static <E> List<E> merge(@Nonnull List<? extends E> list,
-                                  @Nonnull List<? extends E>... lists) {
-    int capacity = list.size();
-    for (List<? extends E> es : lists) {
-      capacity += es.size();
+  public static <E> List<E> merge(@Nonnull Collection<? extends E> collection,
+                                  @Nonnull Collection<? extends E>... cs) {
+    int capacity = collection.size();
+    for (Collection<? extends E> c : cs) {
+      capacity += c.size();
     }
     List<E> result = new ArrayList<>(capacity);
-    result.addAll(list);
-    for (List<? extends E> ts : lists) {
-      result.addAll(ts);
+    result.addAll(collection);
+    for (Collection<? extends E> c : cs) {
+      result.addAll(c);
     }
     return result;
   }
@@ -334,15 +405,15 @@ public final class Lists {
   /**
    * 对集合进行分块并转换
    *
-   * @param list      集合
-   * @param size      块大小
-   * @param transform 转换函数
+   * @param collection 集合
+   * @param size       块大小
+   * @param transform  转换函数
    * @author 宋志宗 on 2021/10/27
    */
   @Nonnull
-  public static <E, R> List<List<R>> chunked(@Nonnull List<E> list,
+  public static <E, R> List<List<R>> chunked(@Nonnull Collection<E> collection,
                                              int size, @Nonnull Function<E, R> transform) {
-    return CollectionUtils.chunked(list, size, transform);
+    return CollectionUtils.chunked(collection, size, transform);
   }
 
   private Lists() {

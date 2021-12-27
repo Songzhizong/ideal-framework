@@ -69,14 +69,14 @@ public class KafkaEventConsumer {
     this.kafkaConsumer = new KafkaConsumer<>(configs);
     this.kafkaConsumer.subscribe(properties.getTopics());
     threadPoolExecutor = new ThreadPoolExecutor(properties.getCorePoolSize(),
-        properties.getMaximumPoolSize(), 5, TimeUnit.MINUTES, new SynchronousQueue<>(),
-        new BasicThreadFactory.Builder().namingPattern("event-pool-%d").build(),
-        (r, executor) -> {
-          if (!executor.isShutdown()) {
-            log.error("Event pool is full");
-            r.run();
-          }
-        });
+      properties.getMaximumPoolSize(), 5, TimeUnit.MINUTES, new SynchronousQueue<>(),
+      new BasicThreadFactory.Builder().namingPattern("event-pool-%d").build(),
+      (r, executor) -> {
+        if (!executor.isShutdown()) {
+          log.error("Event pool is full");
+          r.run();
+        }
+      });
     Runtime.getRuntime().addShutdownHook(new Thread(() -> {
       this.running = false;
       consumerExecutor.shutdown();
@@ -97,7 +97,17 @@ public class KafkaEventConsumer {
         List<Callable<Boolean>> tasks = new ArrayList<>();
         for (ConsumerRecord<String, String> record : records) {
           String value = record.value();
-          SimpleDelivererEvent message = JsonUtils.parse(value, MESSAGE_TYPE_REFERENCE);
+          if (StringUtils.isBlank(value) || value.charAt(0) != '{') {
+            log.warn("消息处理失败, 非json结构");
+            continue;
+          }
+          SimpleDelivererEvent message;
+          try {
+            message = JsonUtils.parse(value, MESSAGE_TYPE_REFERENCE);
+          } catch (Exception e) {
+            log.warn("反序列化消息出现异常: " + e.getClass().getName() + " " + e.getMessage());
+            continue;
+          }
           tasks.add(() -> {
             eventDeliverer.deliver(message);
             return true;

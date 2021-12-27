@@ -15,6 +15,7 @@
  */
 package cn.idealframework.transmission;
 
+import cn.idealframework.transmission.exception.ResultException;
 import cn.idealframework.transmission.exception.VisibleException;
 import cn.idealframework.transmission.exception.VisibleRuntimeException;
 import lombok.Getter;
@@ -102,6 +103,7 @@ public class Result<T> extends BasicResult {
   public static <T> Result<T> failure(@Nonnull ResMsg resMsg) {
     Result<T> res = new Result<>();
     res.setSuccess(false);
+    res.setHttpStatus(res.getHttpStatus());
     res.setCode(resMsg.code());
     res.setMessage(resMsg.message());
     return res;
@@ -146,6 +148,7 @@ public class Result<T> extends BasicResult {
     }
     Result<T> res = new Result<>();
     res.setSuccess(false);
+    res.setHttpStatus(500);
     res.setCode(ResMsg.INTERNAL_SERVER_ERROR.code());
     res.setMessage(t.getMessage());
     return res;
@@ -156,6 +159,7 @@ public class Result<T> extends BasicResult {
     Result<T> res = new Result<>();
     res.setSuccess(false);
     res.setCode(ResMsg.INTERNAL_SERVER_ERROR.code());
+    res.setHttpStatus(500);
     res.setMessage(message);
     return res;
   }
@@ -171,6 +175,13 @@ public class Result<T> extends BasicResult {
       retRes.setData(function.apply(this.getData()));
     }
     return retRes;
+  }
+
+  @Nonnull
+  @Transient
+  public T getOrThrow() throws ResultException {
+    onFailureThrow();
+    return requiredData();
   }
 
   /**

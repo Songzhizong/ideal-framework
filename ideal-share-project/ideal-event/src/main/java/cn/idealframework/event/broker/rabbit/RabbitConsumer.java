@@ -19,12 +19,14 @@ import cn.idealframework.event.listener.EventDeliverer;
 import cn.idealframework.event.message.impl.SimpleDelivererEvent;
 import cn.idealframework.json.JsonUtils;
 import cn.idealframework.json.TypeReference;
+import cn.idealframework.lang.StringUtils;
 import com.rabbitmq.client.Channel;
 import lombok.extern.apachecommons.CommonsLog;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.rabbit.listener.api.ChannelAwareMessageListener;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.nio.charset.StandardCharsets;
 
 /**
@@ -39,7 +41,9 @@ public class RabbitConsumer implements ChannelAwareMessageListener {
   private final EventDeliverer eventDeliverer;
   private final boolean enableLocalModel;
 
-  public RabbitConsumer(@Nonnull String queuePrefix, EventDeliverer eventDeliverer, boolean enableLocalModel) {
+  public RabbitConsumer(@Nonnull String queuePrefix,
+                        EventDeliverer eventDeliverer,
+                        boolean enableLocalModel) {
     this.enableLocalModel = enableLocalModel;
     if (!queuePrefix.endsWith(".")) {
       queuePrefix = queuePrefix + ".";
@@ -49,14 +53,31 @@ public class RabbitConsumer implements ChannelAwareMessageListener {
   }
 
   @Override
-  public void onMessage(@Nonnull Message message, @Nonnull Channel channel) throws Exception {
+  public void onMessage(@Nonnull Message message, @Nullable Channel channel) throws Exception {
+    if (channel == null) {
+      log.warn("channel is null");
+      return;
+    }
     long deliveryTag = message.getMessageProperties().getDeliveryTag();
     String consumerQueue = message.getMessageProperties().getConsumerQueue();
-    String listenerName = RabbitEventUtils.getListenerNameByQueueName(queuePrefix, consumerQueue, enableLocalModel);
+    String listenerName = RabbitEventUtils
+      .getListenerNameByQueueName(queuePrefix, consumerQueue, enableLocalModel);
     byte[] body = message.getBody();
     String value = new String(body, StandardCharsets.UTF_8);
+    if (StringUtils.isBlank(value) || value.charAt(0) != '{') {
+      log.warn("消息处理失败, 非json结构");
+      channel.basicAck(deliveryTag, false);
+      return;
+    }
     log.debug("Queue : " + consumerQueue + " message value: " + value);
-    SimpleDelivererEvent domainEvent = JsonUtils.parse(value, MESSAGE_TYPE_REFERENCE);
+    SimpleDelivererEvent domainEvent;
+    try {
+      domainEvent = JsonUtils.parse(value, MESSAGE_TYPE_REFERENCE);
+    } catch (Exception e) {
+      log.warn("反序列化消息出现异常: " + e.getClass().getName() + " " + e.getMessage());
+      channel.basicAck(deliveryTag, false);
+      return;
+    }
     domainEvent.setListenerName(listenerName);
     try {
       eventDeliverer.deliver(domainEvent);

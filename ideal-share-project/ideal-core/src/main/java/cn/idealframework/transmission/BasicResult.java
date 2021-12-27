@@ -17,9 +17,11 @@ package cn.idealframework.transmission;
 
 import cn.idealframework.lang.StringUtils;
 import cn.idealframework.trace.TraceContextHolder;
+import cn.idealframework.transmission.exception.ResultException;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
+import lombok.extern.apachecommons.CommonsLog;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -31,14 +33,17 @@ import java.io.Serializable;
  */
 @Getter
 @Setter
+@CommonsLog
 @Accessors(chain = true)
-public class BasicResult implements Serializable {
+public class BasicResult implements ResMsg, Serializable {
   private static final long serialVersionUID = 1658084050565123764L;
 
   @Nullable
   private String traceId;
 
   private boolean success = true;
+
+  private int httpStatus = 200;
 
   private int code = 200;
 
@@ -60,5 +65,30 @@ public class BasicResult implements Serializable {
       message = "";
     }
     this.message = message;
+  }
+
+  /**
+   * 当调用失败时抛出 {@link ResultException}
+   */
+  public void onFailureThrow() throws ResultException {
+    if (isFailure()) {
+      int httpStatus = getHttpStatus();
+      int code = getCode();
+      String message = getMessage();
+      log.info("Result is failure, httpStatus: "
+        + httpStatus + " code: " + code + " message: " + message);
+      throw new ResultException(httpStatus, code, message);
+    }
+  }
+
+  @Override
+  public int code() {
+    return getCode();
+  }
+
+  @Nonnull
+  @Override
+  public String message() {
+    return getMessage();
   }
 }

@@ -32,6 +32,6 @@ public class ResourceNotFoundException extends VisibleRuntimeException {
   }
 
   public ResourceNotFoundException(@Nonnull String message) {
-    super(ResMsg.NOT_FOUND.code(), message);
+    super(ResMsg.NOT_FOUND.httpStatus(), ResMsg.NOT_FOUND.code(), message);
   }
 }

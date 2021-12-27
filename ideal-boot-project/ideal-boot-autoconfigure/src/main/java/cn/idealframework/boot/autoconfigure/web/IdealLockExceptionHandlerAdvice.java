@@ -18,6 +18,7 @@ package cn.idealframework.boot.autoconfigure.web;
 import cn.idealframework.boot.starter.module.lock.LockModule;
 import cn.idealframework.lock.DistributedLockConflictException;
 import cn.idealframework.trace.TraceContextHolder;
+import cn.idealframework.transmission.ResMsg;
 import cn.idealframework.transmission.Result;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.apachecommons.CommonsLog;
@@ -58,9 +59,10 @@ public class IdealLockExceptionHandlerAdvice {
   @ExceptionHandler(DistributedLockConflictException.class)
   public ResponseEntity<Object> distributedLockConflictExceptionHandler(@Nonnull DistributedLockConflictException ex) {
     Result<Object> body = Result.exception(ex);
+    body.setHttpStatus(ResMsg.INTERNAL_SERVER_ERROR.httpStatus());
     String message = ex.getMessage();
     TraceContextHolder.current().ifPresent(context -> body.setTraceId(context.getTraceId()));
     log.info(message);
-    return new ResponseEntity<>(body, RESPONSE_HEADERS, HttpStatus.OK);
+    return new ResponseEntity<>(body, RESPONSE_HEADERS, HttpStatus.INTERNAL_SERVER_ERROR);
   }
 }

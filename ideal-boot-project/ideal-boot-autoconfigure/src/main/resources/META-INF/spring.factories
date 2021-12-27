@@ -1,7 +1,6 @@
 # Auto Configure
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
   cn.idealframework.boot.autoconfigure.application.IdealBootApplicationAutoConfigure,\
-  cn.idealframework.boot.autoconfigure.authentication.IdealBootAuthenticationAutoConfigure,\
   cn.idealframework.boot.autoconfigure.cache.IdealBootCacheAutoConfigure,\
   cn.idealframework.boot.autoconfigure.cache.IdealBootCaffeineCacheAutoConfigure,\
   cn.idealframework.boot.autoconfigure.cache.IdealBootGuavaCacheAutoConfigure,\
@@ -14,6 +13,7 @@ org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
   cn.idealframework.boot.autoconfigure.event.transaction.IdealBootEventNoneTransactionAutoConfigure,\
   cn.idealframework.boot.autoconfigure.event.persistent.IdealBootEventPersistentAutoConfigure,\
   cn.idealframework.boot.autoconfigure.event.broker.IdealBootEventRabbitBrokerAutoConfigure,\
+  cn.idealframework.boot.autoconfigure.event.broker.IdealBootEventRabbitBrokerRunner,\
   cn.idealframework.boot.autoconfigure.event.idempotent.IdealBootEventRedisIdempotentAutoConfigure,\
   cn.idealframework.boot.autoconfigure.event.transaction.IdealBootEventAutomaticEventPublisherRunner,\
   cn.idealframework.boot.autoconfigure.event.transaction.IdealBootEventTransactionAutoConfigure,\

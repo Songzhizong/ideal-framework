@@ -70,22 +70,24 @@ public class GeneralExceptionHandlerAdvice {
   @ExceptionHandler(VisibleRuntimeException.class)
   public ResponseEntity<Object> visibleRuntimeExceptionHandler(
     @Nonnull VisibleRuntimeException ex) {
-    Result<Object> body = Result.exception(ex);
     String message = ex.getMessage();
-    TraceContextHolder.current().ifPresent(context -> body.setTraceId(context.getTraceId()));
-    log.info(message);
     int httpStatus = ex.httpStatus();
+    log.info(message);
+    Result<Object> body = Result.exception(ex);
+    body.setHttpStatus(httpStatus);
+    TraceContextHolder.current().ifPresent(context -> body.setTraceId(context.getTraceId()));
     return new ResponseEntity<>(body, RESPONSE_HEADERS, HttpStatus.valueOf(httpStatus));
   }
 
   @Nonnull
   @ExceptionHandler(VisibleException.class)
   public ResponseEntity<Object> visibleExceptionHandler(@Nonnull VisibleException ex) {
-    Result<Object> body = Result.exception(ex);
     String message = ex.getMessage();
-    TraceContextHolder.current().ifPresent(context -> body.setTraceId(context.getTraceId()));
     log.info(message);
     int httpStatus = ex.httpStatus();
+    Result<Object> body = Result.exception(ex);
+    body.setHttpStatus(httpStatus);
+    TraceContextHolder.current().ifPresent(context -> body.setTraceId(context.getTraceId()));
     return new ResponseEntity<>(body, RESPONSE_HEADERS, HttpStatus.valueOf(httpStatus));
   }
 
@@ -94,10 +96,9 @@ public class GeneralExceptionHandlerAdvice {
   public ResponseEntity<Object> jsonFormatExceptionHandler(@Nonnull JsonFormatException ex) {
     log.info("JsonFormatException: ", ex);
     Result<Object> body = Result.exception(ex);
-    String message = ex.getMessage();
+    body.setHttpStatus(500);
     TraceContextHolder.current().ifPresent(context -> body.setTraceId(context.getTraceId()));
-    log.info(message);
-    return new ResponseEntity<>(body, RESPONSE_HEADERS, HttpStatus.OK);
+    return new ResponseEntity<>(body, RESPONSE_HEADERS, HttpStatus.INTERNAL_SERVER_ERROR);
   }
 
   @Nonnull
@@ -105,10 +106,9 @@ public class GeneralExceptionHandlerAdvice {
   public ResponseEntity<Object> jsonParseExceptionHandler(@Nonnull JsonParseException ex) {
     log.info("JsonParseException: ", ex);
     Result<Object> body = Result.exception(ex);
-    String message = ex.getMessage();
+    body.setHttpStatus(500);
     TraceContextHolder.current().ifPresent(context -> body.setTraceId(context.getTraceId()));
-    log.info(message);
-    return new ResponseEntity<>(body, RESPONSE_HEADERS, HttpStatus.OK);
+    return new ResponseEntity<>(body, RESPONSE_HEADERS, HttpStatus.INTERNAL_SERVER_ERROR);
   }
 
   /**
@@ -123,10 +123,11 @@ public class GeneralExceptionHandlerAdvice {
     log.info("@Valid fail : " + message);
     BasicResult res = new BasicResult();
     res.setSuccess(false);
+    res.setHttpStatus(ResMsg.BAD_REQUEST.httpStatus());
     res.setCode(ResMsg.BAD_REQUEST.code());
     res.setMessage(message);
     TraceContextHolder.current().ifPresent(context -> res.setTraceId(context.getTraceId()));
-    return new ResponseEntity<>(res, RESPONSE_HEADERS, HttpStatus.OK);
+    return new ResponseEntity<>(res, RESPONSE_HEADERS, HttpStatus.BAD_REQUEST);
   }
 
 
@@ -141,10 +142,11 @@ public class GeneralExceptionHandlerAdvice {
     log.info("@Valid fail : " + message);
     BasicResult res = new BasicResult();
     res.setSuccess(false);
+    res.setHttpStatus(ResMsg.BAD_REQUEST.httpStatus());
     res.setCode(ResMsg.BAD_REQUEST.code());
     res.setMessage(message);
     TraceContextHolder.current().ifPresent(context -> res.setTraceId(context.getTraceId()));
-    return new ResponseEntity<>(res, RESPONSE_HEADERS, HttpStatus.OK);
+    return new ResponseEntity<>(res, RESPONSE_HEADERS, HttpStatus.BAD_REQUEST);
   }
 
   @ExceptionHandler(HttpMessageNotReadableException.class)
@@ -165,10 +167,11 @@ public class GeneralExceptionHandlerAdvice {
     log.info(originalMessage);
     BasicResult res = new BasicResult();
     res.setSuccess(false);
+    res.setHttpStatus(ResMsg.BAD_REQUEST.httpStatus());
     res.setCode(ResMsg.BAD_REQUEST.code());
     res.setMessage(originalMessage);
     TraceContextHolder.current().ifPresent(context -> res.setTraceId(context.getTraceId()));
-    return new ResponseEntity<>(res, RESPONSE_HEADERS, HttpStatus.OK);
+    return new ResponseEntity<>(res, RESPONSE_HEADERS, HttpStatus.BAD_REQUEST);
   }
 
   @Nonnull
@@ -182,10 +185,11 @@ public class GeneralExceptionHandlerAdvice {
     log.info(message);
     BasicResult res = new BasicResult();
     res.setSuccess(false);
+    res.setHttpStatus(ResMsg.BAD_REQUEST.httpStatus());
     res.setCode(ResMsg.BAD_REQUEST.code());
     res.setMessage(message);
     TraceContextHolder.current().ifPresent(context -> res.setTraceId(context.getTraceId()));
-    return new ResponseEntity<>(res, RESPONSE_HEADERS, HttpStatus.OK);
+    return new ResponseEntity<>(res, RESPONSE_HEADERS, HttpStatus.BAD_REQUEST);
   }
 
   @Nonnull
@@ -199,10 +203,11 @@ public class GeneralExceptionHandlerAdvice {
     log.info("", ex);
     BasicResult res = new BasicResult();
     res.setSuccess(false);
+    res.setHttpStatus(ResMsg.BAD_REQUEST.httpStatus());
     res.setCode(ResMsg.BAD_REQUEST.code());
     res.setMessage(message);
     TraceContextHolder.current().ifPresent(context -> res.setTraceId(context.getTraceId()));
-    return new ResponseEntity<>(res, RESPONSE_HEADERS, HttpStatus.OK);
+    return new ResponseEntity<>(res, RESPONSE_HEADERS, HttpStatus.BAD_REQUEST);
   }
 
   @Nonnull
@@ -216,10 +221,11 @@ public class GeneralExceptionHandlerAdvice {
     log.info(message);
     BasicResult res = new BasicResult();
     res.setSuccess(false);
+    res.setHttpStatus(ResMsg.METHOD_NOT_ALLOWED.httpStatus());
     res.setCode(ResMsg.METHOD_NOT_ALLOWED.code());
     res.setMessage(message);
     TraceContextHolder.current().ifPresent(context -> res.setTraceId(context.getTraceId()));
-    return new ResponseEntity<>(res, RESPONSE_HEADERS, HttpStatus.OK);
+    return new ResponseEntity<>(res, RESPONSE_HEADERS, HttpStatus.METHOD_NOT_ALLOWED);
   }
 
   @Nonnull
@@ -233,10 +239,11 @@ public class GeneralExceptionHandlerAdvice {
     log.info(message);
     BasicResult res = new BasicResult();
     res.setSuccess(false);
+    res.setHttpStatus(ResMsg.BAD_REQUEST.httpStatus());
     res.setCode(ResMsg.BAD_REQUEST.code());
     res.setMessage(message);
     TraceContextHolder.current().ifPresent(context -> res.setTraceId(context.getTraceId()));
-    return new ResponseEntity<>(res, RESPONSE_HEADERS, HttpStatus.OK);
+    return new ResponseEntity<>(res, RESPONSE_HEADERS, HttpStatus.BAD_REQUEST);
   }
 
   /**
@@ -253,9 +260,10 @@ public class GeneralExceptionHandlerAdvice {
     }
     BasicResult res = new BasicResult();
     res.setSuccess(false);
+    res.setHttpStatus(ResMsg.INTERNAL_SERVER_ERROR.httpStatus());
     res.setCode(ResMsg.INTERNAL_SERVER_ERROR.code());
     res.setMessage(message);
     TraceContextHolder.current().ifPresent(context -> res.setTraceId(context.getTraceId()));
-    return new ResponseEntity<>(res, RESPONSE_HEADERS, HttpStatus.OK);
+    return new ResponseEntity<>(res, RESPONSE_HEADERS, HttpStatus.INTERNAL_SERVER_ERROR);
   }
 }

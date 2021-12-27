@@ -18,20 +18,20 @@ package cn.idealframework.boot.autoconfigure.event.broker;
 import cn.idealframework.boot.autoconfigure.event.IdealBootEventProperties;
 import cn.idealframework.boot.autoconfigure.event.broker.properties.rabbit.IdealBootEventRabbitProperties;
 import cn.idealframework.boot.starter.module.event.EventModule;
-import cn.idealframework.event.broker.rabbit.*;
+import cn.idealframework.event.broker.rabbit.IdealRabbitMessageListenerContainer;
+import cn.idealframework.event.broker.rabbit.RabbitConsumer;
+import cn.idealframework.event.broker.rabbit.RabbitEventPublisher;
+import cn.idealframework.event.broker.rabbit.RabbitInitializer;
 import cn.idealframework.event.listener.EventDeliverer;
 import cn.idealframework.event.listener.EventListenerInitializer;
 import cn.idealframework.event.persistence.EventMessageRepository;
 import cn.idealframework.event.publisher.EventPublisher;
-import cn.idealframework.json.JsonUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.apachecommons.CommonsLog;
 import org.springframework.amqp.core.AmqpAdmin;
 import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.ApplicationArguments;
-import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -48,13 +48,9 @@ import javax.annotation.Nullable;
 @EnableConfigurationProperties(IdealBootEventProperties.class)
 @ConditionalOnClass({EventPublisher.class, EventModule.class})
 @ConditionalOnExpression("'${ideal.event.broker.type:LOCAL}'.equalsIgnoreCase('RABBIT')")
-public class IdealBootEventRabbitBrokerAutoConfigure implements ApplicationRunner {
+public class IdealBootEventRabbitBrokerAutoConfigure {
   private final IdealBootEventProperties properties;
   private final EventListenerInitializer eventListenerInitializer;
-
-  @SuppressWarnings("SpringJavaAutowiredMembersInspection")
-  @Autowired
-  private IdealRabbitMessageListenerContainer listenerContainer;
 
   @Bean
   public RabbitInitializer rabbitInitializer(AmqpAdmin amqpAdmin) {
@@ -92,12 +88,5 @@ public class IdealBootEventRabbitBrokerAutoConfigure implements ApplicationRunne
     int maxConcurrentConsumers = rabbit.getMaxConcurrentConsumers();
     return new IdealRabbitMessageListenerContainer(rabbitConsumer,
       connectionFactory, concurrentConsumers, maxConcurrentConsumers, prefetchCount);
-  }
-
-  @Override
-  public void run(ApplicationArguments args) {
-    String[] queues = RabbitEventUtils.getAllQueueName().toArray(new String[0]);
-    log.info("Listen queues: " + JsonUtils.toJsonString(queues));
-    listenerContainer.addQueueNames(queues);
   }
 }

@@ -81,10 +81,11 @@ public class SpringJdbcExceptionHandlerAdvice {
     log.info(message);
     BasicResult res = new BasicResult();
     res.setSuccess(false);
+    res.setHttpStatus(ResMsg.BAD_REQUEST.httpStatus());
     res.setCode(ResMsg.BAD_REQUEST.code());
     res.setMessage(message);
     TraceContextHolder.current().ifPresent(context -> res.setTraceId(context.getTraceId()));
-    return new ResponseEntity<>(res, RESPONSE_HEADERS, HttpStatus.OK);
+    return new ResponseEntity<>(res, RESPONSE_HEADERS, HttpStatus.BAD_REQUEST);
   }
 
   @Nonnull
@@ -105,10 +106,11 @@ public class SpringJdbcExceptionHandlerAdvice {
     log.info(message);
     BasicResult res = new BasicResult();
     res.setSuccess(false);
+    res.setHttpStatus(ResMsg.BAD_REQUEST.httpStatus());
     res.setCode(ResMsg.BAD_REQUEST.code());
     res.setMessage(message);
     TraceContextHolder.current().ifPresent(context -> res.setTraceId(context.getTraceId()));
-    return new ResponseEntity<>(res, RESPONSE_HEADERS, HttpStatus.OK);
+    return new ResponseEntity<>(res, RESPONSE_HEADERS, HttpStatus.BAD_REQUEST);
   }
 
 }

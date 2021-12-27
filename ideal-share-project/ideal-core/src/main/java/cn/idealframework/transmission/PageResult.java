@@ -15,11 +15,15 @@
  */
 package cn.idealframework.transmission;
 
+import cn.idealframework.lang.Lists;
+import cn.idealframework.transmission.exception.ResultException;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
 import javax.annotation.Nonnull;
+import java.beans.Transient;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.Function;
@@ -55,8 +59,36 @@ public class PageResult<E> extends BasicResult {
   }
 
   @Nonnull
+  public static <E> PageResult<E> empty(@Nonnull Paging paging) {
+    PageResult<E> res = new PageResult<>();
+    res.setPage(paging.getPageNumber());
+    res.setSize(paging.getPageSize());
+    res.setTotal(0);
+    res.setTotalPages(1);
+    res.setData(new ArrayList<>());
+    res.setSuccess(true);
+    res.setCode(ResMsg.SUCCESS.code());
+    res.setMessage(ResMsg.SUCCESS.message());
+    return res;
+  }
+
+  @Nonnull
+  public static <E> PageResult<E> singleton(@Nonnull Paging paging, @Nonnull E element) {
+    PageResult<E> res = new PageResult<>();
+    res.setPage(paging.getPageNumber());
+    res.setSize(paging.getPageSize());
+    res.setTotal(1);
+    res.setTotalPages(1);
+    res.setData(Lists.arrayList(element));
+    res.setSuccess(true);
+    res.setCode(ResMsg.SUCCESS.code());
+    res.setMessage(ResMsg.SUCCESS.message());
+    return res;
+  }
+
+  @Nonnull
   @SuppressWarnings("DuplicatedCode")
-  public static <E> PageResult<E> page(@Nonnull PageInfo<E> pageInfo) {
+  public static <E> PageResult<E> of(@Nonnull PageInfo<E> pageInfo) {
     PageResult<E> res = new PageResult<>();
     res.setPage(pageInfo.getPageNumber());
     res.setSize(pageInfo.getPageSize());
@@ -84,5 +116,29 @@ public class PageResult<E> extends BasicResult {
       res.setData(data.stream().map(converter).collect(Collectors.toList()));
     }
     return res;
+  }
+
+  @Nonnull
+  public PageInfo<E> toPage() {
+    PageInfo<E> pageInfo = new PageInfo<>();
+    pageInfo.setPageNumber(getPage());
+    pageInfo.setPageSize(getSize());
+    pageInfo.setTotalElements(getTotal());
+    pageInfo.setTotalPages(getTotalPages());
+    pageInfo.setContent(getData());
+    return pageInfo;
+  }
+
+  @Nonnull
+  public PageInfo<E> toPageOrThrow() throws ResultException {
+    onFailureThrow();
+    return toPage();
+  }
+
+  @Nonnull
+  @Transient
+  public List<E> getOrThrow() throws ResultException {
+    onFailureThrow();
+    return getData();
   }
 }

@@ -27,5 +27,6 @@ public enum StatisticsTimeDimension {
   MONTH,
   /** 按日 */
   DAY,
-  ;
+  /** 按小时 */
+  HOUR,
 }

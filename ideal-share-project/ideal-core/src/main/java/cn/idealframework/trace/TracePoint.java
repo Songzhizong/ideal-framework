@@ -33,7 +33,7 @@ public @interface TracePoint {
   /**
    * 是否记录入参
    */
-  boolean recordResp() default true;
+  boolean recordResp() default false;
 
   /**
    * 需要排除的请求参数位置, 从0开始

@@ -25,7 +25,11 @@ import javax.annotation.Nonnull;
 public class BadRequestException extends VisibleRuntimeException {
   private static final long serialVersionUID = 6232518534259102606L;
 
+  public BadRequestException(int code, @Nonnull String message) {
+    super(ResMsg.BAD_REQUEST.httpStatus(), code, message);
+  }
+
   public BadRequestException(@Nonnull String message) {
-    super(ResMsg.BAD_REQUEST.code(), message);
+    super(ResMsg.BAD_REQUEST.httpStatus(), ResMsg.BAD_REQUEST.code(), message);
   }
 }

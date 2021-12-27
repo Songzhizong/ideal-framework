@@ -13,13 +13,36 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cn.idealframework.authentication;
+package cn.idealframework.util.cron;
+
+import lombok.Getter;
+import lombok.Setter;
+import lombok.extern.apachecommons.CommonsLog;
+
+import javax.annotation.Nonnull;
 
 /**
- * @author 宋志宗 on 2021/6/28
+ * @author 宋志宗 on 2018-11-20 19:46
  */
-public interface AuthenticationConstants {
-  String HEADER_NAME_AK = "Ideal-Access-Key";
-  String HEADER_NAME_REQUEST_DATE = "Request-Date";
-  String HEADER_NAME_SECRET_TOKEN = "Ideal-Secret-Token";
+@Getter
+@Setter
+@CommonsLog
+@SuppressWarnings("unused")
+public class Cron {
+  @Nonnull
+  private final String value;
+
+  public Cron(@Nonnull String value) {
+    this.value = value;
+  }
+
+  @Nonnull
+  public static CronBuilder builder() {
+    return new CronBuilder();
+  }
+
+  @Override
+  public String toString() {
+    return value;
+  }
 }

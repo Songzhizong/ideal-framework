@@ -43,13 +43,8 @@ public class VisibleRuntimeException extends RuntimeException implements ResMsg 
     this.message = resMsg.message();
   }
 
-  public VisibleRuntimeException(@Nonnull Result<?> result) {
-    this(200, result.getCode(), result.getMessage());
-  }
-
-
-  public VisibleRuntimeException(int code, @Nonnull String message) {
-    this(200, code, message);
+  public VisibleRuntimeException(int httpStatus, @Nonnull Result<?> result) {
+    this(httpStatus, result.getCode(), result.getMessage());
   }
 
   public VisibleRuntimeException(int httpStatus, int code, @Nonnull String message) {

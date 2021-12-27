@@ -23,6 +23,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
@@ -330,6 +331,41 @@ public final class Maps {
                                     @Nonnull K k12, @Nonnull V v12,
                                     @Nonnull K k13, @Nonnull V v13,
                                     @Nonnull K k14, @Nonnull V v14,
+                                    @Nonnull K k15, @Nonnull V v15) {
+    Map<K, V> map = new HashMap<>(32);
+    map.put(k1, v1);
+    map.put(k2, v2);
+    map.put(k3, v3);
+    map.put(k4, v4);
+    map.put(k5, v5);
+    map.put(k6, v6);
+    map.put(k7, v7);
+    map.put(k8, v8);
+    map.put(k9, v9);
+    map.put(k10, v10);
+    map.put(k11, v11);
+    map.put(k12, v12);
+    map.put(k13, v13);
+    map.put(k14, v14);
+    map.put(k15, v15);
+    return Collections.unmodifiableMap(map);
+  }
+
+  @Nonnull
+  public static <K, V> Map<K, V> of(@Nonnull K k1, @Nonnull V v1,
+                                    @Nonnull K k2, @Nonnull V v2,
+                                    @Nonnull K k3, @Nonnull V v3,
+                                    @Nonnull K k4, @Nonnull V v4,
+                                    @Nonnull K k5, @Nonnull V v5,
+                                    @Nonnull K k6, @Nonnull V v6,
+                                    @Nonnull K k7, @Nonnull V v7,
+                                    @Nonnull K k8, @Nonnull V v8,
+                                    @Nonnull K k9, @Nonnull V v9,
+                                    @Nonnull K k10, @Nonnull V v10,
+                                    @Nonnull K k11, @Nonnull V v11,
+                                    @Nonnull K k12, @Nonnull V v12,
+                                    @Nonnull K k13, @Nonnull V v13,
+                                    @Nonnull K k14, @Nonnull V v14,
                                     @Nonnull K k15, @Nonnull V v15,
                                     @Nonnull K k16, @Nonnull V v16) {
     Map<K, V> map = new HashMap<>(32);
@@ -522,10 +558,10 @@ public final class Maps {
 
   @Nonnull
   @SafeVarargs
-  public static <K, V> Map<K, V> of(@Nonnull Pair<K, V>... pairs) {
-    Map<K, V> map = new HashMap<>(pairs.length);
-    for (Pair<K, V> pair : pairs) {
-      map.put(pair.getKey(), pair.getValue());
+  public static <K, V> Map<K, V> ofEntries(@Nonnull Map.Entry<K, V>... entries) {
+    Map<K, V> map = new HashMap<>(entries.length);
+    for (Map.Entry<K, V> entry : entries) {
+      map.put(entry.getKey(), entry.getValue());
     }
     return Collections.unmodifiableMap(map);
   }
@@ -545,7 +581,7 @@ public final class Maps {
       | InvocationTargetException
       | NoSuchMethodException e) {
       log.warn("Reflection create map ex:", e);
-      newMap = new HashMap<>(map);
+      newMap = new LinkedHashMap<>(map);
     }
     return Collections.unmodifiableMap(newMap);
   }

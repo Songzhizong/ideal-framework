@@ -63,9 +63,10 @@ public class SpringOrmExceptionHandlerAdvice {
     log.info("乐观锁冲突: " + e.getMessage());
     BasicResult res = new BasicResult();
     res.setSuccess(false);
+    res.setHttpStatus(HttpStatus.CONFLICT.value());
     res.setCode(ResMsg.INTERNAL_SERVER_ERROR.code());
     res.setMessage("Object optimistic locking failure.");
     TraceContextHolder.current().ifPresent(context -> res.setTraceId(context.getTraceId()));
-    return new ResponseEntity<>(res, RESPONSE_HEADERS, HttpStatus.OK);
+    return new ResponseEntity<>(res, RESPONSE_HEADERS, HttpStatus.CONFLICT);
   }
 }

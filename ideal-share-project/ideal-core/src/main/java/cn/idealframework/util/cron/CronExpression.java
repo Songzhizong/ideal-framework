@@ -13,20 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cn.idealframework.util;
+package cn.idealframework.util.cron;
 
 import java.io.Serializable;
 import java.text.ParseException;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Locale;
-import java.util.Map;
-import java.util.SortedSet;
-import java.util.StringTokenizer;
-import java.util.TimeZone;
-import java.util.TreeSet;
+import java.util.*;
 
 /**
  * Provides a parser and evaluator for unix-like cron expressions. Cron
@@ -1689,10 +1680,10 @@ public final class CronExpression implements Serializable, Cloneable {
   public Object clone() {
     return new CronExpression(this);
   }
-}
 
-class ValueSet {
-  public int value;
+  public static class ValueSet {
+    public int value;
 
-  public int pos;
+    public int pos;
+  }
 }

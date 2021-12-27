@@ -27,11 +27,15 @@ public class ForbiddenException extends VisibleRuntimeException {
   public static final ForbiddenException INSTANCE = new ForbiddenException();
 
   public ForbiddenException() {
-    super(403, ResMsg.FORBIDDEN.code(), ResMsg.FORBIDDEN.message());
+    super(ResMsg.FORBIDDEN);
+  }
+
+  public ForbiddenException(@Nonnull String message) {
+    super(ResMsg.FORBIDDEN.httpStatus(), ResMsg.FORBIDDEN.code(), message);
   }
 
 
   public ForbiddenException(int code, @Nonnull String message) {
-    super(403, code, message);
+    super(ResMsg.FORBIDDEN.httpStatus(), code, message);
   }
 }
