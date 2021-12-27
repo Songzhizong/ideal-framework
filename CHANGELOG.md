@@ -1,6 +1,6 @@
 <h1>更新日志</h1>
 
-# developer
+# 2.6.2.211227
 
 ### ⭐ New Features
 

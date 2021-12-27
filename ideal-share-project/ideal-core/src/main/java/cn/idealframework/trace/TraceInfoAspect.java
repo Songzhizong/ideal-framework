@@ -41,7 +41,6 @@ import java.util.concurrent.ConcurrentMap;
 /**
  * @author 宋志宗 on 2021/6/4
  */
-@SuppressWarnings("SpellCheckingInspection")
 @Aspect
 @CommonsLog
 @RequiredArgsConstructor
