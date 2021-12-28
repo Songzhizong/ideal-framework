@@ -1,5 +1,17 @@
 <h1>更新日志</h1>
 
+# developer
+
+### ⭐ New Features
+
+- 放宽Lists和Sets中部分方法对null的限制
+
+### 🐞 Bug Fixes
+
+### 🔨 Dependency Upgrades
+
+### ⚠️ Compatibility
+
 # 2.6.2.211227
 
 ### ⭐ New Features
