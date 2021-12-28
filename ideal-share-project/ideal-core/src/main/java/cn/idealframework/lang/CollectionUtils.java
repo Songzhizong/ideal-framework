@@ -39,7 +39,7 @@ public final class CollectionUtils {
   }
 
   @Nonnull
-  public static <E> List<List<E>> chunked(@Nonnull Collection<E> collection, int size) {
+  public static <E> List<List<E>> chunked(@Nullable Collection<E> collection, int size) {
     Asserts.assertTrue(size > 0, "The size must be greater than 0");
     if (CollectionUtils.isEmpty(collection)) {
       return new ArrayList<>();
@@ -62,7 +62,7 @@ public final class CollectionUtils {
   }
 
   @Nonnull
-  public static <E, R> List<List<R>> chunked(@Nonnull Collection<E> collection,
+  public static <E, R> List<List<R>> chunked(@Nullable Collection<E> collection,
                                              int size, @Nonnull Function<E, R> transform) {
     Asserts.assertTrue(size > 0, "The size must be greater than 0");
     if (CollectionUtils.isEmpty(collection)) {

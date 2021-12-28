@@ -19,6 +19,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.*;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * @author 宋志宗 on 2021/4/27
@@ -35,7 +36,10 @@ public final class Lists {
   }
 
   @Nonnull
-  public static <E> List<E> unmodifiable(@Nonnull List<E> list) {
+  public static <E> List<E> unmodifiable(@Nullable List<E> list) {
+    if (list == null) {
+      return Collections.emptyList();
+    }
     return Collections.unmodifiableList(list);
   }
 
@@ -137,12 +141,18 @@ public final class Lists {
   }
 
   @Nonnull
-  public static <E> List<E> ofArray(@Nonnull E[] intArray) {
+  public static <E> List<E> ofArray(@Nullable E[] intArray) {
+    if (intArray == null) {
+      return Collections.emptyList();
+    }
     return Arrays.asList(intArray);
   }
 
   @Nonnull
-  public static List<Character> ofArray(@Nonnull char[] charArray) {
+  public static List<Character> ofArray(@Nullable char[] charArray) {
+    if (charArray == null) {
+      return Collections.emptyList();
+    }
     List<Character> res = new ArrayList<>(charArray.length);
     for (char i : charArray) {
       res.add(i);
@@ -151,7 +161,10 @@ public final class Lists {
   }
 
   @Nonnull
-  public static List<Integer> ofArray(@Nonnull int[] intArray) {
+  public static List<Integer> ofArray(@Nullable int[] intArray) {
+    if (intArray == null) {
+      return Collections.emptyList();
+    }
     List<Integer> res = new ArrayList<>(intArray.length);
     for (int i : intArray) {
       res.add(i);
@@ -160,7 +173,10 @@ public final class Lists {
   }
 
   @Nonnull
-  public static List<Long> ofArray(@Nonnull long[] longArray) {
+  public static List<Long> ofArray(@Nullable long[] longArray) {
+    if (longArray == null) {
+      return Collections.emptyList();
+    }
     List<Long> res = new ArrayList<>(longArray.length);
     for (long i : longArray) {
       res.add(i);
@@ -262,8 +278,14 @@ public final class Lists {
   }
 
   @Nonnull
-  public static <E> List<E> merge(@Nonnull Collection<? extends E> c1,
-                                  @Nonnull Collection<? extends E> c2) {
+  public static <E> List<E> merge(@Nullable Collection<? extends E> c1,
+                                  @Nullable Collection<? extends E> c2) {
+    if (c1 == null) {
+      c1 = Collections.emptyList();
+    }
+    if (c2 == null) {
+      c2 = Collections.emptyList();
+    }
     int capacity = c1.size() + c2.size();
     List<E> result = new ArrayList<>(capacity);
     result.addAll(c1);
@@ -272,9 +294,18 @@ public final class Lists {
   }
 
   @Nonnull
-  public static <E> List<E> merge(@Nonnull Collection<? extends E> c1,
-                                  @Nonnull Collection<? extends E> c2,
-                                  @Nonnull Collection<? extends E> c3) {
+  public static <E> List<E> merge(@Nullable Collection<? extends E> c1,
+                                  @Nullable Collection<? extends E> c2,
+                                  @Nullable Collection<? extends E> c3) {
+    if (c1 == null) {
+      c1 = Collections.emptyList();
+    }
+    if (c2 == null) {
+      c2 = Collections.emptyList();
+    }
+    if (c3 == null) {
+      c3 = Collections.emptyList();
+    }
     int capacity = c1.size() + c2.size() + c3.size();
     List<E> result = new ArrayList<>(capacity);
     result.addAll(c1);
@@ -284,10 +315,22 @@ public final class Lists {
   }
 
   @Nonnull
-  public static <E> List<E> merge(@Nonnull Collection<? extends E> c1,
-                                  @Nonnull Collection<? extends E> c2,
-                                  @Nonnull Collection<? extends E> c3,
-                                  @Nonnull Collection<? extends E> c4) {
+  public static <E> List<E> merge(@Nullable Collection<? extends E> c1,
+                                  @Nullable Collection<? extends E> c2,
+                                  @Nullable Collection<? extends E> c3,
+                                  @Nullable Collection<? extends E> c4) {
+    if (c1 == null) {
+      c1 = Collections.emptyList();
+    }
+    if (c2 == null) {
+      c2 = Collections.emptyList();
+    }
+    if (c3 == null) {
+      c3 = Collections.emptyList();
+    }
+    if (c4 == null) {
+      c4 = Collections.emptyList();
+    }
     int capacity = c1.size() + c2.size() + c3.size() + c4.size();
     List<E> result = new ArrayList<>(capacity);
     result.addAll(c1);
@@ -298,11 +341,26 @@ public final class Lists {
   }
 
   @Nonnull
-  public static <E> List<E> merge(@Nonnull Collection<? extends E> c1,
-                                  @Nonnull Collection<? extends E> c2,
-                                  @Nonnull Collection<? extends E> c3,
-                                  @Nonnull Collection<? extends E> c4,
-                                  @Nonnull Collection<? extends E> c5) {
+  public static <E> List<E> merge(@Nullable Collection<? extends E> c1,
+                                  @Nullable Collection<? extends E> c2,
+                                  @Nullable Collection<? extends E> c3,
+                                  @Nullable Collection<? extends E> c4,
+                                  @Nullable Collection<? extends E> c5) {
+    if (c1 == null) {
+      c1 = Collections.emptyList();
+    }
+    if (c2 == null) {
+      c2 = Collections.emptyList();
+    }
+    if (c3 == null) {
+      c3 = Collections.emptyList();
+    }
+    if (c4 == null) {
+      c4 = Collections.emptyList();
+    }
+    if (c5 == null) {
+      c5 = Collections.emptyList();
+    }
     int capacity = c1.size() + c2.size() + c3.size() + c4.size() + c5.size();
     List<E> result = new ArrayList<>(capacity);
     result.addAll(c1);
@@ -314,12 +372,30 @@ public final class Lists {
   }
 
   @Nonnull
-  public static <E> List<E> merge(@Nonnull Collection<? extends E> c1,
-                                  @Nonnull Collection<? extends E> c2,
-                                  @Nonnull Collection<? extends E> c3,
-                                  @Nonnull Collection<? extends E> c4,
-                                  @Nonnull Collection<? extends E> c5,
-                                  @Nonnull Collection<? extends E> c6) {
+  public static <E> List<E> merge(@Nullable Collection<? extends E> c1,
+                                  @Nullable Collection<? extends E> c2,
+                                  @Nullable Collection<? extends E> c3,
+                                  @Nullable Collection<? extends E> c4,
+                                  @Nullable Collection<? extends E> c5,
+                                  @Nullable Collection<? extends E> c6) {
+    if (c1 == null) {
+      c1 = Collections.emptyList();
+    }
+    if (c2 == null) {
+      c2 = Collections.emptyList();
+    }
+    if (c3 == null) {
+      c3 = Collections.emptyList();
+    }
+    if (c4 == null) {
+      c4 = Collections.emptyList();
+    }
+    if (c5 == null) {
+      c5 = Collections.emptyList();
+    }
+    if (c6 == null) {
+      c6 = Collections.emptyList();
+    }
     int capacity = c1.size() + c2.size() + c3.size() + c4.size() + c5.size() + c6.size();
     List<E> result = new ArrayList<>(capacity);
     result.addAll(c1);
@@ -333,16 +409,27 @@ public final class Lists {
 
   @Nonnull
   @SafeVarargs
-  public static <E> List<E> merge(@Nonnull Collection<? extends E> collection,
-                                  @Nonnull Collection<? extends E>... cs) {
+  public static <E> List<E> merge(@Nullable Collection<? extends E> collection,
+                                  @Nullable Collection<? extends E>... cs) {
+    if (collection == null) {
+      collection = Collections.emptyList();
+    }
     int capacity = collection.size();
-    for (Collection<? extends E> c : cs) {
-      capacity += c.size();
+    if (cs != null) {
+      for (Collection<? extends E> c : cs) {
+        if (c != null) {
+          capacity += c.size();
+        }
+      }
     }
     List<E> result = new ArrayList<>(capacity);
     result.addAll(collection);
-    for (Collection<? extends E> c : cs) {
-      result.addAll(c);
+    if (cs != null) {
+      for (Collection<? extends E> c : cs) {
+        if (c != null) {
+          result.addAll(c);
+        }
+      }
     }
     return result;
   }
@@ -356,8 +443,11 @@ public final class Lists {
    * @author 宋志宗 on 2021/9/27
    */
   @Nonnull
-  public static <E> List<E> distinct(@Nonnull List<E> list) {
-    return new ArrayList<>(new LinkedHashSet<>(list));
+  public static <E> List<E> distinct(@Nullable List<E> list) {
+    if (list == null) {
+      return new ArrayList<>();
+    }
+    return list.stream().distinct().collect(Collectors.toList());
   }
 
   /**
@@ -369,7 +459,11 @@ public final class Lists {
    * @author 宋志宗 on 2021/9/27
    */
   @Nonnull
-  public static <E, D> List<E> distinct(@Nonnull List<E> list, @Nonnull Function<E, D> function) {
+  public static <E, D> List<E> distinct(@Nullable List<E> list,
+                                        @Nonnull Function<E, D> function) {
+    if (list == null) {
+      return new ArrayList<>();
+    }
     if (list.isEmpty()) {
       return list;
     }
@@ -397,7 +491,7 @@ public final class Lists {
    * @author 宋志宗 on 2021/10/27
    */
   @Nonnull
-  public static <E> List<List<E>> chunked(@Nonnull List<E> list, int size) {
+  public static <E> List<List<E>> chunked(@Nullable List<E> list, int size) {
     return CollectionUtils.chunked(list, size);
   }
 
@@ -411,7 +505,7 @@ public final class Lists {
    * @author 宋志宗 on 2021/10/27
    */
   @Nonnull
-  public static <E, R> List<List<R>> chunked(@Nonnull Collection<E> collection,
+  public static <E, R> List<List<R>> chunked(@Nullable Collection<E> collection,
                                              int size, @Nonnull Function<E, R> transform) {
     return CollectionUtils.chunked(collection, size, transform);
   }

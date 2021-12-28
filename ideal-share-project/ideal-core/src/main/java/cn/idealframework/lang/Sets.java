@@ -139,8 +139,14 @@ public final class Sets {
   }
 
   @Nonnull
-  public static <E> Set<E> merge(@Nonnull Collection<? extends E> c1,
-                                 @Nonnull Collection<? extends E> c2) {
+  public static <E> Set<E> merge(@Nullable Collection<? extends E> c1,
+                                 @Nullable Collection<? extends E> c2) {
+    if (c1 == null) {
+      c1 = Collections.emptySet();
+    }
+    if (c2 == null) {
+      c2 = Collections.emptySet();
+    }
     Set<E> result = new HashSet<>();
     result.addAll(c1);
     result.addAll(c2);
@@ -148,9 +154,18 @@ public final class Sets {
   }
 
   @Nonnull
-  public static <E> Set<E> merge(@Nonnull Collection<? extends E> c1,
-                                 @Nonnull Collection<? extends E> c2,
-                                 @Nonnull Collection<? extends E> c3) {
+  public static <E> Set<E> merge(@Nullable Collection<? extends E> c1,
+                                 @Nullable Collection<? extends E> c2,
+                                 @Nullable Collection<? extends E> c3) {
+    if (c1 == null) {
+      c1 = Collections.emptySet();
+    }
+    if (c2 == null) {
+      c2 = Collections.emptySet();
+    }
+    if (c3 == null) {
+      c3 = Collections.emptySet();
+    }
     Set<E> result = new HashSet<>();
     result.addAll(c1);
     result.addAll(c2);
@@ -159,10 +174,22 @@ public final class Sets {
   }
 
   @Nonnull
-  public static <E> Set<E> merge(@Nonnull Collection<? extends E> c1,
-                                 @Nonnull Collection<? extends E> c2,
-                                 @Nonnull Collection<? extends E> c3,
-                                 @Nonnull Collection<? extends E> c4) {
+  public static <E> Set<E> merge(@Nullable Collection<? extends E> c1,
+                                 @Nullable Collection<? extends E> c2,
+                                 @Nullable Collection<? extends E> c3,
+                                 @Nullable Collection<? extends E> c4) {
+    if (c1 == null) {
+      c1 = Collections.emptySet();
+    }
+    if (c2 == null) {
+      c2 = Collections.emptySet();
+    }
+    if (c3 == null) {
+      c3 = Collections.emptySet();
+    }
+    if (c4 == null) {
+      c4 = Collections.emptySet();
+    }
     Set<E> result = new HashSet<>();
     result.addAll(c1);
     result.addAll(c2);
@@ -172,11 +199,26 @@ public final class Sets {
   }
 
   @Nonnull
-  public static <E> Set<E> merge(@Nonnull Collection<? extends E> c1,
-                                 @Nonnull Collection<? extends E> c2,
-                                 @Nonnull Collection<? extends E> c3,
-                                 @Nonnull Collection<? extends E> c4,
-                                 @Nonnull Collection<? extends E> c5) {
+  public static <E> Set<E> merge(@Nullable Collection<? extends E> c1,
+                                 @Nullable Collection<? extends E> c2,
+                                 @Nullable Collection<? extends E> c3,
+                                 @Nullable Collection<? extends E> c4,
+                                 @Nullable Collection<? extends E> c5) {
+    if (c1 == null) {
+      c1 = Collections.emptySet();
+    }
+    if (c2 == null) {
+      c2 = Collections.emptySet();
+    }
+    if (c3 == null) {
+      c3 = Collections.emptySet();
+    }
+    if (c4 == null) {
+      c4 = Collections.emptySet();
+    }
+    if (c5 == null) {
+      c5 = Collections.emptySet();
+    }
     Set<E> result = new HashSet<>();
     result.addAll(c1);
     result.addAll(c2);
@@ -187,12 +229,30 @@ public final class Sets {
   }
 
   @Nonnull
-  public static <E> Set<E> merge(@Nonnull Collection<? extends E> c1,
-                                 @Nonnull Collection<? extends E> c2,
-                                 @Nonnull Collection<? extends E> c3,
-                                 @Nonnull Collection<? extends E> c4,
-                                 @Nonnull Collection<? extends E> c5,
-                                 @Nonnull Collection<? extends E> c6) {
+  public static <E> Set<E> merge(@Nullable Collection<? extends E> c1,
+                                 @Nullable Collection<? extends E> c2,
+                                 @Nullable Collection<? extends E> c3,
+                                 @Nullable Collection<? extends E> c4,
+                                 @Nullable Collection<? extends E> c5,
+                                 @Nullable Collection<? extends E> c6) {
+    if (c1 == null) {
+      c1 = Collections.emptySet();
+    }
+    if (c2 == null) {
+      c2 = Collections.emptySet();
+    }
+    if (c3 == null) {
+      c3 = Collections.emptySet();
+    }
+    if (c4 == null) {
+      c4 = Collections.emptySet();
+    }
+    if (c5 == null) {
+      c5 = Collections.emptySet();
+    }
+    if (c6 == null) {
+      c6 = Collections.emptySet();
+    }
     Set<E> result = new HashSet<>();
     result.addAll(c1);
     result.addAll(c2);
@@ -205,16 +265,21 @@ public final class Sets {
 
   @Nonnull
   @SafeVarargs
-  public static <E> Set<E> merge(@Nonnull Collection<? extends E>... cs) {
+  public static <E> Set<E> merge(@Nullable Collection<? extends E>... cs) {
+    if (cs == null) {
+      return new HashSet<>();
+    }
     Set<E> result = new HashSet<>();
     for (Collection<? extends E> c : cs) {
-      result.addAll(c);
+      if (c != null) {
+        result.addAll(c);
+      }
     }
     return result;
   }
 
   @Nonnull
-  public static <E> List<List<E>> chunked(@Nonnull Set<E> set, int size) {
+  public static <E> List<List<E>> chunked(@Nullable Set<E> set, int size) {
     return CollectionUtils.chunked(set, size);
   }
 }
