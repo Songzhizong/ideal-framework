@@ -10,6 +10,9 @@
 
 ### 🔨 Dependency Upgrades
 
+- zstd-jni.version > 1.5.1-1
+- redisson.version > 3.16.7
+
 ### ⚠️ Compatibility
 
 # 2.6.2.211227
