@@ -24,8 +24,11 @@ import java.util.Set;
  * @author 宋志宗 on 2021/5/28
  */
 public class JsonUtils {
+  /** 完整的时间格式 */
   public static final String DATE_TIME_PATTERN = "yyyy-MM-dd HH:mm:ss.SSS";
+  /** 日期格式 */
   public static final String DATE_PATTERN = "yyyy-MM-dd";
+  /** 时间格式 */
   public static final String TIME_PATTERN = "HH:mm:ss.SSS";
 
 

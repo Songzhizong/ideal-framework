@@ -17,6 +17,7 @@ package cn.idealframework.util;
 
 import cn.idealframework.lang.StringUtils;
 import cn.idealframework.transmission.exception.BadRequestException;
+import lombok.extern.apachecommons.CommonsLog;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -28,12 +29,15 @@ import java.util.function.Supplier;
  * @author 宋志宗 on 2021/4/20
  */
 @SuppressWarnings("UnusedReturnValue")
+@CommonsLog
 public final class Asserts {
+  private static final String CLASS_NAME = "cn.idealframework.util.Asserts";
 
   @Nonnull
   public static CharSequence notBlank(@Nullable CharSequence charSequence,
                                       @Nullable String message) throws IllegalArgumentException {
     if (StringUtils.isBlank(charSequence)) {
+      printLog(message);
       throwAssertException(message);
     }
     return charSequence;
@@ -43,7 +47,8 @@ public final class Asserts {
   public static CharSequence notBlank(@Nullable CharSequence charSequence,
                                       @Nonnull Supplier<String> messageSupplier) throws IllegalArgumentException {
     if (StringUtils.isBlank(charSequence)) {
-      throwAssertException(messageSupplier.get());
+      String message = messageSupplier.get();
+      throwAssertException(message);
     }
     return charSequence;
   }
@@ -60,6 +65,7 @@ public final class Asserts {
   @Nonnull
   public static <T> T nonnull(@Nullable T t, @Nullable String message) {
     if (t == null) {
+      printLog(message);
       throwAssertException(message);
     }
     return t;
@@ -68,7 +74,8 @@ public final class Asserts {
   @Nonnull
   public static <T> T nonnull(@Nullable T t, @Nonnull Supplier<String> messageSupplier) {
     if (t == null) {
-      throwAssertException(messageSupplier.get());
+      String message = messageSupplier.get();
+      throwAssertException(message);
     }
     return t;
   }
@@ -84,36 +91,42 @@ public final class Asserts {
 
   public static void equals(@Nullable Object o1, @Nullable Object o2, @Nullable String message) {
     if (!Objects.equals(o1, o2)) {
+      printLog(message);
       throwAssertException(message);
     }
   }
 
   public static void equals(long l1, long l2, @Nullable String message) {
     if (l1 != l2) {
+      printLog(message);
       throwAssertException(message);
     }
   }
 
   public static void equals(int i1, int i2, @Nullable String message) {
     if (i1 != i2) {
+      printLog(message);
       throwAssertException(message);
     }
   }
 
   public static void notEquals(@Nullable Object o1, @Nullable Object o2, @Nullable String message) {
     if (Objects.equals(o1, o2)) {
+      printLog(message);
       throwAssertException(message);
     }
   }
 
   public static void notEquals(long l1, long l2, @Nullable String message) {
     if (l1 == l2) {
+      printLog(message);
       throwAssertException(message);
     }
   }
 
   public static void notEquals(int i1, int i2, @Nullable String message) {
     if (i1 == i2) {
+      printLog(message);
       throwAssertException(message);
     }
   }
@@ -121,12 +134,14 @@ public final class Asserts {
 
   public static void maxLength(@Nonnull CharSequence charSequence, int length, @Nullable String message) {
     if (charSequence.length() > length) {
+      printLog(message);
       throwAssertException(message);
     }
   }
 
   public static void assertTrue(boolean expression, @Nullable String message) {
     if (!expression) {
+      printLog(message);
       throwAssertException(message);
     }
   }
@@ -139,6 +154,7 @@ public final class Asserts {
 
   public static void assertFalse(boolean expression, @Nullable String message) {
     if (expression) {
+      printLog(message);
       throwAssertException(message);
     }
   }
@@ -153,6 +169,7 @@ public final class Asserts {
   public static <C extends Collection<?>> C notEmpty(@Nullable C collection,
                                                      @Nullable String message) {
     if (collection == null || collection.isEmpty()) {
+      printLog(message);
       throwAssertException(message);
     }
     return collection;
@@ -171,7 +188,18 @@ public final class Asserts {
   public static void range(long value, long minimum, long maximum,
                            @Nullable String message) throws IllegalArgumentException {
     if (value < minimum || value > maximum) {
+      printLog(message);
       throwAssertException(message);
+    }
+  }
+
+  private static void printLog(@Nullable String message) {
+    StackTraceElement[] stackTrace = new Throwable().getStackTrace();
+    if (stackTrace.length > 2) {
+      StackTraceElement stackTraceElement = stackTrace[2];
+      String className = stackTraceElement.getClassName();
+      int lineNumber = stackTraceElement.getLineNumber();
+      log.info(className + " " + lineNumber + " : " + message);
     }
   }
 
