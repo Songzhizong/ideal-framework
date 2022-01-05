@@ -15,6 +15,7 @@
  */
 package cn.idealframework.http;
 
+import cn.idealframework.extensions.reactor.Reactors;
 import org.springframework.http.client.reactive.ReactorClientHttpConnector;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.netty.http.client.HttpClient;
@@ -24,7 +25,9 @@ import java.time.Duration;
 
 /**
  * @author 宋志宗 on 2021/3/8
+ * @deprecated see {@link  Reactors}
  */
+@Deprecated
 public class WebClients {
 
   @Nonnull
