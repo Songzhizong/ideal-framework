@@ -19,7 +19,7 @@ import cn.idealframework.boot.autoconfigure.trace.properties.CollectorProperties
 import cn.idealframework.boot.autoconfigure.trace.properties.IdealBootTraceProperties;
 import cn.idealframework.boot.autoconfigure.trace.properties.WebClientCollectorProperties;
 import cn.idealframework.boot.starter.module.operation.TraceModule;
-import cn.idealframework.http.WebClients;
+import cn.idealframework.extensions.reactor.Reactors;
 import cn.idealframework.trace.LogCollector;
 import cn.idealframework.trace.TraceCollector;
 import cn.idealframework.trace.impl.WebClientLogCollector;
@@ -55,7 +55,9 @@ public class IdealBootTraceWebClientCollectorAutoConfigure {
       WebClientCollectorProperties webClientProperties = collector.getWebClient();
       if (webClientProperties.isEnableTraceCollector()) {
         String traceCollectorUrl = webClientProperties.getTraceCollectorUrl();
-        WebClient webClient = WebClients.createWebClientBuilder(Duration.ofSeconds(5)).build();
+        WebClient webClient = Reactors
+          .webClientBuilder(ops -> ops.setResponseTimeout(Duration.ofSeconds(5)))
+          .build();
         log.info("Initializing WebClientTraceCollector");
         return new WebClientTraceCollector(true, traceCollectorUrl, webClient);
       } else {
@@ -74,7 +76,9 @@ public class IdealBootTraceWebClientCollectorAutoConfigure {
       WebClientCollectorProperties webClientProperties = collector.getWebClient();
       if (webClientProperties.isEnableLogCollector()) {
         String logCollectorUrl = webClientProperties.getLogCollectorUrl();
-        WebClient webClient = WebClients.createWebClientBuilder(Duration.ofSeconds(5)).build();
+        WebClient webClient = Reactors
+          .webClientBuilder(ops -> ops.setResponseTimeout(Duration.ofSeconds(5)))
+          .build();
         log.info("Initializing WebClientLogCollector");
         return new WebClientLogCollector(true, logCollectorUrl, webClient);
       } else {

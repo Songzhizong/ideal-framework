@@ -20,7 +20,7 @@ import cn.idealframework.boot.autoconfigure.operation.properties.StorageProperti
 import cn.idealframework.boot.autoconfigure.operation.properties.StorageType;
 import cn.idealframework.boot.autoconfigure.operation.properties.WebClientStorageProperties;
 import cn.idealframework.boot.starter.module.operation.OperationModule;
-import cn.idealframework.http.WebClients;
+import cn.idealframework.extensions.reactor.Reactors;
 import cn.idealframework.operation.OperationLogAspect;
 import cn.idealframework.operation.OperationLogStorage;
 import cn.idealframework.operation.OperationLogStorageWebClientImpl;
@@ -52,8 +52,8 @@ public class IdealBootLbWebClientOperationLogStorageAutoConfigure {
   @Bean
   @ConditionalOnMissingBean
   public OperationLogStorage operationLogStorage(
-      @Nullable @Autowired(required = false)
-          ReactorLoadBalancerExchangeFilterFunction lbFunction) {
+    @Nullable @Autowired(required = false)
+      ReactorLoadBalancerExchangeFilterFunction lbFunction) {
     if (lbFunction == null) {
       throw new IllegalArgumentException("ReactorLoadBalancerExchangeFilterFunction is null");
     }
@@ -64,8 +64,9 @@ public class IdealBootLbWebClientOperationLogStorageAutoConfigure {
       boolean async = webClientStorageProperties.isAsync();
       String url = webClientStorageProperties.getUrl();
       log.info("Initializing loadBalanced OperationLogStorageWebClientImpl");
-      WebClient webClient = WebClients.createWebClientBuilder(Duration.ofSeconds(5))
-          .filter(lbFunction).build();
+      WebClient webClient = Reactors
+        .webClientBuilder(ops -> ops.setResponseTimeout(Duration.ofSeconds(5)))
+        .filter(lbFunction).build();
       return new OperationLogStorageWebClientImpl(async, url, webClient);
     }
     return null;
