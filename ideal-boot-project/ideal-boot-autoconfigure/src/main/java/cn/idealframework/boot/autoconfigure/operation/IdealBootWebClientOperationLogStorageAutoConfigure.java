@@ -58,8 +58,7 @@ public class IdealBootWebClientOperationLogStorageAutoConfigure {
         boolean async = webClientStorageProperties.isAsync();
         String url = webClientStorageProperties.getUrl();
         WebClient webClient = Reactors
-          .webClientBuilder(ops -> ops.setResponseTimeout(Duration.ofSeconds(5)))
-          .build();
+          .webClient(ops -> ops.setResponseTimeout(Duration.ofSeconds(5)));
         log.info("Initializing OperationLogStorageWebClientImpl");
         return new OperationLogStorageWebClientImpl(async, url, webClient);
       }

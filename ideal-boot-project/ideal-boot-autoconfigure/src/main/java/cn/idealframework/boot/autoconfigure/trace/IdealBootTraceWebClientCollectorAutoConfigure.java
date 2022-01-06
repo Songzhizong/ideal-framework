@@ -56,8 +56,7 @@ public class IdealBootTraceWebClientCollectorAutoConfigure {
       if (webClientProperties.isEnableTraceCollector()) {
         String traceCollectorUrl = webClientProperties.getTraceCollectorUrl();
         WebClient webClient = Reactors
-          .webClientBuilder(ops -> ops.setResponseTimeout(Duration.ofSeconds(5)))
-          .build();
+          .webClient(ops -> ops.setResponseTimeout(Duration.ofSeconds(5)));
         log.info("Initializing WebClientTraceCollector");
         return new WebClientTraceCollector(true, traceCollectorUrl, webClient);
       } else {
@@ -77,8 +76,7 @@ public class IdealBootTraceWebClientCollectorAutoConfigure {
       if (webClientProperties.isEnableLogCollector()) {
         String logCollectorUrl = webClientProperties.getLogCollectorUrl();
         WebClient webClient = Reactors
-          .webClientBuilder(ops -> ops.setResponseTimeout(Duration.ofSeconds(5)))
-          .build();
+          .webClient(ops -> ops.setResponseTimeout(Duration.ofSeconds(5)));
         log.info("Initializing WebClientLogCollector");
         return new WebClientLogCollector(true, logCollectorUrl, webClient);
       } else {

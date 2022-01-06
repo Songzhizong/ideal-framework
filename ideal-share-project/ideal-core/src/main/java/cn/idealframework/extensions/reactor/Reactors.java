@@ -71,25 +71,25 @@ public final class Reactors {
   @Nonnull
   public static WebClient.Builder webClientBuilder(@Nonnull FullWebClientOptions options) {
     HttpClient httpClient = httpClient(options.toHttpClientOptions());
-    return webClientBuilder(httpClient, options.toWebClientOptions());
+    return webClientBuilderOfHttpClient(httpClient, options.toWebClientOptions());
   }
 
   @Nonnull
-  public static WebClient.Builder webClientBuilder(@Nonnull HttpClient httpClient) {
-    return webClientBuilder(httpClient, (WebClientOptions) null);
+  public static WebClient.Builder webClientBuilderOfHttpClient(@Nonnull HttpClient httpClient) {
+    return webClientBuilderOfHttpClient(httpClient, (WebClientOptions) null);
   }
 
   @Nonnull
-  public static WebClient.Builder webClientBuilder(@Nonnull HttpClient httpClient,
-                                                   @Nonnull Consumer<WebClientOptions> consumer) {
+  public static WebClient.Builder webClientBuilderOfHttpClient(@Nonnull HttpClient httpClient,
+                                                               @Nonnull Consumer<WebClientOptions> consumer) {
     WebClientOptions options = new WebClientOptions();
     consumer.accept(options);
-    return webClientBuilder(httpClient, options);
+    return webClientBuilderOfHttpClient(httpClient, options);
   }
 
   @Nonnull
-  public static WebClient.Builder webClientBuilder(@Nonnull HttpClient httpClient,
-                                                   @Nullable WebClientOptions options) {
+  public static WebClient.Builder webClientBuilderOfHttpClient(@Nonnull HttpClient httpClient,
+                                                               @Nullable WebClientOptions options) {
     WebClient.Builder builder = WebClient.builder()
       .clientConnector(new ReactorClientHttpConnector(httpClient))
       .filter(TraceExchangeFilterFunction.getInstance());
