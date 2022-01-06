@@ -5,6 +5,7 @@
 ### ⭐ New Features
 
 - 放宽Lists和Sets中部分方法对null的限制
+- 新增重试工具 Retryer 和AsyncRetryer
 
 ### 🐞 Bug Fixes
 
@@ -14,6 +15,8 @@
 - redisson.version > 3.16.7
 
 ### ⚠️ Compatibility
+
+- 修改Reactors类中部分方法的名称, 避免编译时因歧义而导致的编译失败
 
 # 2.6.2.211227
 
