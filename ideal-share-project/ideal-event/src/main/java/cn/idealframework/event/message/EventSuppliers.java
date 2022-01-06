@@ -15,96 +15,64 @@
  */
 package cn.idealframework.event.message;
 
-import cn.idealframework.event.tuple.EventTuple;
-import cn.idealframework.lang.ArrayUtils;
-import cn.idealframework.lang.Lists;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
+import cn.idealframework.event.message.impl.EventSuppliersImpl;
 
 import javax.annotation.Nonnull;
-import java.beans.Transient;
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @author 宋志宗 on 2021/11/22
+ * @author 宋志宗 on 2022/1/6
  */
-@Setter(AccessLevel.PROTECTED)
-@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
-public final class EventSuppliers {
-  @Nonnull
-  @Getter(AccessLevel.PROTECTED)
-  private List<EventSupplier> suppliers;
+public interface EventSuppliers {
 
   @Nonnull
-  public static EventSuppliers empty() {
-    return new EventSuppliers(new ArrayList<>());
+  static EventSuppliers empty() {
+    return EventSuppliersImpl.empty();
   }
 
   @Nonnull
-  public static EventSuppliers of(EventSupplier supplier) {
-    if (supplier == null) {
-      return empty();
-    }
-    return new EventSuppliers(Lists.arrayList(supplier));
+  static EventSuppliers of(@Nullable EventSupplier supplier) {
+    return EventSuppliersImpl.of(supplier);
   }
 
   @Nonnull
-  public static EventSuppliers of(EventSupplier... suppliers) {
-    if (ArrayUtils.isEmpty(suppliers)) {
-      return empty();
-    }
-    return new EventSuppliers(Lists.arrayList(suppliers));
+  static EventSuppliers of(@Nullable List<EventSupplier> suppliers) {
+    return EventSuppliersImpl.of(suppliers);
   }
 
   @Nonnull
-  public static EventSuppliers of(@Nonnull EventTuple<?> eventTuple) {
-    return empty().merge(eventTuple);
+  static EventSuppliers of(@Nullable EventSupplier... suppliers) {
+    return EventSuppliersImpl.of(suppliers);
   }
 
   @Nonnull
-  public List<EventSupplier> get() {
-    return getSuppliers();
-  }
-
-  @Transient
-  public boolean isEmpty() {
-    return Lists.isEmpty(getSuppliers());
+  static EventSuppliers of(@Nullable EventSuppliers suppliers) {
+    return EventSuppliersImpl.of(suppliers);
   }
 
   @Nonnull
-  public EventSuppliers add(@Nonnull EventSupplier supplier) {
-    this.getSuppliers().add(supplier);
-    return this;
+  ArrayList<EventSupplier> get();
+
+  boolean isEmpty();
+
+  @Nonnull
+  EventSuppliers add(@Nullable EventSupplier supplier);
+
+  @Nonnull
+  EventSuppliers add(@Nullable EventSuppliers suppliers);
+
+  @Nonnull
+  EventSuppliers add(@Nullable List<EventSupplier> suppliers);
+
+  @Nonnull
+  default EventSuppliers merge(@Nullable EventSuppliers suppliers) {
+    return this.add(suppliers);
   }
 
   @Nonnull
-  public EventSuppliers merge(@Nonnull EventSuppliers suppliers) {
-    if (suppliers.isEmpty()) {
-      return this;
-    }
-    if (this.isEmpty()) {
-      return suppliers;
-    }
-    List<EventSupplier> otherSuppliers = suppliers.get();
-    this.getSuppliers().addAll(otherSuppliers);
-    return this;
-  }
-
-  @Nonnull
-  public EventSuppliers merge(@Nonnull List<EventSupplier> otherSuppliers) {
-    if (Lists.isEmpty(otherSuppliers)) {
-      return this;
-    }
-    this.getSuppliers().addAll(otherSuppliers);
-    return this;
-  }
-
-  @Nonnull
-  public EventSuppliers merge(@Nonnull EventTuple<?> eventTuple) {
-    List<EventSupplier> otherSuppliers = eventTuple.getSuppliers();
-    return merge(otherSuppliers);
+  default EventSuppliers merge(@Nullable List<EventSupplier> otherSuppliers) {
+    return this.add(otherSuppliers);
   }
 }

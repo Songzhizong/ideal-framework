@@ -13,73 +13,80 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cn.idealframework.event.tuple;
+package cn.idealframework.event.message.impl;
 
 import cn.idealframework.event.message.EventSupplier;
 import cn.idealframework.event.message.EventSuppliers;
+import cn.idealframework.lang.ArrayUtils;
 import cn.idealframework.lang.Lists;
 import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.beans.Transient;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
- * @author 宋志宗 on 2021/4/27
+ * @author 宋志宗 on 2021/11/22
  */
-@Getter
-public class EventTuple<R> implements EventSuppliers {
-  /** 方法返回结果 */
+@Setter(AccessLevel.PROTECTED)
+@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
+public final class EventSuppliersImpl implements EventSuppliers {
   @Nonnull
-  private final R result;
-
-  /** 方法返回事件列表 */
-  @Nonnull
-  @Setter(AccessLevel.PRIVATE)
+  @Getter(AccessLevel.PROTECTED)
   private ArrayList<EventSupplier> suppliers;
 
-  protected EventTuple(@Nonnull R result,
-                       @Nonnull ArrayList<EventSupplier> suppliers) {
-    this.result = result;
-    this.suppliers = suppliers;
+  @Nonnull
+  public static EventSuppliers empty() {
+    return new EventSuppliersImpl(new ArrayList<>());
   }
 
   @Nonnull
-  public static <R> EventTuple<R> of(@Nonnull R result) {
-    return new EventTuple<>(result, new ArrayList<>());
+  public static EventSuppliers of(@Nullable EventSupplier supplier) {
+    if (supplier == null) {
+      return empty();
+    }
+    return new EventSuppliersImpl(Lists.arrayList(supplier));
   }
 
   @Nonnull
-  public static <R> EventTuple<R> of(@Nonnull R result,
-                                     @Nonnull List<EventSupplier> suppliers) {
-    return new EventTuple<>(result, new ArrayList<>(suppliers));
+  public static EventSuppliers of(@Nullable List<EventSupplier> suppliers) {
+    if (Lists.isEmpty(suppliers)) {
+      return empty();
+    }
+    return new EventSuppliersImpl(new ArrayList<>(suppliers));
   }
 
   @Nonnull
-  public static <R> EventTuple<R> of(@Nonnull R result,
-                                     @Nonnull EventSupplier supplier) {
-    return new EventTuple<>(result, Lists.arrayList(supplier));
+  public static EventSuppliers of(@Nullable EventSupplier... suppliers) {
+    if (ArrayUtils.isEmpty(suppliers)) {
+      return empty();
+    }
+    return new EventSuppliersImpl(Lists.arrayList(suppliers));
   }
 
   @Nonnull
-  public static <R> EventTuple<R> of(@Nonnull R result,
-                                     @Nonnull EventSupplier... suppliers) {
-    return new EventTuple<>(result, new ArrayList<>(Arrays.asList(suppliers)));
+  public static EventSuppliers of(@Nullable EventSuppliers suppliers) {
+    if (suppliers == null || suppliers.isEmpty()) {
+      return empty();
+    }
+    return new EventSuppliersImpl(suppliers.get());
   }
 
   @Nonnull
   @Override
   public ArrayList<EventSupplier> get() {
-    return this.getSuppliers();
+    return getSuppliers();
   }
 
+  @Transient
   @Override
   public boolean isEmpty() {
-    return Lists.isEmpty(this.getSuppliers());
+    return Lists.isEmpty(getSuppliers());
   }
 
   @Nonnull
@@ -98,33 +105,22 @@ public class EventTuple<R> implements EventSuppliers {
     if (suppliers == null || suppliers.isEmpty()) {
       return this;
     }
+    ArrayList<EventSupplier> otherSuppliers = suppliers.get();
     if (this.isEmpty()) {
-      this.setSuppliers(suppliers.get());
+      this.setSuppliers(otherSuppliers);
       return this;
     }
-    this.getSuppliers().addAll(suppliers.get());
+    this.getSuppliers().addAll(otherSuppliers);
     return this;
   }
 
   @Nonnull
-  public EventTuple<R> add(@Nullable List<EventSupplier> suppliers) {
+  @Override
+  public EventSuppliers add(@Nullable List<EventSupplier> suppliers) {
     if (Lists.isEmpty(suppliers)) {
       return this;
     }
-    if (this.isEmpty()) {
-      if (suppliers instanceof ArrayList) {
-        this.setSuppliers((ArrayList<EventSupplier>) suppliers);
-      } else {
-        this.setSuppliers(new ArrayList<>(suppliers));
-      }
-      return this;
-    }
     this.getSuppliers().addAll(suppliers);
-    return this;
-  }
-
-  @Nonnull
-  public EventSuppliers toEventSuppliers() {
     return this;
   }
 }
