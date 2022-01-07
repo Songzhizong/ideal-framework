@@ -27,6 +27,10 @@ public class AsyncRetryer<V> {
   private final Collection<RetryListener<V>> listeners;
   private final ExecutorService workerExecutor;
 
+  static {
+    Runtime.getRuntime().addShutdownHook(new Thread(AsyncRetryer.SCHEDULED_EXECUTOR::shutdown));
+  }
+
   /**
    * Constructor
    *
@@ -58,10 +62,10 @@ public class AsyncRetryer<V> {
     this.rejectionPredicate = rejectionPredicate;
     this.listeners = listeners;
     this.workerExecutor = workerExecutor;
-    Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-      this.workerExecutor.shutdown();
-      AsyncRetryer.SCHEDULED_EXECUTOR.shutdown();
-    }));
+  }
+
+  public static void shutdown() {
+    AsyncRetryer.SCHEDULED_EXECUTOR.shutdown();
   }
 
   public CompletableFuture<V> call(Callable<V> callable) {

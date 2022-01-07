@@ -18,6 +18,8 @@ package cn.idealframework.util.retry;
 
 import cn.idealframework.util.retry.attempt.Attempt;
 
+import javax.annotation.Nonnull;
+
 /**
  * An exception indicating that none of the attempts of the {@link Retryer}
  * succeeded. If the last {@link Attempt} resulted in an Exception, it is set as
@@ -28,6 +30,7 @@ import cn.idealframework.util.retry.attempt.Attempt;
 public final class RetryException extends Exception {
 
   private final int numberOfFailedAttempts;
+  @Nonnull
   private final Attempt<?> lastFailedAttempt;
 
   /**
@@ -37,7 +40,8 @@ public final class RetryException extends Exception {
    * @param numberOfFailedAttempts times we've tried and failed
    * @param lastFailedAttempt      what happened the last time we failed
    */
-  public RetryException(int numberOfFailedAttempts, Attempt<?> lastFailedAttempt) {
+  public RetryException(int numberOfFailedAttempts,
+                        @Nonnull Attempt<?> lastFailedAttempt) {
     this("Retrying failed to complete successfully after " + numberOfFailedAttempts + " attempts.", numberOfFailedAttempts, lastFailedAttempt);
   }
 
@@ -49,7 +53,9 @@ public final class RetryException extends Exception {
    * @param numberOfFailedAttempts times we've tried and failed
    * @param lastFailedAttempt      what happened the last time we failed
    */
-  public RetryException(String message, int numberOfFailedAttempts, Attempt<?> lastFailedAttempt) {
+  public RetryException(@Nonnull String message,
+                        int numberOfFailedAttempts,
+                        @Nonnull Attempt<?> lastFailedAttempt) {
     super(message, Preconditions.checkNotNull(lastFailedAttempt, "Last attempt was null").hasException() ? lastFailedAttempt
       .getExceptionCause() : null);
     this.numberOfFailedAttempts = numberOfFailedAttempts;
@@ -70,6 +76,7 @@ public final class RetryException extends Exception {
    *
    * @return the last failed attempt
    */
+  @Nonnull
   public Attempt<?> getLastFailedAttempt() {
     return lastFailedAttempt;
   }
