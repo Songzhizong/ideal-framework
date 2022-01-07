@@ -1,5 +1,6 @@
 package cn.idealframework.util.retry;
 
+import cn.idealframework.concurrent.BasicThreadFactory;
 import cn.idealframework.util.retry.attempt.Attempt;
 import cn.idealframework.util.retry.attempt.ExceptionAttempt;
 import cn.idealframework.util.retry.attempt.ResultAttempt;
@@ -15,8 +16,10 @@ import java.util.function.Predicate;
  * @author lowzj
  */
 public class AsyncRetryer<V> {
+  /** 延迟调度线程池, 该线程池负责全局延迟调度, 不参与计算. 计算任务在传入的 workerExecutor 中执行 */
   private static final ScheduledExecutorService SCHEDULED_EXECUTOR
-    = new ScheduledThreadPoolExecutor(Math.max(Runtime.getRuntime().availableProcessors(), 8));
+    = new ScheduledThreadPoolExecutor(Math.max(Runtime.getRuntime().availableProcessors(), 8),
+    BasicThreadFactory.builder().namingPattern("retry-scheduled-%d").build());
   private final StopStrategy stopStrategy;
   private final WaitStrategy waitStrategy;
   private final AttemptTimeLimiter<V> attemptTimeLimiter;
@@ -101,8 +104,9 @@ public class AsyncRetryer<V> {
       if (stopStrategy.shouldStop(attempt)) {
         resultFuture.completeExceptionally(new RetryException(attemptNumber, attempt));
       } else {
+        long delayMills = waitStrategy.computeSleepTime(attempt);
         Runnable runner = createRunner(callable, startTime, attemptNumber + 1, resultFuture);
-        SCHEDULED_EXECUTOR.schedule(runner, waitStrategy.computeSleepTime(attempt), TimeUnit.MILLISECONDS);
+        SCHEDULED_EXECUTOR.schedule(() -> workerExecutor.execute(runner), delayMills, TimeUnit.MILLISECONDS);
       }
     };
   }
