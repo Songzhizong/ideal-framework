@@ -104,9 +104,13 @@ public class AsyncRetryer<V> {
       if (stopStrategy.shouldStop(attempt)) {
         resultFuture.completeExceptionally(new RetryException(attemptNumber, attempt));
       } else {
-        long delayMills = waitStrategy.computeSleepTime(attempt);
         Runnable runner = createRunner(callable, startTime, attemptNumber + 1, resultFuture);
-        SCHEDULED_EXECUTOR.schedule(() -> workerExecutor.execute(runner), delayMills, TimeUnit.MILLISECONDS);
+        long delayMills = waitStrategy.computeSleepTime(attempt);
+        if (delayMills < 1) {
+          workerExecutor.execute(runner);
+        } else {
+          SCHEDULED_EXECUTOR.schedule(() -> workerExecutor.execute(runner), delayMills, TimeUnit.MILLISECONDS);
+        }
       }
     };
   }

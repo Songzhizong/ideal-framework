@@ -22,6 +22,7 @@ import cn.idealframework.util.retry.predicate.ExceptionPredicate;
 import cn.idealframework.util.retry.predicate.ResultPredicate;
 
 import javax.annotation.Nonnull;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -229,7 +230,7 @@ public class RetryerBuilder<V> {
         : stopStrategy;
     WaitStrategy theWaitStrategy =
       waitStrategy == null
-        ? WaitStrategies.noWait()
+        ? WaitStrategies.fixedWait(Duration.ofSeconds(1))
         : waitStrategy;
     return new AsyncRetryer<>(theAttemptTimeLimiter, theStopStrategy,
       theWaitStrategy, rejectionPredicate, listeners, workerExecutor);
