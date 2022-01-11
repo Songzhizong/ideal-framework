@@ -6,6 +6,7 @@
 
 - 放宽Lists和Sets中部分方法对null的限制
 - 新增重试工具 Retryer 和AsyncRetryer
+- 出现InvalidDataAccessApiUsageException时打印整个异常栈
 
 ### 🐞 Bug Fixes
 

@@ -103,7 +103,7 @@ public class SpringJdbcExceptionHandlerAdvice {
     if (message == null) {
       message = "InvalidDataAccessApiUsageException";
     }
-    log.info(message);
+    log.info("InvalidDataAccessApiUsageException: ", ex);
     BasicResult res = new BasicResult();
     res.setSuccess(false);
     res.setHttpStatus(ResMsg.BAD_REQUEST.httpStatus());
