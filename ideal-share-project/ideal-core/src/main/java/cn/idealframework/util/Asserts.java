@@ -22,6 +22,7 @@ import lombok.extern.apachecommons.CommonsLog;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Collection;
+import java.util.Map;
 import java.util.Objects;
 import java.util.function.Supplier;
 
@@ -169,6 +170,15 @@ public final class Asserts {
       throw genAssertException(messageSupplier.get());
     }
     return collection;
+  }
+
+  @Nonnull
+  public static <K, V> Map<K, V> notEmpty(@Nullable Map<K, V> map,
+                                          @Nullable String message) {
+    if (map == null || map.isEmpty()) {
+      throw genAssertException(message);
+    }
+    return map;
   }
 
 
