@@ -39,6 +39,7 @@ import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.validation.BindException;
+import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -244,6 +245,24 @@ public class GeneralExceptionHandlerAdvice {
     res.setMessage(message);
     TraceContextHolder.current().ifPresent(context -> res.setTraceId(context.getTraceId()));
     return new ResponseEntity<>(res, RESPONSE_HEADERS, HttpStatus.BAD_REQUEST);
+  }
+
+
+  /**
+   * 服务器无法处理请求附带的媒体格式
+   */
+  @ExceptionHandler(HttpMediaTypeNotSupportedException.class)
+  public ResponseEntity<Object> httpMediaTypeNotSupportedExceptionHandler(
+    @Nonnull HttpMediaTypeNotSupportedException exception) {
+    String message = exception.getMessage();
+    log.info(message);
+    BasicResult res = new BasicResult();
+    res.setSuccess(false);
+    res.setHttpStatus(HttpStatus.UNSUPPORTED_MEDIA_TYPE.value());
+    res.setCode(HttpStatus.UNSUPPORTED_MEDIA_TYPE.value());
+    res.setMessage(message);
+    TraceContextHolder.current().ifPresent(context -> res.setTraceId(context.getTraceId()));
+    return new ResponseEntity<>(res, RESPONSE_HEADERS, HttpStatus.UNSUPPORTED_MEDIA_TYPE);
   }
 
   /**
