@@ -171,6 +171,10 @@ public class GeneralExceptionHandlerAdvice {
     res.setHttpStatus(ResMsg.BAD_REQUEST.httpStatus());
     res.setCode(ResMsg.BAD_REQUEST.code());
     res.setMessage(originalMessage);
+    String prefix = "Cannot coerce empty String";
+    if (originalMessage.startsWith(prefix)) {
+      res.setMessage("枚举类型值为空时请传null,而非空白字符串");
+    }
     TraceContextHolder.current().ifPresent(context -> res.setTraceId(context.getTraceId()));
     return new ResponseEntity<>(res, RESPONSE_HEADERS, HttpStatus.BAD_REQUEST);
   }
