@@ -20,14 +20,17 @@ import cn.idealframework.event.message.impl.SimpleDelivererEvent;
 import cn.idealframework.json.JsonUtils;
 import cn.idealframework.json.TypeReference;
 import cn.idealframework.lang.StringUtils;
+import com.github.luben.zstd.Zstd;
 import com.rabbitmq.client.Channel;
 import lombok.extern.apachecommons.CommonsLog;
 import org.springframework.amqp.core.Message;
+import org.springframework.amqp.core.MessageProperties;
 import org.springframework.amqp.rabbit.listener.api.ChannelAwareMessageListener;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.nio.charset.StandardCharsets;
+import java.util.Map;
 
 /**
  * @author 宋志宗 on 2021/4/24
@@ -58,11 +61,30 @@ public class RabbitConsumer implements ChannelAwareMessageListener {
       log.warn("channel is null");
       return;
     }
-    long deliveryTag = message.getMessageProperties().getDeliveryTag();
-    String consumerQueue = message.getMessageProperties().getConsumerQueue();
+    MessageProperties messageProperties = message.getMessageProperties();
+    long deliveryTag = messageProperties.getDeliveryTag();
+    String consumerQueue = messageProperties.getConsumerQueue();
     String listenerName = RabbitEventUtils
       .getListenerNameByQueueName(queuePrefix, consumerQueue, enableLocalModel);
     byte[] body = message.getBody();
+
+    try {
+      Map<String, Object> headers = messageProperties.getHeaders();
+      Object contentEncodingObj = headers.get(RabbitConstants.CONTENT_ENCODING_NAME);
+      if (contentEncodingObj != null) {
+        String contentEncoding = (String) contentEncodingObj;
+        if (StringUtils.equals(RabbitConstants.CONTENT_ENCODING_TYPE_ZSTD, contentEncoding)) {
+          Object originalLengthObj = headers.get(RabbitConstants.CONTENT_ORIGINAL_LENGTH_NAME);
+          int length = Integer.parseInt((String) originalLengthObj);
+          body = Zstd.decompress(body, length);
+        }
+      }
+    } catch (Exception e) {
+      log.warn("数据解压缩出现异常: ", e);
+      channel.basicAck(deliveryTag, false);
+      return;
+    }
+
     String value = new String(body, StandardCharsets.UTF_8);
     if (StringUtils.isBlank(value) || value.charAt(0) != '{') {
       log.warn("消息处理失败, 非json结构");
@@ -83,7 +105,7 @@ public class RabbitConsumer implements ChannelAwareMessageListener {
       eventDeliverer.deliver(domainEvent);
       channel.basicAck(deliveryTag, false);
     } catch (Exception e) {
-      e.printStackTrace();
+      log.info("消息交付出现异常: ", e);
       channel.basicNack(deliveryTag, false, true);
     }
   }

@@ -27,6 +27,11 @@ import java.util.List;
  */
 public interface EventSuppliers {
 
+  /**
+   * 创建一个空的EventSuppliers
+   *
+   * @author 宋志宗 on 2022/1/19
+   */
   @Nonnull
   static EventSuppliers empty() {
     return EventSuppliersImpl.empty();

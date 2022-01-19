@@ -19,10 +19,9 @@ import cn.idealframework.event.message.EventMessage;
 import cn.idealframework.event.persistence.EventMessageRepository;
 import cn.idealframework.event.publisher.AbstractEventPublisher;
 import cn.idealframework.json.JsonUtils;
-import org.springframework.amqp.core.AmqpTemplate;
-import org.springframework.amqp.core.Message;
-import org.springframework.amqp.core.MessageBuilder;
-import org.springframework.amqp.core.MessageDeliveryMode;
+import com.github.luben.zstd.Zstd;
+import lombok.extern.apachecommons.CommonsLog;
+import org.springframework.amqp.core.*;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -32,6 +31,7 @@ import java.util.Collection;
 /**
  * @author 宋志宗 on 2021/4/24
  */
+@CommonsLog
 public class RabbitEventPublisher extends AbstractEventPublisher {
   private final String publishExchange;
   private final AmqpTemplate amqpTemplate;
@@ -49,8 +49,18 @@ public class RabbitEventPublisher extends AbstractEventPublisher {
     for (EventMessage<?> eventMessage : messages) {
       String topic = eventMessage.getTopic();
       String jsonString = JsonUtils.toJsonStringIgnoreNull(eventMessage);
-      Message message = MessageBuilder.withBody(jsonString.getBytes(StandardCharsets.UTF_8)).build();
-      message.getMessageProperties().setDeliveryMode(MessageDeliveryMode.PERSISTENT);
+      byte[] originalBytes = jsonString.getBytes(StandardCharsets.UTF_8);
+      int originalLength = originalBytes.length;
+      byte[] compress = Zstd.compress(originalBytes);
+      log.info("发布事件: " + topic);
+      if (log.isDebugEnabled()) {
+        log.debug("原始数据长度: " + originalLength + " zstd压缩后数据长度: " + compress.length);
+      }
+      Message message = MessageBuilder.withBody(compress).build();
+      MessageProperties properties = message.getMessageProperties();
+      properties.setDeliveryMode(MessageDeliveryMode.PERSISTENT);
+      properties.setHeader(RabbitConstants.CONTENT_ENCODING_NAME, RabbitConstants.CONTENT_ENCODING_TYPE_ZSTD);
+      properties.setHeader(RabbitConstants.CONTENT_ORIGINAL_LENGTH_NAME, String.valueOf(originalLength));
       amqpTemplate.send(publishExchange, topic, message);
     }
   }
