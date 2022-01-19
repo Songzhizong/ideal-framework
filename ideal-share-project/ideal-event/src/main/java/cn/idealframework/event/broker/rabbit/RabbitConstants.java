@@ -20,10 +20,10 @@ package cn.idealframework.event.broker.rabbit;
  */
 public interface RabbitConstants {
   /** 消息压缩方式头名称 */
-  String CONTENT_ENCODING_NAME = "msg_content_encoding";
+  String CONTENT_ENCODING_NAME = "mencoding";
 
   /** 消息原始长度头名称 */
-  String CONTENT_ORIGINAL_LENGTH_NAME = "msg_content_original_length";
+  String CONTENT_ORIGINAL_LENGTH_NAME = "morilength";
 
   /** ZSTD压缩方式 */
   String CONTENT_ENCODING_TYPE_ZSTD = "zstd";
