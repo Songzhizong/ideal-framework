@@ -18,6 +18,7 @@ package cn.idealframework.boot.autoconfigure.event.broker;
 import cn.idealframework.boot.autoconfigure.event.IdealBootEventProperties;
 import cn.idealframework.boot.autoconfigure.event.broker.properties.rabbit.IdealBootEventRabbitProperties;
 import cn.idealframework.boot.starter.module.event.EventModule;
+import cn.idealframework.compression.CompressType;
 import cn.idealframework.event.broker.rabbit.IdealRabbitMessageListenerContainer;
 import cn.idealframework.event.broker.rabbit.RabbitConsumer;
 import cn.idealframework.event.broker.rabbit.RabbitEventPublisher;
@@ -68,7 +69,8 @@ public class IdealBootEventRabbitBrokerAutoConfigure {
                                          EventMessageRepository eventMessageRepository) {
     IdealBootEventRabbitProperties rabbit = properties.getBroker().getRabbit();
     String exchange = rabbit.getExchange();
-    return new RabbitEventPublisher(exchange, amqpTemplate, eventMessageRepository);
+    CompressType compressType = rabbit.getCompressType();
+    return new RabbitEventPublisher(exchange, amqpTemplate, compressType, eventMessageRepository);
   }
 
   @Bean

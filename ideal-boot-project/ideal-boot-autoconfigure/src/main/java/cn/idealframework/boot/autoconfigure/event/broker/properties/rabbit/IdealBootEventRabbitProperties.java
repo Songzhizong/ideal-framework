@@ -15,6 +15,7 @@
  */
 package cn.idealframework.boot.autoconfigure.event.broker.properties.rabbit;
 
+import cn.idealframework.compression.CompressType;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -43,4 +44,7 @@ public class IdealBootEventRabbitProperties {
 
   /** 最大消费者数 */
   private int maxConcurrentConsumers = 64;
+
+  /** 数据压缩方式 */
+  private CompressType compressType = CompressType.NONE;
 }

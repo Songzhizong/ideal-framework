@@ -15,6 +15,7 @@
  */
 package cn.idealframework.event.broker.rabbit;
 
+import cn.idealframework.compression.CompressType;
 import cn.idealframework.event.message.EventMessage;
 import cn.idealframework.event.persistence.EventMessageRepository;
 import cn.idealframework.event.publisher.AbstractEventPublisher;
@@ -35,32 +36,43 @@ import java.util.Collection;
 public class RabbitEventPublisher extends AbstractEventPublisher {
   private final String publishExchange;
   private final AmqpTemplate amqpTemplate;
+  private final CompressType compressType;
 
   public RabbitEventPublisher(@Nonnull String publishExchange,
                               @Nonnull AmqpTemplate amqpTemplate,
+                              @Nullable CompressType compressType,
                               @Nullable EventMessageRepository eventMessageRepository) {
     super(eventMessageRepository);
+    if (compressType == null) {
+      compressType = CompressType.NONE;
+    }
     this.amqpTemplate = amqpTemplate;
     this.publishExchange = publishExchange;
+    this.compressType = compressType;
   }
 
   @Override
   public void brokerPublish(@Nonnull Collection<EventMessage<?>> messages) {
     for (EventMessage<?> eventMessage : messages) {
       String topic = eventMessage.getTopic();
+      log.info("发布事件: " + topic);
       String jsonString = JsonUtils.toJsonStringIgnoreNull(eventMessage);
       byte[] originalBytes = jsonString.getBytes(StandardCharsets.UTF_8);
       int originalLength = originalBytes.length;
-      byte[] compress = Zstd.compress(originalBytes);
-      log.info("发布事件: " + topic);
-      if (log.isDebugEnabled()) {
-        log.debug("原始数据长度: " + originalLength + " zstd压缩后数据长度: " + compress.length);
+      byte[] compress = originalBytes;
+      if (compressType == CompressType.ZSTD) {
+        compress = Zstd.compress(originalBytes);
+        if (log.isDebugEnabled()) {
+          log.debug("原始数据长度: " + originalLength + " zstd压缩后数据长度: " + compress.length);
+        }
       }
       Message message = MessageBuilder.withBody(compress).build();
       MessageProperties properties = message.getMessageProperties();
       properties.setDeliveryMode(MessageDeliveryMode.PERSISTENT);
-      properties.setHeader(RabbitConstants.CONTENT_ENCODING_NAME, RabbitConstants.CONTENT_ENCODING_TYPE_ZSTD);
-      properties.setHeader(RabbitConstants.CONTENT_ORIGINAL_LENGTH_NAME, String.valueOf(originalLength));
+      if (compressType == CompressType.ZSTD) {
+        properties.setHeader(RabbitConstants.CONTENT_ENCODING_NAME, RabbitConstants.CONTENT_ENCODING_TYPE_ZSTD);
+        properties.setHeader(RabbitConstants.CONTENT_ORIGINAL_LENGTH_NAME, String.valueOf(originalLength));
+      }
       amqpTemplate.send(publishExchange, topic, message);
     }
   }
