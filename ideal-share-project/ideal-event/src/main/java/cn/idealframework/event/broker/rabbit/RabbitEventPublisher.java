@@ -55,7 +55,6 @@ public class RabbitEventPublisher extends AbstractEventPublisher {
   public void brokerPublish(@Nonnull Collection<EventMessage<?>> messages) {
     for (EventMessage<?> eventMessage : messages) {
       String topic = eventMessage.getTopic();
-      log.info("发布事件: " + topic);
       String jsonString = JsonUtils.toJsonStringIgnoreNull(eventMessage);
       byte[] originalBytes = jsonString.getBytes(StandardCharsets.UTF_8);
       int originalLength = originalBytes.length;

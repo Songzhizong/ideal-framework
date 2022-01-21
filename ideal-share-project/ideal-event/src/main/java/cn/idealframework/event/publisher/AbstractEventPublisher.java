@@ -22,6 +22,7 @@ import cn.idealframework.event.message.EventMessage;
 import cn.idealframework.event.message.EventSupplier;
 import cn.idealframework.event.persistence.EventMessageRepository;
 import cn.idealframework.lang.CollectionUtils;
+import lombok.extern.apachecommons.CommonsLog;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -32,6 +33,7 @@ import java.util.List;
 /**
  * @author 宋志宗 on 2021/7/23
  */
+@CommonsLog
 public abstract class AbstractEventPublisher implements EventPublisher {
   private final EventMessageRepository eventMessageRepository;
 
@@ -58,6 +60,7 @@ public abstract class AbstractEventPublisher implements EventPublisher {
       EventMessage<?> message = supplier.getEventMessage();
       messages.add(message);
       String topic = message.getTopic();
+      log.info("发布事件: " + topic);
       EventHeaders headers = message.getHeaders();
       List<LocalEventProcessor> list = LocalEventProcessorFactory.get(topic);
       for (LocalEventProcessor processor : list) {
