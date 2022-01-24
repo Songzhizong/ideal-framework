@@ -20,12 +20,14 @@ import cn.idealframework.lang.Lists;
 import cn.idealframework.lang.StringUtils;
 
 import javax.persistence.AttributeConverter;
+import javax.persistence.Converter;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * @author 宋志宗 on 2021/11/2
  */
+@Converter
 public class LongListConverter implements AttributeConverter<List<Long>, String> {
 
   @Override

@@ -27,5 +27,4 @@ public enum CertificateType {
   PASSPORT,
   /** 无 */
   NONE,
-  ;
 }

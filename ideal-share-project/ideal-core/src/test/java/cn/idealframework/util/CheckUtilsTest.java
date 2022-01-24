@@ -35,7 +35,6 @@ public class CheckUtilsTest {
     Assert.assertTrue(c4);
     boolean c5 = CheckUtils.checkMobile("29530258334");
     Assert.assertFalse(c5);
-    Assert.assertTrue(c4);
     boolean c6 = CheckUtils.checkMobile("195302583342");
     Assert.assertFalse(c6);
   }
@@ -48,7 +47,6 @@ public class CheckUtilsTest {
     Assert.assertFalse(c2);
     boolean c3 = CheckUtils.checkAccount("zzs");
     Assert.assertFalse(c3);
-    Assert.assertFalse(c2);
     boolean c4 = CheckUtils.checkAccount("zzsong");
     Assert.assertTrue(c4);
   }

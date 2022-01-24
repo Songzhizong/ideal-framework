@@ -20,12 +20,14 @@ import cn.idealframework.lang.Sets;
 import cn.idealframework.lang.StringUtils;
 
 import javax.persistence.AttributeConverter;
+import javax.persistence.Converter;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
 /**
  * @author 宋志宗 on 2021/11/2
  */
+@Converter
 public class LongSetConverter implements AttributeConverter<Set<Long>, String> {
 
   @Override

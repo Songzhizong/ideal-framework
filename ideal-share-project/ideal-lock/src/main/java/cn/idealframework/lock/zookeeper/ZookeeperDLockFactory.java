@@ -29,12 +29,12 @@ public class ZookeeperDLockFactory implements DLockFactory {
   @Nonnull
   @Override
   public DLock getLock(@Nonnull String name) {
-    return null;
+    throw new UnsupportedOperationException("未实现");
   }
 
   @Nonnull
   @Override
   public DLock getLock(@Nonnull String name, @Nonnull Duration leaseTime) {
-    return null;
+    throw new UnsupportedOperationException("未实现");
   }
 }

@@ -29,5 +29,4 @@ public enum Gender {
   SECRET,
   /** 其它 */
   OTHER,
-  ;
 }

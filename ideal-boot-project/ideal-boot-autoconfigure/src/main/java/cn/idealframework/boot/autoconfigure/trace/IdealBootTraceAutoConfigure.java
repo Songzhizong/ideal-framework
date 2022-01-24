@@ -71,14 +71,6 @@ public class IdealBootTraceAutoConfigure {
     return UUIDTraceIdGenerator.getInstance();
   }
 
-//  @Bean
-//  @ConditionalOnMissingBean
-//  public TraceInfoStorage traceLogStorage() {
-//    CollectorProperties storage = properties.getCollector();
-//    LogCollectorProperties log = storage.getLog();
-//    return new LogTraceInfoStorage(log.isPrettyOutput());
-//  }
-
   @Bean
   public TraceFilter traceFilter(
     @Nullable @Autowired(required = false)

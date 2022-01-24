@@ -27,9 +27,7 @@ public final class WebClientTraceUtils {
 
   @Nonnull
   public static Consumer<TraceContext> setTraceHeaders(@Nonnull HttpHeaders httpHeaders) {
-    return traceContext -> {
-      setTraceHeaders(httpHeaders, traceContext);
-    };
+    return traceContext -> setTraceHeaders(httpHeaders, traceContext);
   }
 
   public static void setTraceHeaders(@Nonnull HttpHeaders httpHeaders,

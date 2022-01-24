@@ -28,7 +28,7 @@ public class ZookeeperDLock implements DLock {
   @Nonnull
   @Override
   public String getName() {
-    return null;
+    return "";
   }
 
   @Override
