@@ -12,8 +12,9 @@
 
 ### 🔨 Dependency Upgrades
 
-- zstd-jni.version > 1.5.1-1
-- redisson.version > 3.16.7
+- vertx.version -> 4.2.4
+- zstd-jni.version -> 1.5.2-1
+- redisson.version -> 3.16.8
 
 ### ⚠️ Compatibility
 
