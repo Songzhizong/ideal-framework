@@ -61,6 +61,7 @@ public class RedisCache<V> implements DistributedCache<V> {
   private final long timeoutSeconds;
   private final long minTimeoutSeconds;
   private final long maxTimeoutSeconds;
+  private final boolean cacheNull;
   private final long nullCacheTimeoutSeconds;
   private final Serializer<V> serializer;
   private final Deserializer<V> deserializer;
@@ -70,6 +71,7 @@ public class RedisCache<V> implements DistributedCache<V> {
                     long timeoutSeconds,
                     long minTimeoutSeconds,
                     long maxTimeoutSeconds,
+                    boolean cacheNull,
                     long nullCacheTimeoutSeconds,
                     @Nonnull Serializer<V> serializer,
                     @Nonnull Deserializer<V> deserializer) {
@@ -82,6 +84,7 @@ public class RedisCache<V> implements DistributedCache<V> {
     this.timeoutSeconds = Math.max(timeoutSeconds, 1L);
     this.minTimeoutSeconds = Math.max(minTimeoutSeconds, 1L);
     this.maxTimeoutSeconds = Math.max(maxTimeoutSeconds, 2L);
+    this.cacheNull = cacheNull;
     this.nullCacheTimeoutSeconds = Math.max(nullCacheTimeoutSeconds, 1L);
     this.serializer = serializer;
     this.deserializer = deserializer;
@@ -104,23 +107,28 @@ public class RedisCache<V> implements DistributedCache<V> {
     if (value != null) {
       return value;
     }
-    DLock lock = getLock(redisKey);
+    DLock lock = null;
     V apply;
     try {
-      lock.lock();
-      value = doGet(redisKey);
-      if (value != null) {
-        return value;
+      if (cacheNull) {
+        lock = getLock(redisKey);
+        lock.lock();
+        value = doGet(redisKey);
+        if (value != null) {
+          return value;
+        }
       }
       apply = function.apply(key);
       if (apply != null) {
         String serialize = serializer.serialize(apply);
         redisTemplate.opsForValue().set(redisKey, serialize, getTimeoutSeconds(), TimeUnit.SECONDS);
-      } else {
+      } else if (cacheNull) {
         redisTemplate.opsForValue().set(redisKey, CacheUtils.NULL_VALUE, nullCacheTimeoutSeconds, TimeUnit.SECONDS);
       }
     } finally {
-      lock.unlock();
+      if (lock != null) {
+        lock.unlock();
+      }
     }
     return apply;
   }

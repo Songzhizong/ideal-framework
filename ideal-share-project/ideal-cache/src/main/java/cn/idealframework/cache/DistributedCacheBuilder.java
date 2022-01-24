@@ -48,6 +48,13 @@ public interface DistributedCacheBuilder<V> {
                                               @Nonnull Duration maxTimeout);
 
   /**
+   * 关闭空值缓存
+   *
+   * @author 宋志宗 on 2022/1/25
+   */
+  DistributedCacheBuilder<V> disableCacheNull();
+
+  /**
    * 设置fallback的过期时间
    *
    * @param fallbackTimeout fallback的过期时间

@@ -34,6 +34,7 @@ public class RedisCacheBuilder<V> implements DistributedCacheBuilder<V> {
   private long minTimeoutSeconds = -1L;
   private long maxTimeoutSeconds = -1L;
   // fallback默认一分钟过期时间
+  private boolean cacheNull = true;
   private long nullCacheTimeoutSeconds = 60;
   private Serializer<V> serializer;
   private Deserializer<V> deserializer;
@@ -52,6 +53,12 @@ public class RedisCacheBuilder<V> implements DistributedCacheBuilder<V> {
     this.randomTimeout = true;
     this.minTimeoutSeconds = Math.max(minTimeout.getSeconds(), 1L);
     this.maxTimeoutSeconds = Math.max(maxTimeout.getSeconds(), 2L);
+    return this;
+  }
+
+  @Override
+  public DistributedCacheBuilder<V> disableCacheNull() {
+    this.cacheNull = false;
     return this;
   }
 
@@ -81,6 +88,6 @@ public class RedisCacheBuilder<V> implements DistributedCacheBuilder<V> {
     Asserts.nonnull(serializer, "未设置缓存值序列化器");
     Asserts.nonnull(deserializer, "未设置缓存值反序列化器");
     return new RedisCache<>(namespace, randomTimeout, timeoutSeconds,
-      minTimeoutSeconds, maxTimeoutSeconds, nullCacheTimeoutSeconds, serializer, deserializer);
+      minTimeoutSeconds, maxTimeoutSeconds, cacheNull, nullCacheTimeoutSeconds, serializer, deserializer);
   }
 }
