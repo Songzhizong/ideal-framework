@@ -28,7 +28,6 @@ import java.time.Duration;
  * @author 宋志宗 on 2021/7/20
  */
 public class RedisHashCacheBuilder<V> implements DistributedHashCacheBuilder<V> {
-  private V defaultFallback;
   private boolean randomTimeout = false;
   // 缓存默认一天过期时间
   private long timeoutSeconds = 86400L;
@@ -36,13 +35,6 @@ public class RedisHashCacheBuilder<V> implements DistributedHashCacheBuilder<V> 
   private long maxTimeoutSeconds = -1L;
   private Serializer<V> serializer;
   private Deserializer<V> deserializer;
-
-
-  @Override
-  public DistributedHashCacheBuilder<V> defaultFallback(@Nonnull V defaultFallback) {
-    this.defaultFallback = defaultFallback;
-    return this;
-  }
 
   @Override
   public DistributedHashCacheBuilder<V> expireAfterWrite(@Nonnull Duration expireAfterWrite) {
@@ -79,7 +71,7 @@ public class RedisHashCacheBuilder<V> implements DistributedHashCacheBuilder<V> 
   public DistributedHashCache<V> build(@Nonnull String namespace) {
     Asserts.nonnull(serializer, "未设置缓存值序列化器");
     Asserts.nonnull(deserializer, "未设置缓存值反序列化器");
-    return new RedisHashCache<>(namespace, defaultFallback, randomTimeout, timeoutSeconds,
+    return new RedisHashCache<>(namespace, randomTimeout, timeoutSeconds,
       minTimeoutSeconds, maxTimeoutSeconds, serializer, deserializer);
   }
 }

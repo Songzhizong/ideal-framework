@@ -23,6 +23,7 @@ import java.util.function.Function;
 /**
  * @author 宋志宗 on 2021/7/20
  */
+@SuppressWarnings("unused")
 public interface HashCache<V> {
 
   boolean hasKey(@Nonnull String key);

@@ -23,6 +23,7 @@ import java.time.Duration;
  *
  * @author 宋志宗 on 2021/7/10
  */
+@SuppressWarnings("unused")
 public interface MemoryCacheBuilder<V> {
 
   MemoryCacheBuilder<V> maximumSize(long maximumSize);

@@ -15,6 +15,7 @@
  */
 package cn.idealframework.cache.impl;
 
+import cn.idealframework.cache.CacheUtils;
 import cn.idealframework.cache.DistributedCache;
 import cn.idealframework.cache.serialize.Deserializer;
 import cn.idealframework.cache.serialize.Serializer;
@@ -56,31 +57,32 @@ public class RedisCache<V> implements DistributedCache<V> {
   private static DLockFactory lockFactory;
 
   private final String prefix;
-  private final V defaultFallback;
   private final boolean randomTimeout;
   private final long timeoutSeconds;
   private final long minTimeoutSeconds;
   private final long maxTimeoutSeconds;
-  private final long fallbackTimeoutSeconds;
+  private final long nullCacheTimeoutSeconds;
   private final Serializer<V> serializer;
   private final Deserializer<V> deserializer;
 
   public RedisCache(@Nonnull String namespace,
-                    @Nonnull V defaultFallback,
                     boolean randomTimeout,
                     long timeoutSeconds,
                     long minTimeoutSeconds,
                     long maxTimeoutSeconds,
-                    long fallbackTimeoutSeconds,
+                    long nullCacheTimeoutSeconds,
                     @Nonnull Serializer<V> serializer,
                     @Nonnull Deserializer<V> deserializer) {
+    Asserts.nonnull(RedisCache.redisTemplate,
+      "RedisCache.redisTemplate为空, 请手动设置或配置ideal-boot-starter-redis");
+    Asserts.nonnull(RedisCache.lockFactory,
+      "RedisCache.lockFactory为空, 请手动设置或配置ideal-boot-starter-lock");
     this.prefix = globalPrefix + namespace;
-    this.defaultFallback = defaultFallback;
     this.randomTimeout = randomTimeout;
     this.timeoutSeconds = Math.max(timeoutSeconds, 1L);
     this.minTimeoutSeconds = Math.max(minTimeoutSeconds, 1L);
     this.maxTimeoutSeconds = Math.max(maxTimeoutSeconds, 2L);
-    this.fallbackTimeoutSeconds = Math.max(fallbackTimeoutSeconds, 1L);
+    this.nullCacheTimeoutSeconds = Math.max(nullCacheTimeoutSeconds, 1L);
     this.serializer = serializer;
     this.deserializer = deserializer;
   }
@@ -90,65 +92,46 @@ public class RedisCache<V> implements DistributedCache<V> {
   @Override
   public V getIfPresent(@Nonnull String key) {
     String redisKey = genRedisKey(key);
-    String value = getRedisTemplate().opsForValue().get(redisKey);
-    if (value == null) {
-      return null;
-    }
-    return deserializer.deserialize(value);
+    return doGet(redisKey);
   }
 
   @Nullable
   @Override
   public V get(@Nonnull String key, @Nonnull Function<String, ? extends V> function) {
-    if (defaultFallback != null) {
-      return get(key, function, defaultFallback);
-    }
     Asserts.nonnull(function, "function must be not null");
     String redisKey = genRedisKey(key);
-    StringRedisTemplate redisTemplate = getRedisTemplate();
-    String value = redisTemplate.opsForValue().get(redisKey);
+    V value = doGet(redisKey);
     if (value != null) {
-      return deserializer.deserialize(value);
+      return value;
     }
-    V apply = function.apply(key);
-    if (apply != null) {
-      String serialize = serializer.serialize(apply);
-      redisTemplate.opsForValue().set(redisKey, serialize, getTimeoutSeconds(), TimeUnit.SECONDS);
+    DLock lock = getLock(redisKey);
+    V apply;
+    try {
+      lock.lock();
+      value = doGet(redisKey);
+      if (value != null) {
+        return value;
+      }
+      apply = function.apply(key);
+      if (apply != null) {
+        String serialize = serializer.serialize(apply);
+        redisTemplate.opsForValue().set(redisKey, serialize, getTimeoutSeconds(), TimeUnit.SECONDS);
+      } else {
+        redisTemplate.opsForValue().set(redisKey, CacheUtils.NULL_VALUE, nullCacheTimeoutSeconds, TimeUnit.SECONDS);
+      }
+    } finally {
+      lock.unlock();
     }
     return apply;
   }
 
-  @Nonnull
-  @Override
-  public V get(@Nonnull String key, @Nonnull Function<String, ? extends V> function, @Nonnull V fallback) {
-    Asserts.nonnull(function, "function must be not null");
-    Asserts.nonnull(fallback, "fallback must be not null");
-    String redisKey = genRedisKey(key);
-    StringRedisTemplate redisTemplate = getRedisTemplate();
+  @Nullable
+  private V doGet(String redisKey) {
     String value = redisTemplate.opsForValue().get(redisKey);
-    if (value != null) {
-      return deserializer.deserialize(value);
+    if (CacheUtils.isNullValue(value)) {
+      return null;
     }
-    DLock lock = getLockFactory().getLock(redisKey);
-    try {
-      lock.lock();
-      value = redisTemplate.opsForValue().get(redisKey);
-      if (value != null) {
-        return deserializer.deserialize(value);
-      }
-      V apply = function.apply(key);
-      if (apply == null) {
-        log.debug("function.apply(key) return null, use fallback");
-        value = serializer.serialize(fallback);
-        redisTemplate.opsForValue().set(redisKey, value, fallbackTimeoutSeconds, TimeUnit.SECONDS);
-        return fallback;
-      }
-      value = serializer.serialize(apply);
-      redisTemplate.opsForValue().set(redisKey, value, getTimeoutSeconds(), TimeUnit.SECONDS);
-      return apply;
-    } finally {
-      lock.unlock();
-    }
+    return deserializer.deserialize(value);
   }
 
   @Override
@@ -156,7 +139,7 @@ public class RedisCache<V> implements DistributedCache<V> {
     Asserts.nonnull(value, "value must be not null");
     String redisKey = genRedisKey(key);
     String json = serializer.serialize(value);
-    getRedisTemplate().opsForValue().set(redisKey, json, getTimeoutSeconds(), TimeUnit.SECONDS);
+    redisTemplate.opsForValue().set(redisKey, json, getTimeoutSeconds(), TimeUnit.SECONDS);
   }
 
   @Override
@@ -179,13 +162,13 @@ public class RedisCache<V> implements DistributedCache<V> {
         return true;
       }
     };
-    getRedisTemplate().execute(callback);
+    redisTemplate.execute(callback);
   }
 
   @Override
   public void invalidate(@Nonnull String key) {
     String redisKey = genRedisKey(key);
-    getRedisTemplate().delete(redisKey);
+    redisTemplate.delete(redisKey);
   }
 
   @Override
@@ -197,27 +180,12 @@ public class RedisCache<V> implements DistributedCache<V> {
         redisKeys.add(redisKey);
       }
     });
-    getRedisTemplate().delete(redisKeys);
+    redisTemplate.delete(redisKeys);
   }
 
   @Nonnull
-  private StringRedisTemplate getRedisTemplate() {
-    if (RedisCache.redisTemplate == null) {
-      log.error("RedisCache.redisTemplate为空, 请手动设置或配置ideal-boot-starter-redis");
-      Asserts.nonnull(RedisCache.redisTemplate,
-        "RedisCache.redisTemplate为空, 请手动设置或配置ideal-boot-starter-redis");
-    }
-    return RedisCache.redisTemplate;
-  }
-
-  @Nonnull
-  private DLockFactory getLockFactory() {
-    if (RedisCache.lockFactory == null) {
-      log.error("RedisCache.lockFactory为空, 请手动设置或配置ideal-boot-starter-lock");
-      Asserts.nonnull(RedisCache.lockFactory,
-        "RedisCache.lockFactory为空, 请手动设置或配置ideal-boot-starter-lock");
-    }
-    return RedisCache.lockFactory;
+  private DLock getLock(@Nonnull String key) {
+    return RedisCache.lockFactory.getLock(key);
   }
 
   @Nonnull

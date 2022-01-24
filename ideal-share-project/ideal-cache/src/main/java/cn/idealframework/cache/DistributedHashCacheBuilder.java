@@ -26,9 +26,8 @@ import java.time.Duration;
  *
  * @author 宋志宗 on 2021/7/10
  */
+@SuppressWarnings("unused")
 public interface DistributedHashCacheBuilder<V> {
-  DistributedHashCacheBuilder<V> defaultFallback(@Nonnull V defaultFallback);
-
   /**
    * 设置缓存过期时间, 自写入之后
    *

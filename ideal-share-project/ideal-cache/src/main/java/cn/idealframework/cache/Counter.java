@@ -23,6 +23,7 @@ import javax.annotation.Nullable;
  *
  * @author 宋志宗 on 2021/12/10
  */
+@SuppressWarnings("unused")
 public interface Counter {
 
   /**

@@ -26,8 +26,8 @@ import java.time.Duration;
  *
  * @author 宋志宗 on 2021/7/10
  */
+@SuppressWarnings("unused")
 public interface DistributedCacheBuilder<V> {
-  DistributedCacheBuilder<V> defaultFallback(@Nonnull V defaultFallback);
 
   /**
    * 设置缓存过期时间, 自写入之后
@@ -53,7 +53,7 @@ public interface DistributedCacheBuilder<V> {
    * @param fallbackTimeout fallback的过期时间
    * @author 宋志宗 on 2021/7/11
    */
-  DistributedCacheBuilder<V> fallbackTimeout(@Nonnull Duration fallbackTimeout);
+  DistributedCacheBuilder<V> nullCacheTimeout(@Nonnull Duration fallbackTimeout);
 
   /**
    * 设置序列化器

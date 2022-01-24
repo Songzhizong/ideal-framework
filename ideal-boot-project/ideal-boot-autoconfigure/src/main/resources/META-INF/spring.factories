@@ -3,7 +3,6 @@ org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
   cn.idealframework.boot.autoconfigure.application.IdealBootApplicationAutoConfigure,\
   cn.idealframework.boot.autoconfigure.cache.IdealBootCacheAutoConfigure,\
   cn.idealframework.boot.autoconfigure.cache.IdealBootCaffeineCacheAutoConfigure,\
-  cn.idealframework.boot.autoconfigure.cache.IdealBootGuavaCacheAutoConfigure,\
   cn.idealframework.boot.autoconfigure.cache.IdealBootRedisCacheAutoConfigure,\
   cn.idealframework.boot.autoconfigure.database.IdealBootDatabaseAutoConfigure,\
   cn.idealframework.boot.autoconfigure.event.IdealBootEventAutoConfigure,\

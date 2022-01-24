@@ -28,22 +28,15 @@ import java.time.Duration;
  * @author 宋志宗 on 2021/7/9
  */
 public class RedisCacheBuilder<V> implements DistributedCacheBuilder<V> {
-  private V defaultFallback;
   private boolean randomTimeout = false;
   // 缓存默认一天过期时间
   private long timeoutSeconds = 86400L;
   private long minTimeoutSeconds = -1L;
   private long maxTimeoutSeconds = -1L;
   // fallback默认一分钟过期时间
-  private long fallbackTimeoutSeconds = 60;
+  private long nullCacheTimeoutSeconds = 60;
   private Serializer<V> serializer;
   private Deserializer<V> deserializer;
-
-  @Override
-  public DistributedCacheBuilder<V> defaultFallback(@Nonnull V defaultFallback) {
-    this.defaultFallback = defaultFallback;
-    return this;
-  }
 
   @Override
   public RedisCacheBuilder<V> expireAfterWrite(@Nonnull Duration expireAfterWrite) {
@@ -63,9 +56,9 @@ public class RedisCacheBuilder<V> implements DistributedCacheBuilder<V> {
   }
 
   @Override
-  public RedisCacheBuilder<V> fallbackTimeout(@Nonnull Duration fallbackTimeout) {
+  public RedisCacheBuilder<V> nullCacheTimeout(@Nonnull Duration fallbackTimeout) {
     Asserts.nonnull(fallbackTimeout, "fallbackTimeout must be not null");
-    this.fallbackTimeoutSeconds = fallbackTimeout.getSeconds();
+    this.nullCacheTimeoutSeconds = fallbackTimeout.getSeconds();
     return this;
   }
 
@@ -87,7 +80,7 @@ public class RedisCacheBuilder<V> implements DistributedCacheBuilder<V> {
   public DistributedCache<V> build(@Nonnull String namespace) {
     Asserts.nonnull(serializer, "未设置缓存值序列化器");
     Asserts.nonnull(deserializer, "未设置缓存值反序列化器");
-    return new RedisCache<>(namespace, defaultFallback, randomTimeout, timeoutSeconds,
-      minTimeoutSeconds, maxTimeoutSeconds, fallbackTimeoutSeconds, serializer, deserializer);
+    return new RedisCache<>(namespace, randomTimeout, timeoutSeconds,
+      minTimeoutSeconds, maxTimeoutSeconds, nullCacheTimeoutSeconds, serializer, deserializer);
   }
 }

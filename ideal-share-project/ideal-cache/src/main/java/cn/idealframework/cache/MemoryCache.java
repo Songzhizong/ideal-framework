@@ -24,6 +24,7 @@ import javax.annotation.Nonnull;
  *
  * @author 宋志宗 on 2021/7/10
  */
+@SuppressWarnings("unused")
 public interface MemoryCache<V> extends Cache<V> {
 
   @Nonnull

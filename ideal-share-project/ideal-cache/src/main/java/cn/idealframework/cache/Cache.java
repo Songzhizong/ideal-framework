@@ -18,6 +18,7 @@ package cn.idealframework.cache;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Function;
 
 /**
@@ -25,6 +26,7 @@ import java.util.function.Function;
  *
  * @author 宋志宗 on 2021/7/9
  */
+@SuppressWarnings("unused")
 public interface Cache<V> {
 
   /**
@@ -36,6 +38,10 @@ public interface Cache<V> {
    */
   @Nullable
   V getIfPresent(@Nonnull String key);
+
+  default Optional<V> get(@Nonnull String key) {
+    return Optional.ofNullable(getIfPresent(key));
+  }
 
   /**
    * 从缓存中获取指定键对应的值, 不存在则调用 function 获取值

@@ -18,7 +18,6 @@ package cn.idealframework.cache;
 import cn.idealframework.cache.impl.SmartDistributedCacheBuilder;
 
 import javax.annotation.Nonnull;
-import java.util.function.Function;
 
 /**
  * @author 宋志宗 on 2021/7/10
@@ -30,16 +29,4 @@ public interface DistributedCache<V> extends Cache<V> {
   static <V> DistributedCacheBuilder<V> newBuilder() {
     return SmartDistributedCacheBuilder.newBuilder();
   }
-
-  /**
-   * 从缓存中获取指定键对应的值, 不存在则调用 function 获取值, 若 function 返回null则使用fallback
-   *
-   * @param key      缓存键
-   * @param function 未命中缓存时调用此函数获取值并写入缓存
-   * @param fallback function返回null是将此值写入缓存并返还
-   * @return 值
-   * @author 宋志宗 on 2021/7/11
-   */
-  @Nonnull
-  V get(@Nonnull String key, @Nonnull Function<String, ? extends V> function, @Nonnull V fallback);
 }

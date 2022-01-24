@@ -67,7 +67,6 @@ public class IdealBootRedisCacheAutoConfigure implements BeanPostProcessor, Smar
     RedisCache.setRedisTemplate(redisTemplate);
     RedisCache.setLockFactory(lockFactory);
     RedisHashCache.setRedisTemplate(redisTemplate);
-    RedisHashCache.setLockFactory(lockFactory);
     log.info("Init RedisCache...");
   }
 }

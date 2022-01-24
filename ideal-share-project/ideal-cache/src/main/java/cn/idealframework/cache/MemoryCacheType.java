@@ -22,5 +22,4 @@ package cn.idealframework.cache;
  */
 public enum MemoryCacheType {
   CAFFEINE,
-  GUAVA,
 }

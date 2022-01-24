@@ -18,8 +18,6 @@ package cn.idealframework.cache.impl;
 import cn.idealframework.cache.DistributedHashCache;
 import cn.idealframework.cache.serialize.Deserializer;
 import cn.idealframework.cache.serialize.Serializer;
-import cn.idealframework.lock.DLock;
-import cn.idealframework.lock.DLockFactory;
 import cn.idealframework.util.Asserts;
 import lombok.Setter;
 import lombok.extern.apachecommons.CommonsLog;
@@ -46,12 +44,8 @@ public class RedisHashCache<V> implements DistributedHashCache<V> {
   private static String globalPrefix = "cache:";
   @Setter
   private static StringRedisTemplate redisTemplate;
-  @Setter
-  private static DLockFactory lockFactory;
 
   private final String prefix;
-  @Nullable
-  private final V defaultFallback;
   private final boolean randomTimeout;
   private final long timeoutSeconds;
   private final long minTimeoutSeconds;
@@ -60,15 +54,15 @@ public class RedisHashCache<V> implements DistributedHashCache<V> {
   private final Deserializer<V> deserializer;
 
   public RedisHashCache(@Nonnull String namespace,
-                        @Nullable V defaultFallback,
                         boolean randomTimeout,
                         long timeoutSeconds,
                         long minTimeoutSeconds,
                         long maxTimeoutSeconds,
                         @Nonnull Serializer<V> serializer,
                         @Nonnull Deserializer<V> deserializer) {
+    Asserts.nonnull(RedisHashCache.redisTemplate,
+      "RedisCache.redisTemplate为空, 请手动设置或配置ideal-boot-starter-redis");
     this.prefix = globalPrefix + namespace;
-    this.defaultFallback = defaultFallback;
     this.randomTimeout = randomTimeout;
     this.timeoutSeconds = Math.max(timeoutSeconds, 1L);
     this.minTimeoutSeconds = Math.max(minTimeoutSeconds, 1L);
@@ -80,14 +74,14 @@ public class RedisHashCache<V> implements DistributedHashCache<V> {
   @Override
   public boolean hasKey(@Nonnull String key) {
     String redisKey = genRedisKey(key);
-    Boolean hasKey = getRedisTemplate().hasKey(redisKey);
+    Boolean hasKey = redisTemplate.hasKey(redisKey);
     return hasKey != null && hasKey;
   }
 
   @Override
   public boolean hasKey(@Nonnull String key, @Nonnull String hashKey) {
     String redisKey = genRedisKey(key);
-    HashOperations<String, Object, Object> ops = getRedisTemplate().opsForHash();
+    HashOperations<String, Object, Object> ops = redisTemplate.opsForHash();
     Boolean hasKey = ops.hasKey(redisKey, hashKey);
     //noinspection ConstantConditions
     return hasKey != null && hasKey;
@@ -95,43 +89,8 @@ public class RedisHashCache<V> implements DistributedHashCache<V> {
 
   @Nonnull
   @Override
-  public V get(@Nonnull String key, @Nonnull String hashKey,
-               @Nonnull Function<String, ? extends V> function, @Nonnull V fallback) {
-    Asserts.notBlank(hashKey, "hashKey must be not blank");
-    Asserts.nonnull(function, "function must be not null");
-    Asserts.nonnull(fallback, "fallback must be not null");
-    String redisKey = genRedisKey(key);
-    StringRedisTemplate redisTemplate = getRedisTemplate();
-    HashOperations<String, Object, Object> hash = redisTemplate.opsForHash();
-    Object value = hash.get(redisKey, hashKey);
-    if (value != null) {
-      return deserializer.deserialize((String) value);
-    }
-    DLock lock = getLockFactory().getLock(redisKey + ":" + hashKey);
-    try {
-      lock.lock();
-      value = hash.get(redisKey, hashKey);
-      if (value != null) {
-        return deserializer.deserialize((String) value);
-      }
-      V apply = function.apply(key);
-      if (apply == null) {
-        log.debug("function.apply(key) return null, use fallback");
-        this.doPut(redisKey, hashKey, fallback);
-        return fallback;
-      }
-      this.doPut(redisKey, hashKey, apply);
-      return apply;
-    } finally {
-      lock.unlock();
-    }
-  }
-
-  @Nonnull
-  @Override
   public Map<String, V> getAllIfPresent(@Nonnull String key) {
     String redisKey = genRedisKey(key);
-    StringRedisTemplate redisTemplate = getRedisTemplate();
     Map<Object, Object> entries = redisTemplate.opsForHash().entries(redisKey);
     Map<String, V> result = new HashMap<>();
     entries.forEach((k, v) -> {
@@ -148,32 +107,31 @@ public class RedisHashCache<V> implements DistributedHashCache<V> {
   public V getIfPresent(@Nonnull String key, @Nonnull String hashKey) {
     Asserts.notBlank(hashKey, "hashKey must be not blank");
     String redisKey = genRedisKey(key);
-    StringRedisTemplate redisTemplate = getRedisTemplate();
-    Object value = redisTemplate.opsForHash().get(redisKey, hashKey);
-    if (value == null) {
-      return null;
-    }
-    return deserializer.deserialize((String) value);
+    return doGet(redisKey, hashKey);
   }
 
   @Nullable
   @Override
   public V get(@Nonnull String key, @Nonnull String hashKey, @Nonnull Function<String, ? extends V> function) {
-    if (defaultFallback != null) {
-      return get(key, hashKey, function, defaultFallback);
-    }
     String redisKey = genRedisKey(key);
-    StringRedisTemplate redisTemplate = getRedisTemplate();
-    HashOperations<String, Object, Object> hash = redisTemplate.opsForHash();
-    Object value = hash.get(redisKey, hashKey);
+    V value = doGet(redisKey, hashKey);
     if (value != null) {
-      return deserializer.deserialize((String) value);
+      return value;
     }
     V apply = function.apply(key);
     if (apply != null) {
       this.doPut(redisKey, hashKey, apply);
     }
     return apply;
+  }
+
+  @Nullable
+  private V doGet(@Nonnull String redisKey, @Nonnull String hashKey) {
+    Object value = redisTemplate.opsForHash().get(redisKey, hashKey);
+    if (value == null) {
+      return null;
+    }
+    return deserializer.deserialize((String) value);
   }
 
   @Override
@@ -189,7 +147,6 @@ public class RedisHashCache<V> implements DistributedHashCache<V> {
     Map<String, String> stringMap = new LinkedHashMap<>(map.size());
     map.forEach((k, v) -> stringMap.put(k, serializer.serialize(v)));
     String redisKey = genRedisKey(key);
-    StringRedisTemplate redisTemplate = getRedisTemplate();
     Boolean hasKey = redisTemplate.hasKey(redisKey);
     if (hasKey != null && hasKey) {
       redisTemplate.opsForHash().putAll(redisKey, stringMap);
@@ -212,7 +169,6 @@ public class RedisHashCache<V> implements DistributedHashCache<V> {
     Map<String, String> stringMap = new LinkedHashMap<>(map.size());
     map.forEach((k, v) -> stringMap.put(k, serializer.serialize(v)));
     String redisKey = genRedisKey(key);
-    StringRedisTemplate redisTemplate = getRedisTemplate();
     redisTemplate.delete(redisKey);
     SessionCallback<Boolean> callback = new SessionCallback<Boolean>() {
       @Nonnull
@@ -231,7 +187,6 @@ public class RedisHashCache<V> implements DistributedHashCache<V> {
     Asserts.notBlank(hashKey, "hashKey must be not blank");
     Asserts.nonnull(value, "value must be not null");
     String serialize = serializer.serialize(value);
-    StringRedisTemplate redisTemplate = getRedisTemplate();
     Boolean hasKey = redisTemplate.hasKey(redisKey);
     if (hasKey != null && hasKey) {
       redisTemplate.opsForHash().put(redisKey, hashKey, serialize);
@@ -252,14 +207,14 @@ public class RedisHashCache<V> implements DistributedHashCache<V> {
   @Override
   public void invalidate(@Nonnull String key) {
     String redisKey = genRedisKey(key);
-    getRedisTemplate().delete(redisKey);
+    redisTemplate.delete(redisKey);
   }
 
   @Override
   public void invalidate(@Nonnull String key, @Nonnull String hashKey) {
     Asserts.notBlank(hashKey, "hashKey must be not blank");
     String redisKey = genRedisKey(key);
-    getRedisTemplate().opsForHash().delete(redisKey, hashKey);
+    redisTemplate.opsForHash().delete(redisKey, hashKey);
   }
 
   @Override
@@ -268,29 +223,8 @@ public class RedisHashCache<V> implements DistributedHashCache<V> {
     for (String key : keys) {
       redisKeys.add(genRedisKey(key));
     }
-    getRedisTemplate().delete(redisKeys);
+    redisTemplate.delete(redisKeys);
   }
-
-  @Nonnull
-  private StringRedisTemplate getRedisTemplate() {
-    if (RedisHashCache.redisTemplate == null) {
-      log.error("RedisHashCache.redisTemplate为空, 请手动设置或配置ideal-boot-starter-redis");
-      Asserts.nonnull(RedisHashCache.redisTemplate,
-        "RedisHashCache.redisTemplate为空, 请手动设置或配置ideal-boot-starter-redis");
-    }
-    return RedisHashCache.redisTemplate;
-  }
-
-  @Nonnull
-  private DLockFactory getLockFactory() {
-    if (RedisHashCache.lockFactory == null) {
-      log.error("RedisHashCache.lockFactory为空, 请手动设置或配置ideal-boot-starter-lock");
-      Asserts.nonnull(RedisHashCache.lockFactory,
-        "RedisHashCache.lockFactory为空, 请手动设置或配置ideal-boot-starter-lock");
-    }
-    return RedisHashCache.lockFactory;
-  }
-
 
   @Nonnull
   private String genRedisKey(@Nonnull String key) {
