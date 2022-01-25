@@ -505,9 +505,21 @@ public final class Lists {
    * @author 宋志宗 on 2021/10/27
    */
   @Nonnull
-  public static <E, R> List<List<R>> chunked(@Nullable Collection<E> collection,
+  public static <E, R> List<List<R>> chunked(@Nullable List<E> collection,
                                              int size, @Nonnull Function<E, R> transform) {
     return CollectionUtils.chunked(collection, size, transform);
+  }
+
+  /**
+   * 对集合进行分组, 分组后总数不超过 limit限制
+   *
+   * @param list  需要分组的集合
+   * @param limit 分组后返回的集合最大尺寸
+   * @author 宋志宗 on 2022/1/25
+   */
+  @Nonnull
+  public static <E> List<List<E>> chunkedLimit(@Nullable List<E> list, int limit) {
+    return CollectionUtils.chunkedLimit(list, limit);
   }
 
   private Lists() {
