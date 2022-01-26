@@ -28,36 +28,37 @@ import java.util.List;
  * @author 宋志宗 on 2021/4/27
  */
 @Getter
-public class NullableEventTuple<R> {
+@Deprecated
+public class NullableEventTuple<V> {
   /** 方法返回结果 */
   @Nullable
-  private final R result;
+  private final V value;
 
   /** 方法返回事件列表 */
   @Nonnull
   private final List<EventSupplier> suppliers;
 
-  protected NullableEventTuple(@Nullable R result,
+  protected NullableEventTuple(@Nullable V value,
                                @Nonnull List<EventSupplier> suppliers) {
-    this.result = result;
+    this.value = value;
     this.suppliers = suppliers;
   }
 
   @Nonnull
-  public static <R> NullableEventTuple<R> of(@Nullable R result,
+  public static <V> NullableEventTuple<V> of(@Nullable V value,
                                              @Nonnull List<EventSupplier> suppliers) {
-    return new NullableEventTuple<>(result, suppliers);
+    return new NullableEventTuple<>(value, suppliers);
   }
 
   @Nonnull
-  public static <R> NullableEventTuple<R> of(@Nullable R result,
+  public static <V> NullableEventTuple<V> of(@Nullable V value,
                                              @Nonnull EventSupplier supplier) {
-    return new NullableEventTuple<>(result, Lists.of(supplier));
+    return new NullableEventTuple<>(value, Lists.of(supplier));
   }
 
   @Nonnull
-  public static <R> NullableEventTuple<R> of(@Nullable R result,
+  public static <V> NullableEventTuple<V> of(@Nullable V value,
                                              @Nonnull EventSupplier... suppliers) {
-    return new NullableEventTuple<>(result, Arrays.asList(suppliers));
+    return new NullableEventTuple<>(value, Arrays.asList(suppliers));
   }
 }

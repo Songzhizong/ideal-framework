@@ -32,43 +32,57 @@ import java.util.List;
  * @author 宋志宗 on 2021/4/27
  */
 @Getter
-public class EventTuple<R> implements EventSuppliers {
+public class EventTuple<V> implements EventSuppliers {
   /** 方法返回结果 */
   @Nonnull
-  private final R result;
+  private final V value;
 
   /** 方法返回事件列表 */
   @Nonnull
   @Setter(AccessLevel.PRIVATE)
   private ArrayList<EventSupplier> suppliers;
 
-  protected EventTuple(@Nonnull R result,
+  protected EventTuple(@Nonnull V value,
                        @Nonnull ArrayList<EventSupplier> suppliers) {
-    this.result = result;
+    this.value = value;
     this.suppliers = suppliers;
   }
 
   @Nonnull
-  public static <R> EventTuple<R> of(@Nonnull R result) {
-    return new EventTuple<>(result, new ArrayList<>());
+  public static <V> EventTuple<V> of(@Nonnull V value) {
+    return new EventTuple<>(value, new ArrayList<>());
   }
 
   @Nonnull
-  public static <R> EventTuple<R> of(@Nonnull R result,
+  public static <V> EventTuple<V> of(@Nonnull V value,
                                      @Nonnull List<EventSupplier> suppliers) {
-    return new EventTuple<>(result, new ArrayList<>(suppliers));
+    return new EventTuple<>(value, new ArrayList<>(suppliers));
   }
 
   @Nonnull
-  public static <R> EventTuple<R> of(@Nonnull R result,
+  public static <V> EventTuple<V> of(@Nonnull V value,
                                      @Nonnull EventSupplier supplier) {
-    return new EventTuple<>(result, Lists.arrayList(supplier));
+    return new EventTuple<>(value, Lists.arrayList(supplier));
   }
 
   @Nonnull
-  public static <R> EventTuple<R> of(@Nonnull R result,
+  public static <V> EventTuple<V> of(@Nonnull V value,
                                      @Nonnull EventSupplier... suppliers) {
-    return new EventTuple<>(result, new ArrayList<>(Arrays.asList(suppliers)));
+    return new EventTuple<>(value, new ArrayList<>(Arrays.asList(suppliers)));
+  }
+
+  @Nonnull
+  public V getValue() {
+    return value;
+  }
+
+  /**
+   * @deprecated {@link EventTuple#getValue()}
+   */
+  @Nonnull
+  @Deprecated
+  public V getResult() {
+    return value;
   }
 
   @Nonnull
@@ -107,7 +121,7 @@ public class EventTuple<R> implements EventSuppliers {
   }
 
   @Nonnull
-  public EventTuple<R> add(@Nullable List<EventSupplier> suppliers) {
+  public EventTuple<V> add(@Nullable List<EventSupplier> suppliers) {
     if (Lists.isEmpty(suppliers)) {
       return this;
     }
