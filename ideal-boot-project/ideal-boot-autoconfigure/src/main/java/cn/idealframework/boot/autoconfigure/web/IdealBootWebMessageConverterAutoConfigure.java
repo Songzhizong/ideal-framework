@@ -54,7 +54,7 @@ import java.util.List;
 @CommonsLog
 @Configuration
 @RequiredArgsConstructor
-@ConditionalOnClass({WebModule.class})
+@ConditionalOnClass({WebModule.class, WebMvcConfigurer.class})
 @ConditionalOnExpression("${ideal.web.message-converter.enable-custom:true}")
 public class IdealBootWebMessageConverterAutoConfigure {
   private final IdealBootWebProperties properties;

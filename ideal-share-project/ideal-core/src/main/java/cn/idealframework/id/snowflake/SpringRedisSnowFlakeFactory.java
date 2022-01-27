@@ -15,6 +15,7 @@
  */
 package cn.idealframework.id.snowflake;
 
+import cn.idealframework.util.Asserts;
 import lombok.extern.apachecommons.CommonsLog;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
@@ -30,20 +31,18 @@ import java.util.concurrent.*;
  * @author 宋志宗 on 2020/10/21
  */
 @CommonsLog
-public class SpringRedisSnowFlakeFactory implements SnowflakeFactory {
-  private final ConcurrentMap<String, SnowFlake> generatorMap = new ConcurrentHashMap<>();
+public class SpringRedisSnowFlakeFactory implements SnowflakeFactory, SnowflakeMachineIdHolder {
   private final String value = UUID.randomUUID().toString();
+  private final ConcurrentMap<String, SnowFlake> generatorMap = new ConcurrentHashMap<>();
+  private final ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
   private final String prefix;
   private final Duration expire;
-  private final long expireSeconds;
-  private final long renewalIntervalSeconds;
   @Nonnull
   private final StringRedisTemplate redisTemplate;
 
   private final long dataCenterId;
-  private final long machineId;
-  private boolean automaticallyRenewal = false;
-  private ScheduledExecutorService executorService;
+  private final String applicationName;
+  private volatile long machineId;
 
   /**
    * @param applicationName 应用名称
@@ -64,7 +63,7 @@ public class SpringRedisSnowFlakeFactory implements SnowflakeFactory {
     long dataCenterId,
     @Nonnull String applicationName,
     @Nonnull StringRedisTemplate redisTemplate) {
-    this(dataCenterId, 300, 60,
+    this(dataCenterId, 600, 30,
       applicationName, redisTemplate);
   }
 
@@ -92,52 +91,52 @@ public class SpringRedisSnowFlakeFactory implements SnowflakeFactory {
     this.dataCenterId = dataCenterId;
     this.prefix = "ideal:register:snowflake:machineId:" + applicationName + ":";
     this.expire = Duration.ofSeconds(expireSeconds);
-    this.expireSeconds = expireSeconds;
-    this.renewalIntervalSeconds = renewalIntervalSeconds;
     this.redisTemplate = redisTemplate;
-    int maxMachineNum = SnowFlake.MAX_MACHINE_NUM;
-    ValueOperations<String, String> operations = redisTemplate.opsForValue();
+    this.applicationName = applicationName;
+    this.machineId = calculateMachineId();
+    Asserts.assertTrue(this.machineId > -1, "计算机器码失败");
+    executorService.scheduleAtFixedRate(() -> {
+        try {
+          this.heartbeat();
+        } catch (Exception e) {
+          log.warn("", e);
+        }
+      },
+      renewalIntervalSeconds, renewalIntervalSeconds, TimeUnit.SECONDS);
+    Runtime.getRuntime().addShutdownHook(new Thread(this::release));
+    log.info("SnowFlake dataCenterId = " + dataCenterId + ", machineId = " + machineId);
+  }
+
+  private int calculateMachineId() {
+    ValueOperations<String, String> operations = this.redisTemplate.opsForValue();
     int machineId = -1;
     while (true) {
       ++machineId;
       Boolean success = operations
         .setIfAbsent(prefix + machineId, value, expire);
       if (success != null && success) {
-        log.info("SnowFlake register success: applicationName = " + applicationName + ", machineId = " + machineId);
+        log.info("SnowFlake register success: applicationName = " + this.applicationName + ", machineId = " + machineId);
         break;
       }
-      if (machineId >= maxMachineNum) {
-        log.error("停止服务, SnowFlake machineId 计算失败,已达上限: " + maxMachineNum);
-        System.exit(0);
+      if (machineId >= SnowFlake.MAX_MACHINE_NUM) {
+        log.error("SnowFlake machineId 计算失败,已达上限: " + SnowFlake.MAX_MACHINE_NUM + " applicationName = " + this.applicationName);
+        return -1;
       }
     }
-    this.machineId = machineId;
-    // 开始自动续期
-    automaticallyRenewed();
-    Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-      // 先把自动续期停掉
-      if (executorService != null) {
-        executorService.shutdownNow();
-      }
-      // 释放机器码
-      this.release();
-    }));
-    log.info("SnowFlake dataCenterId = " + dataCenterId + ", machineId = " + machineId);
+    return machineId;
   }
 
-  private void automaticallyRenewed() {
-    if (automaticallyRenewal) {
+  private void heartbeat() {
+    String key = prefix + this.machineId;
+    String value = redisTemplate.opsForValue().get(key);
+    if (this.value.equals(value)) {
+      redisTemplate.expire(key, expire);
       return;
     }
-    log.info("SnowFlake start automatically renewed, renewed cycle = "
-      + renewalIntervalSeconds + "s, expire = " + expireSeconds + "s");
-    if (executorService == null) {
-      executorService = Executors.newSingleThreadScheduledExecutor();
+    int machineId = calculateMachineId();
+    if (machineId > -1) {
+      this.machineId = machineId;
     }
-    ValueOperations<String, String> operations = redisTemplate.opsForValue();
-    executorService.scheduleAtFixedRate(() -> operations.set(prefix + machineId, value, expire),
-      renewalIntervalSeconds, renewalIntervalSeconds, TimeUnit.SECONDS);
-    automaticallyRenewal = true;
   }
 
   @Override
@@ -153,12 +152,18 @@ public class SpringRedisSnowFlakeFactory implements SnowflakeFactory {
   @Nonnull
   @Override
   public SnowFlake getGenerator(@Nonnull String biz) {
-    return generatorMap.computeIfAbsent(biz, k -> new SnowFlake(dataCenterId, machineId));
+    return generatorMap.computeIfAbsent(biz, k -> new SnowFlake(dataCenterId, this));
   }
 
   @Override
   public void release() {
     // 释放机器码
+    executorService.shutdown();
     redisTemplate.delete(prefix + this.machineId);
+  }
+
+  @Override
+  public long getCurrentMachineId() {
+    return machineId;
   }
 }

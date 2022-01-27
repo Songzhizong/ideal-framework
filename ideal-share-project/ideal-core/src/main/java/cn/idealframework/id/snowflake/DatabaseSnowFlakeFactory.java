@@ -15,6 +15,7 @@
  */
 package cn.idealframework.id.snowflake;
 
+import cn.idealframework.util.Asserts;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +28,10 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.Map;
 import java.util.UUID;
-import java.util.concurrent.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 基于数据库实现的id生成器工厂
@@ -69,18 +73,16 @@ public class DatabaseSnowFlakeFactory implements SnowflakeFactory, SnowflakeMach
     this.dataSource = dataSource;
     this.clearExpired();
     this.machineId = calculateMachineId();
+    Asserts.assertTrue(this.machineId > -1, "计算机器码失败");
     scheduledExecutorService.scheduleAtFixedRate(() -> {
       try {
         this.heartbeat();
         this.clearExpired();
       } catch (Exception e) {
-        e.printStackTrace();
+        log.warn("", e);
       }
     }, RENEWAL_INTERVAL_MILLIS, RENEWAL_INTERVAL_MILLIS, TimeUnit.MILLISECONDS);
-    Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-      this.release();
-      scheduledExecutorService.shutdown();
-    }));
+    Runtime.getRuntime().addShutdownHook(new Thread(this::release));
   }
 
   @Override
@@ -104,6 +106,7 @@ public class DatabaseSnowFlakeFactory implements SnowflakeFactory, SnowflakeMach
     if (released) {
       return;
     }
+    scheduledExecutorService.shutdown();
     String releaseSql = DATABASE_SQL.getReleaseSql();
     try (Connection connection = dataSource.getConnection();
          PreparedStatement preparedStatement = connection.prepareStatement(releaseSql)) {
@@ -135,7 +138,10 @@ public class DatabaseSnowFlakeFactory implements SnowflakeFactory, SnowflakeMach
       int i = preparedStatement.executeUpdate();
       log.debug("heartbeat... " + i + " rows changed");
       if (i == 0) {
-        this.machineId = calculateMachineId();
+        long machineId = calculateMachineId();
+        if (machineId > -1) {
+          this.machineId = machineId;
+        }
       }
     } catch (SQLException exception) {
       log.warn("heartbeat() ex: " + exception.getMessage());
@@ -158,7 +164,7 @@ public class DatabaseSnowFlakeFactory implements SnowflakeFactory, SnowflakeMach
         ++machineId;
         if (machineId > maxMachineNum) {
           log.error("SnowFlake machineId 计算失败,已达上限: " + maxMachineNum);
-          return ThreadLocalRandom.current().nextLong(maxMachineNum);
+          return -1;
         }
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
           preparedStatement.setString(1, applicationName);

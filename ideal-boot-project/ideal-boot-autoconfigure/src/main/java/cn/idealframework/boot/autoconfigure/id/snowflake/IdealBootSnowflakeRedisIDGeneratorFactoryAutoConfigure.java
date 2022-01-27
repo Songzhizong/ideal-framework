@@ -57,7 +57,7 @@ public class IdealBootSnowflakeRedisIDGeneratorFactoryAutoConfigure {
       if (StringUtils.isBlank(applicationName)) {
         throw new IllegalArgumentException("spring.application.name is blank");
       }
-      return new SpringRedisSnowFlakeFactory(dataCenterId, 1800, 30, applicationName, stringRedisTemplate);
+      return new SpringRedisSnowFlakeFactory(dataCenterId, 600, 30, applicationName, stringRedisTemplate);
     }
     return null;
   }
