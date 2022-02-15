@@ -56,11 +56,14 @@ public abstract class AbstractEventPublisher implements EventPublisher {
   @Nonnull
   private List<EventMessage<?>> localPublish(@Nonnull Collection<EventSupplier> suppliers) {
     List<EventMessage<?>> messages = new ArrayList<>(suppliers.size());
+    StringBuilder sb = new StringBuilder();
     for (EventSupplier supplier : suppliers) {
       EventMessage<?> message = supplier.getEventMessage();
       messages.add(message);
       String topic = message.getTopic();
-      log.info("发布事件: " + topic);
+      if (log.isInfoEnabled()) {
+        sb.append(topic).append(" ");
+      }
       EventHeaders headers = message.getHeaders();
       List<LocalEventProcessor> list = LocalEventProcessorFactory.get(topic);
       for (LocalEventProcessor processor : list) {
@@ -72,6 +75,11 @@ public abstract class AbstractEventPublisher implements EventPublisher {
           }
         }
       }
+    }
+    if (log.isInfoEnabled()) {
+      sb.deleteCharAt(sb.length() - 1);
+      String topics = sb.toString();
+      log.info("发布事件: " + topics);
     }
     return messages;
   }
