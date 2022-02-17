@@ -39,7 +39,7 @@ import javax.annotation.Nonnull;
 @RequiredArgsConstructor
 @EnableConfigurationProperties(IdealBootEventProperties.class)
 @ConditionalOnClass({EventPublisher.class, EventModule.class})
-@ConditionalOnExpression("'${ideal.event.consumer.idempotent.type:REDIS}'.equalsIgnoreCase('REDIS')")
+@ConditionalOnExpression("'${ideal.event.idempotent.type:REDIS}'.equalsIgnoreCase('REDIS')")
 public class IdealBootEventRedisIdempotentAutoConfigure {
   private final IdealBootEventProperties properties;
 
