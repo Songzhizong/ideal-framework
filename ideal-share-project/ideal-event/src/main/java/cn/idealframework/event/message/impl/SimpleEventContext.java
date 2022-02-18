@@ -47,6 +47,19 @@ public class SimpleEventContext<T> implements EventContext<T> {
   }
 
   @Nonnull
+  public static SimpleEventContext<String> ofStringPayload(@Nonnull DeliverEventMessage message, String param) {
+    SimpleEventMessage<String> eventMessage = new SimpleEventMessage<>();
+    eventMessage.setUuid(message.uuid());
+    eventMessage.setTopic(message.getTopic());
+    eventMessage.setAggregateType(message.getAggregateType());
+    eventMessage.setAggregateId(message.getAggregateId());
+    eventMessage.setHeaders(message.getHeaders());
+    eventMessage.setPayload(param);
+    eventMessage.setEventTime(message.getEventTime());
+    return new SimpleEventContext<>(eventMessage);
+  }
+
+  @Nonnull
   @Override
   public String uuid() {
     return eventMessage.uuid();

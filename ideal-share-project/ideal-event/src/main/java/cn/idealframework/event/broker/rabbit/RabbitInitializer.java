@@ -15,9 +15,7 @@
  */
 package cn.idealframework.event.broker.rabbit;
 
-import cn.idealframework.event.listener.EventListenerInitializedListener;
-import cn.idealframework.event.listener.RemoteEventProcessor;
-import cn.idealframework.event.listener.RemoteEventProcessorFactory;
+import cn.idealframework.event.listener.*;
 import org.springframework.amqp.core.AmqpAdmin;
 import org.springframework.amqp.core.BindingBuilder;
 import org.springframework.amqp.core.Queue;
@@ -66,6 +64,20 @@ public class RabbitInitializer implements EventListenerInitializedListener {
         amqpAdmin.declareBinding(BindingBuilder.bind(queue).to(exchange).with(topic));
       })
     );
+
+    Map<String, AllEventProcessor> all1 = AllEventProcessorFactory.getAll();
+    all1.forEach((listenerName, processor) -> {
+      String queueName = RabbitEventUtils
+        .generateQueueName(queuePrefix, listenerName, enableLocalModel);
+      Queue queue;
+      if (enableLocalModel) {
+        queue = new Queue(queueName, false, false, true);
+      } else {
+        queue = new Queue(queueName);
+      }
+      amqpAdmin.declareQueue(queue);
+      amqpAdmin.declareBinding(BindingBuilder.bind(queue).to(exchange).with("#"));
+    });
   }
 
   @Override

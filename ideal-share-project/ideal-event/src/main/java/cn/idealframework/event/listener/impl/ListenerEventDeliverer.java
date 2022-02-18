@@ -15,15 +15,13 @@
  */
 package cn.idealframework.event.listener.impl;
 
-import cn.idealframework.event.listener.EventDeliverer;
-import cn.idealframework.event.listener.IdempotentHandler;
-import cn.idealframework.event.listener.RemoteEventProcessor;
-import cn.idealframework.event.listener.RemoteEventProcessorFactory;
+import cn.idealframework.event.listener.*;
 import cn.idealframework.event.message.DeliverEventMessage;
 import cn.idealframework.event.message.EventHeaders;
 import cn.idealframework.event.message.impl.SimpleEventContext;
 import cn.idealframework.json.JacksonUtils;
 import cn.idealframework.json.JsonUtils;
+import cn.idealframework.lang.Maps;
 import cn.idealframework.lang.StringUtils;
 import com.fasterxml.jackson.databind.JavaType;
 import lombok.RequiredArgsConstructor;
@@ -31,10 +29,7 @@ import lombok.extern.apachecommons.CommonsLog;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
@@ -55,8 +50,76 @@ public class ListenerEventDeliverer implements EventDeliverer {
       log.warn("消息处理失败, 非eventMessage结构: " + JsonUtils.toJsonString(message));
       return;
     }
+    Object payload = message.getPayload();
+    String payloadString;
+    if (payload instanceof String) {
+      payloadString = (String) payload;
+    } else if (payload instanceof CharSequence) {
+      payloadString = ((CharSequence) payload).toString();
+    } else {
+      payloadString = JsonUtils.toJsonString(payload);
+    }
+    char c = payloadString.charAt(0);
+    if (c != '{') {
+      log.warn("消息处理失败, 非json结构");
+      return;
+    }
+    this.handleAll(message, payloadString);
+    this.handleRemotes(message, payloadString);
+  }
+
+  private void handleAll(@Nonnull DeliverEventMessage message,
+                         @Nonnull String payloadString) throws Exception {
+    String uuid = message.uuid();
+    String topic = message.getTopic();
+    EventHeaders headers = message.getHeaders();
+    Map<String, AllEventProcessor> processorMap = AllEventProcessorFactory.getAll();
+    if (Maps.isEmpty(processorMap)) {
+      return;
+    }
+    Set<Map.Entry<String, AllEventProcessor>> entries = processorMap.entrySet();
+    for (Map.Entry<String, AllEventProcessor> entry : entries) {
+      AllEventProcessor processor = entry.getValue();
+      if (!processor.match(headers)) {
+        continue;
+      }
+      // 幂等
+      String processorName = processor.getName();
+      boolean consumed = idempotentHandler.consumed(processorName, uuid);
+      if (consumed) {
+        log.info("event: " + uuid + " listener: " + processorName + " consumed");
+        continue;
+      }
+      long startTime = System.currentTimeMillis();
+      try {
+        SimpleEventContext<String> context
+          = SimpleEventContext.ofStringPayload(message, payloadString);
+        processor.invoke(context);
+        if (log.isDebugEnabled()) {
+          long consuming = System.currentTimeMillis() - startTime;
+          log.debug("Event message deliver to " + processorName
+            + ". topic: " + topic + " uuid: " + uuid + " consuming: " + consuming);
+        }
+      } catch (Exception exception) {
+        // 消费失败释放幂等key
+        idempotentHandler.remove(processorName, uuid);
+        if (log.isDebugEnabled()) {
+          long consuming = System.currentTimeMillis() - startTime;
+          log.debug("Event message deliver to " + processorName
+            + ". topic: " + topic + " uuid: " + uuid
+            + " consuming: " + consuming + " throw ex: " + exception.getMessage());
+        }
+        throw exception;
+      }
+    }
+  }
+
+  private void handleRemotes(@Nonnull DeliverEventMessage message,
+                             @Nonnull String payloadString) throws Exception {
+    String uuid = message.uuid();
+    String topic = message.getTopic();
     String listenerName = message.getListenerName();
-    Collection<RemoteEventProcessor> handlers = getEventHandlers(message, listenerName);
+    Collection<RemoteEventProcessor> handlers = getRemoteEventProcessor(message, listenerName);
     for (RemoteEventProcessor handler : handlers) {
       // 幂等校验
       String handlerName = handler.getName();
@@ -67,27 +130,13 @@ public class ListenerEventDeliverer implements EventDeliverer {
       }
       long startTime = System.currentTimeMillis();
       try {
-        Object payload = message.getPayload();
-        String payloadString;
-        if (payload instanceof String) {
-          payloadString = (String) payload;
-        } else if (payload instanceof CharSequence) {
-          payloadString = ((CharSequence) payload).toString();
-        } else {
-          payloadString = JsonUtils.toJsonString(payload);
-        }
-        char c = payloadString.charAt(0);
-        if (c != '{') {
-          log.warn("消息处理失败, 非json结构");
-          return;
-        }
         JavaType payloadType = handler.getPayloadType();
         Object param;
         try {
           param = JacksonUtils.parse(payloadString, payloadType);
         } catch (Exception e) {
           log.warn("反序列化消息出现异常: " + e.getClass().getName() + " " + e.getMessage());
-          return;
+          continue;
         }
         SimpleEventContext<Object> context = SimpleEventContext.of(message, param);
         handler.invoke(context);
@@ -111,14 +160,14 @@ public class ListenerEventDeliverer implements EventDeliverer {
   }
 
   @Nonnull
-  private Collection<RemoteEventProcessor> getEventHandlers(@Nonnull DeliverEventMessage message,
-                                                            @Nullable String listenerName) {
+  private Collection<RemoteEventProcessor> getRemoteEventProcessor(@Nonnull DeliverEventMessage message,
+                                                                   @Nullable String listenerName) {
     String uuid = message.uuid();
     String topic = message.getTopic();
     EventHeaders headers = message.getHeaders();
     Map<String, RemoteEventProcessor> processorMap = RemoteEventProcessorFactory.get(topic);
     if (processorMap.isEmpty()) {
-      log.info("Could not find listeners for the event: " + topic);
+      log.debug("Could not find remote listeners for the event: " + topic);
       return Collections.emptyList();
     }
     if (StringUtils.isBlank(listenerName)) {

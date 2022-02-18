@@ -16,34 +16,39 @@
 package cn.idealframework.event.listener.impl;
 
 import cn.idealframework.event.condition.EventCondition;
-import cn.idealframework.event.listener.LocalEventListener;
-import cn.idealframework.event.listener.LocalEventProcessor;
+import cn.idealframework.event.listener.AllEventListener;
+import cn.idealframework.event.listener.AllEventProcessor;
+import cn.idealframework.event.message.EventContext;
 import cn.idealframework.event.message.EventHeaders;
-import cn.idealframework.event.message.EventMessage;
 import lombok.extern.apachecommons.CommonsLog;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
- * @author 宋志宗 on 2021/7/23
+ * @author 宋志宗 on 2022/2/18
  */
-@SuppressWarnings("rawtypes")
 @CommonsLog
-public class ClassLocalEventProcessor implements LocalEventProcessor {
+public class ClassAllEventProcessor implements AllEventProcessor {
   @Nonnull
   private final String name;
   @Nonnull
   private final EventCondition condition;
   @Nonnull
-  private final LocalEventListener eventListener;
+  private final AllEventListener eventListener;
 
-  public ClassLocalEventProcessor(@Nonnull String name,
-                                  @Nonnull EventCondition condition,
-                                  @Nonnull LocalEventListener eventListener) {
+  public ClassAllEventProcessor(@Nonnull String name,
+                                @Nonnull EventCondition condition,
+                                @Nonnull AllEventListener eventListener) {
     this.name = name;
     this.condition = condition;
     this.eventListener = eventListener;
+  }
+
+  @Nonnull
+  @Override
+  public String getName() {
+    return name;
   }
 
   @Nonnull
@@ -62,9 +67,7 @@ public class ClassLocalEventProcessor implements LocalEventProcessor {
   }
 
   @Override
-  public void invoke(@Nonnull EventMessage<?> message) throws Exception {
-    //noinspection unchecked
-    eventListener.handleEvent(message);
-
+  public void invoke(@Nonnull EventContext<String> eventContext) throws Exception {
+    eventListener.handleEvent(eventContext);
   }
 }

@@ -4,6 +4,12 @@
 
 ### ⚠️ Compatibility
 
+- 修改Reactors类中部分方法的名称, 避免编译时因歧义而导致的编译失败
+
+# 2.6.2.211227
+
+### ⚠️ Compatibility
+
 - `PageResult`中的page方法名称修改为of
 - 移除authentication模块, 因为ideal-cloud-iam已经以无侵入的方式实现该模块的功能了
 

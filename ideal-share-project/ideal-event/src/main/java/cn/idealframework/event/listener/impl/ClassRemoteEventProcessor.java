@@ -71,7 +71,7 @@ public class ClassRemoteEventProcessor implements RemoteEventProcessor {
   @Override
   public boolean match(@Nullable EventHeaders headers) {
     boolean match = condition.match(headers);
-    if (!match) {
+    if (!match && log.isDebugEnabled()) {
       log.debug("Failed match. listener: " + name + " expression: " + condition.toExpression());
     }
     return match;

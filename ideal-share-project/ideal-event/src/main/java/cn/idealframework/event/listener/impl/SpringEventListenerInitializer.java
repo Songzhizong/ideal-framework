@@ -45,7 +45,7 @@ import java.util.Map;
 @SuppressWarnings("DuplicatedCode")
 @CommonsLog
 public class SpringEventListenerInitializer
-    implements EventListenerInitializer, ApplicationContextAware, SmartInitializingSingleton {
+  implements EventListenerInitializer, ApplicationContextAware, SmartInitializingSingleton {
   private final List<EventListenerInitializedListener> listeners = new ArrayList<>();
   private ApplicationContext applicationContext;
 
@@ -54,6 +54,7 @@ public class SpringEventListenerInitializer
     initMethodEventProcessor();
     initRemoteClassEventProcessor();
     initLocalClassEventProcessor();
+    initAllEventProcessor();
     for (EventListenerInitializedListener listener : listeners) {
       listener.completed();
     }
@@ -66,7 +67,7 @@ public class SpringEventListenerInitializer
 
   private void initMethodEventProcessor() {
     Map<String, Object> beanMapping = applicationContext
-        .getBeansWithAnnotation(EventHandlerBean.class);
+      .getBeansWithAnnotation(EventHandlerBean.class);
     Collection<Object> beans = beanMapping.values();
     for (Object bean : beans) {
       String className = bean.getClass().getName();
@@ -87,11 +88,11 @@ public class SpringEventListenerInitializer
           }
           Parameter parameter = parameters[0];
           ParameterizedType parameterizedType = (ParameterizedType) parameter
-              .getParameterizedType();
+            .getParameterizedType();
           Class<?> typeClass = (Class<?>) parameterizedType.getRawType();
           if (typeClass != EventContext.class) {
             log.error(className + "#" + methodName
-                + " 入参必须是" + EventContext.class.getName() + "类型");
+              + " 入参必须是" + EventContext.class.getName() + "类型");
             continue;
           }
           Type[] typeArguments = parameterizedType.getActualTypeArguments();
@@ -104,7 +105,7 @@ public class SpringEventListenerInitializer
           EventCondition eventCondition = EventCondition.parse(condition);
           String listenerName = remoteEventHandler.name();
           MethodRemoteEventProcessor handler
-              = new MethodRemoteEventProcessor(listenerName, bean, method, javaType, eventCondition);
+            = new MethodRemoteEventProcessor(listenerName, bean, method, javaType, eventCondition);
           RemoteEventProcessorFactory.register(topic, listenerName, handler);
         }
         LocalEventHandler localEventHandler = method.getAnnotation(LocalEventHandler.class);
@@ -120,18 +121,18 @@ public class SpringEventListenerInitializer
           }
           Parameter parameter = parameters[0];
           ParameterizedType parameterizedType = (ParameterizedType) parameter
-              .getParameterizedType();
+            .getParameterizedType();
           Class<?> typeClass = (Class<?>) parameterizedType.getRawType();
           if (typeClass != EventMessage.class) {
             log.error(className + "#" + methodName
-                + " 入参必须是" + EventMessage.class.getName() + "类型");
+              + " 入参必须是" + EventMessage.class.getName() + "类型");
             continue;
           }
           String name = className + "#" + methodName;
           String condition = localEventHandler.condition();
           EventCondition eventCondition = EventCondition.parse(condition);
           MethodLocalEventProcessor processor
-              = new MethodLocalEventProcessor(name, bean, method, eventCondition);
+            = new MethodLocalEventProcessor(name, bean, method, eventCondition);
           LocalEventProcessorFactory.register(topic, name, processor);
         }
       }
@@ -141,7 +142,7 @@ public class SpringEventListenerInitializer
   @SuppressWarnings("rawtypes")
   private void initRemoteClassEventProcessor() {
     Map<String, RemoteEventListener> beans
-        = applicationContext.getBeansOfType(RemoteEventListener.class);
+      = applicationContext.getBeansOfType(RemoteEventListener.class);
     beans.forEach((k, bean) -> {
       String listenerName = bean.listenerName();
       String topic = bean.listeningTopic();
@@ -151,13 +152,13 @@ public class SpringEventListenerInitializer
         method = beanClass.getMethod("handleEvent", EventContext.class);
       } catch (NoSuchMethodException e) {
         log.error(beanClass.getName()
-            + " no such method {void receiveEvent(DomainEventContext<T> eventMessage)}");
+          + " no such method {void receiveEvent(DomainEventContext<T> eventMessage)}");
         return;
       }
       Parameter[] parameters = method.getParameters();
       Parameter parameter = parameters[0];
       ParameterizedType parameterizedType = (ParameterizedType) parameter
-          .getParameterizedType();
+        .getParameterizedType();
       Type[] typeArguments = parameterizedType.getActualTypeArguments();
       JavaType javaType = JacksonUtils.constructJavaType(typeArguments[0]);
       EventCondition condition = bean.condition();
@@ -165,7 +166,7 @@ public class SpringEventListenerInitializer
         condition = EventCondition.empty();
       }
       @SuppressWarnings("unchecked") ClassRemoteEventProcessor handler
-          = new ClassRemoteEventProcessor(listenerName, javaType, condition, bean);
+        = new ClassRemoteEventProcessor(listenerName, javaType, condition, bean);
       RemoteEventProcessorFactory.register(topic, listenerName, handler);
     });
   }
@@ -173,7 +174,7 @@ public class SpringEventListenerInitializer
   @SuppressWarnings("rawtypes")
   private void initLocalClassEventProcessor() {
     Map<String, LocalEventListener> beans
-        = applicationContext.getBeansOfType(LocalEventListener.class);
+      = applicationContext.getBeansOfType(LocalEventListener.class);
     beans.forEach((k, bean) -> {
       String name = bean.getClass().getName();
       String topic = bean.listeningTopic();
@@ -183,6 +184,29 @@ public class SpringEventListenerInitializer
       }
       ClassLocalEventProcessor processor = new ClassLocalEventProcessor(name, condition, bean);
       LocalEventProcessorFactory.register(topic, name, processor);
+    });
+  }
+
+  private void initAllEventProcessor() {
+    Map<String, AllEventListener> beans
+      = applicationContext.getBeansOfType(AllEventListener.class);
+    beans.forEach((k, bean) -> {
+      String listenerName = bean.listenerName();
+      Method method;
+      Class<? extends AllEventListener> beanClass = bean.getClass();
+      try {
+        method = beanClass.getMethod("handleEvent", EventContext.class);
+      } catch (NoSuchMethodException e) {
+        log.error(beanClass.getName()
+          + " no such method {void receiveEvent(DomainEventContext<T> eventMessage)}");
+        return;
+      }
+      EventCondition condition = bean.condition();
+      if (condition == null) {
+        condition = EventCondition.empty();
+      }
+      AllEventProcessor processor = new ClassAllEventProcessor(listenerName, condition, bean);
+      AllEventProcessorFactory.register(listenerName, processor);
     });
   }
 

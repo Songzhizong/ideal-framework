@@ -54,7 +54,7 @@ public final class RemoteEventProcessorFactory {
                               @Nonnull String listenerName,
                               @Nonnull RemoteEventProcessor processor) {
     Asserts.notBlank(topic, "监听器监听的主题名称不能为空");
-    Asserts.notBlank(topic, "远程监听器名称不能为空");
+    Asserts.notBlank(listenerName, "远程监听器名称不能为空");
     Map<String, RemoteEventProcessor> listenerMap
       = REMOTE_PROCESSOR_MAPPING.computeIfAbsent(topic, k -> new HashMap<>(8));
     RemoteEventProcessor previous = listenerMap.put(listenerName, processor);
@@ -62,7 +62,7 @@ public final class RemoteEventProcessorFactory {
       log.error("监听器名称重复: " + listenerName);
       System.exit(0);
     }
-    log.info("Register event processor: " + listenerName);
+    log.info("Register remote event processor: " + listenerName);
   }
 
   /**
