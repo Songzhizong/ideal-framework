@@ -64,12 +64,13 @@ public class ListenerEventDeliverer implements EventDeliverer {
       log.warn("消息处理失败, 非json结构");
       return;
     }
-    this.handleAll(message, payloadString);
+    this.handleIndiscriminates(message, payloadString);
     this.handleRemotes(message, payloadString);
   }
 
-  private void handleAll(@Nonnull DeliverEventMessage message,
-                         @Nonnull String payloadString) throws Exception {
+  @SuppressWarnings("SpellCheckingInspection")
+  private void handleIndiscriminates(@Nonnull DeliverEventMessage message,
+                                     @Nonnull String payloadString) throws Exception {
     String uuid = message.uuid();
     String topic = message.getTopic();
     EventHeaders headers = message.getHeaders();
