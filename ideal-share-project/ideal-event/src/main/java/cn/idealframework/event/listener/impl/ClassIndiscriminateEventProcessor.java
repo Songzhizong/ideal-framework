@@ -16,8 +16,8 @@
 package cn.idealframework.event.listener.impl;
 
 import cn.idealframework.event.condition.EventCondition;
-import cn.idealframework.event.listener.AllEventListener;
-import cn.idealframework.event.listener.AllEventProcessor;
+import cn.idealframework.event.listener.IndiscriminateEventListener;
+import cn.idealframework.event.listener.IndiscriminateEventProcessor;
 import cn.idealframework.event.message.EventContext;
 import cn.idealframework.event.message.EventHeaders;
 import lombok.extern.apachecommons.CommonsLog;
@@ -29,17 +29,17 @@ import javax.annotation.Nullable;
  * @author 宋志宗 on 2022/2/18
  */
 @CommonsLog
-public class ClassAllEventProcessor implements AllEventProcessor {
+public class ClassIndiscriminateEventProcessor implements IndiscriminateEventProcessor {
   @Nonnull
   private final String name;
   @Nonnull
   private final EventCondition condition;
   @Nonnull
-  private final AllEventListener eventListener;
+  private final IndiscriminateEventListener eventListener;
 
-  public ClassAllEventProcessor(@Nonnull String name,
-                                @Nonnull EventCondition condition,
-                                @Nonnull AllEventListener eventListener) {
+  public ClassIndiscriminateEventProcessor(@Nonnull String name,
+                                           @Nonnull EventCondition condition,
+                                           @Nonnull IndiscriminateEventListener eventListener) {
     this.name = name;
     this.condition = condition;
     this.eventListener = eventListener;

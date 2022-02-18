@@ -73,13 +73,13 @@ public class ListenerEventDeliverer implements EventDeliverer {
     String uuid = message.uuid();
     String topic = message.getTopic();
     EventHeaders headers = message.getHeaders();
-    Map<String, AllEventProcessor> processorMap = AllEventProcessorFactory.getAll();
+    Map<String, IndiscriminateEventProcessor> processorMap = IndiscriminateEventProcessorFactory.getAll();
     if (Maps.isEmpty(processorMap)) {
       return;
     }
-    Set<Map.Entry<String, AllEventProcessor>> entries = processorMap.entrySet();
-    for (Map.Entry<String, AllEventProcessor> entry : entries) {
-      AllEventProcessor processor = entry.getValue();
+    Set<Map.Entry<String, IndiscriminateEventProcessor>> entries = processorMap.entrySet();
+    for (Map.Entry<String, IndiscriminateEventProcessor> entry : entries) {
+      IndiscriminateEventProcessor processor = entry.getValue();
       if (!processor.match(headers)) {
         continue;
       }

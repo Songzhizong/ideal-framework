@@ -11,7 +11,7 @@
 - 为rabbitmq事件代理添加zstd数据压缩功能, 节省内存以及带宽的使用
 - 分布式缓存支持通过配置来控制是否缓存null值
 - 完善基于Redis的snowflake工厂
-- 新增AllEventListener, 可以从事件代理中监听系统中产生的所有事件
+- 新增IndiscriminateEventListener, 可以从事件代理中监听系统中产生的所有事件
 
 ### 🐞 Bug Fixes
 

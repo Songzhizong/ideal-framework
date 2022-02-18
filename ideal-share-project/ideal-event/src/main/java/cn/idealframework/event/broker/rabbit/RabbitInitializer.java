@@ -65,7 +65,7 @@ public class RabbitInitializer implements EventListenerInitializedListener {
       })
     );
 
-    Map<String, AllEventProcessor> all1 = AllEventProcessorFactory.getAll();
+    Map<String, IndiscriminateEventProcessor> all1 = IndiscriminateEventProcessorFactory.getAll();
     all1.forEach((listenerName, processor) -> {
       String queueName = RabbitEventUtils
         .generateQueueName(queuePrefix, listenerName, enableLocalModel);

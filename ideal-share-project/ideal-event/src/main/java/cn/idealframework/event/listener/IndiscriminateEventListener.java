@@ -26,7 +26,7 @@ import javax.annotation.Nullable;
  *
  * @author 宋志宗 on 2022/2/18
  */
-public interface AllEventListener {
+public interface IndiscriminateEventListener {
   /**
    * @return 监听器名称, 全局唯一
    * @author 宋志宗 on 2021/4/23

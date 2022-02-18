@@ -26,21 +26,21 @@ import java.util.Map;
  * @author 宋志宗 on 2022/2/18
  */
 @CommonsLog
-public final class AllEventProcessorFactory {
+public final class IndiscriminateEventProcessorFactory {
   /**
    * listener name -> {@link RemoteEventProcessor}
    */
-  private static final Map<String, AllEventProcessor> REMOTE_PROCESSOR_MAPPING = new HashMap<>();
+  private static final Map<String, IndiscriminateEventProcessor> REMOTE_PROCESSOR_MAPPING = new HashMap<>();
 
   @Nonnull
-  public static Map<String, AllEventProcessor> getAll() {
+  public static Map<String, IndiscriminateEventProcessor> getAll() {
     return REMOTE_PROCESSOR_MAPPING;
   }
 
   public static void register(@Nonnull String listenerName,
-                              @Nonnull AllEventProcessor processor) {
+                              @Nonnull IndiscriminateEventProcessor processor) {
     Asserts.notBlank(listenerName, "远程监听器名称不能为空");
-    AllEventProcessor previous = REMOTE_PROCESSOR_MAPPING.put(listenerName, processor);
+    IndiscriminateEventProcessor previous = REMOTE_PROCESSOR_MAPPING.put(listenerName, processor);
     if (previous != null) {
       log.error("监听器名称重复: " + listenerName);
       System.exit(0);

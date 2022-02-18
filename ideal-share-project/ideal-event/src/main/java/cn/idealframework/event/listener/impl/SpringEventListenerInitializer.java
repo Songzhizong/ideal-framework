@@ -54,7 +54,7 @@ public class SpringEventListenerInitializer
     initMethodEventProcessor();
     initRemoteClassEventProcessor();
     initLocalClassEventProcessor();
-    initAllEventProcessor();
+    initIndiscriminateEventProcessor();
     for (EventListenerInitializedListener listener : listeners) {
       listener.completed();
     }
@@ -187,26 +187,17 @@ public class SpringEventListenerInitializer
     });
   }
 
-  private void initAllEventProcessor() {
-    Map<String, AllEventListener> beans
-      = applicationContext.getBeansOfType(AllEventListener.class);
+  private void initIndiscriminateEventProcessor() {
+    Map<String, IndiscriminateEventListener> beans
+      = applicationContext.getBeansOfType(IndiscriminateEventListener.class);
     beans.forEach((k, bean) -> {
       String listenerName = bean.listenerName();
-      Method method;
-      Class<? extends AllEventListener> beanClass = bean.getClass();
-      try {
-        method = beanClass.getMethod("handleEvent", EventContext.class);
-      } catch (NoSuchMethodException e) {
-        log.error(beanClass.getName()
-          + " no such method {void receiveEvent(DomainEventContext<T> eventMessage)}");
-        return;
-      }
       EventCondition condition = bean.condition();
       if (condition == null) {
         condition = EventCondition.empty();
       }
-      AllEventProcessor processor = new ClassAllEventProcessor(listenerName, condition, bean);
-      AllEventProcessorFactory.register(listenerName, processor);
+      IndiscriminateEventProcessor processor = new ClassIndiscriminateEventProcessor(listenerName, condition, bean);
+      IndiscriminateEventProcessorFactory.register(listenerName, processor);
     });
   }
 

@@ -25,7 +25,7 @@ import javax.annotation.Nullable;
 /**
  * @author 宋志宗 on 2021/4/23
  */
-public interface AllEventProcessor {
+public interface IndiscriminateEventProcessor {
   @Nonnull
   String getName();
 
