@@ -20,7 +20,6 @@ import lombok.Setter;
 import javax.annotation.Nonnull;
 import java.time.LocalDate;
 import java.time.ZoneOffset;
-import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 
 /**
@@ -44,7 +43,7 @@ public final class LocalDates {
   public static LocalDate parse(@Nonnull String localDateString,
                                 @Nonnull String pattern,
                                 @Nonnull Locale locale) {
-    return LocalDate.parse(localDateString, DateTimeFormatter.ofPattern(pattern, locale));
+    return LocalDate.parse(localDateString, DateTimeFormatters.getFormatter(pattern, locale));
   }
 
   @Nonnull
@@ -57,7 +56,7 @@ public final class LocalDates {
   public static String format(@Nonnull LocalDate localDate,
                               @Nonnull String pattern,
                               @Nonnull Locale locale) {
-    return localDate.format(DateTimeFormatter.ofPattern(pattern, locale));
+    return localDate.format(DateTimeFormatters.getFormatter(pattern, locale));
   }
 
 }

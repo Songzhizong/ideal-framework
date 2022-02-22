@@ -40,35 +40,35 @@ public final class DateTimes {
   @SuppressWarnings("SpellCheckingInspection")
   public static final String TZ_DATE_TIME = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
   public static final DateTimeFormatter TZ_DATE_TIME_FORMATTER
-      = DateTimeFormatter.ofPattern(TZ_DATE_TIME, LOCALE);
+    = DateTimeFormatter.ofPattern(TZ_DATE_TIME, LOCALE);
   /** 2020-12-12 */
   public static final String YYYY_MM_DD = "yyyy-MM-dd";
   public static final DateTimeFormatter YYYY_MM_DD_FORMATTER
-      = DateTimeFormatter.ofPattern(YYYY_MM_DD, LOCALE);
+    = DateTimeFormatter.ofPattern(YYYY_MM_DD, LOCALE);
   /** 2020-12-12 19 */
   public static final String YYYY_MM_DD_HH = "yyyy-MM-dd HH";
   public static final DateTimeFormatter YYYY_MM_DD_HH_FORMATTER
-      = DateTimeFormatter.ofPattern(YYYY_MM_DD_HH, LOCALE);
+    = DateTimeFormatter.ofPattern(YYYY_MM_DD_HH, LOCALE);
   /** 2020-12-12 19:21 */
   public static final String YYYY_MM_DD_HH_MM = "yyyy-MM-dd HH:mm";
   public static final DateTimeFormatter YYYY_MM_DD_HH_MM_FORMATTER
-      = DateTimeFormatter.ofPattern(YYYY_MM_DD_HH_MM, LOCALE);
+    = DateTimeFormatter.ofPattern(YYYY_MM_DD_HH_MM, LOCALE);
   /** 2020-12-12 19:21:56 */
   public static final String YYYY_MM_DD_HH_MM_SS = "yyyy-MM-dd HH:mm:ss";
   public static final DateTimeFormatter YYYY_MM_DD_HH_MM_SS_FORMATTER
-      = DateTimeFormatter.ofPattern(YYYY_MM_DD_HH_MM_SS, LOCALE);
+    = DateTimeFormatter.ofPattern(YYYY_MM_DD_HH_MM_SS, LOCALE);
   /** 2020-12-12 19:21:56.555 */
   public static final String YYYY_MM_DD_HH_MM_SS_SSS = "yyyy-MM-dd HH:mm:ss.SSS";
   public static final DateTimeFormatter YYYY_MM_DD_HH_MM_SS_SSS_FORMATTER
-      = DateTimeFormatter.ofPattern(YYYY_MM_DD_HH_MM_SS_SSS, LOCALE);
+    = DateTimeFormatter.ofPattern(YYYY_MM_DD_HH_MM_SS_SSS, LOCALE);
   /** 12-12 19:21:56 */
   public static final String MM_DD_HH_MM_SS = "MM-dd HH:mm:ss";
   public static final DateTimeFormatter MM_DD_HH_MM_SS_FORMATTER
-      = DateTimeFormatter.ofPattern(MM_DD_HH_MM_SS, LOCALE);
+    = DateTimeFormatter.ofPattern(MM_DD_HH_MM_SS, LOCALE);
   /** 12-12 19 */
   public static final String MM_DD_HH = "MM-dd HH";
   public static final DateTimeFormatter MM_DD_HH_FORMATTER
-      = DateTimeFormatter.ofPattern(MM_DD_HH, LOCALE);
+    = DateTimeFormatter.ofPattern(MM_DD_HH, LOCALE);
   /** 19:21:56 */
   public static final String HH_MM_SS = "HH:mm:ss";
   public static final DateTimeFormatter HH_MM_SS_FORMATTER
@@ -89,7 +89,7 @@ public final class DateTimes {
   @Nonnull
   public static String format(@Nonnull LocalDateTime localDateTime,
                               @Nonnull String pattern, @Nonnull Locale locale) {
-    return localDateTime.format(DateTimeFormatter.ofPattern(pattern, locale));
+    return localDateTime.format(DateTimeFormatters.getFormatter(pattern, locale));
   }
 
   @Nonnull
@@ -100,7 +100,7 @@ public final class DateTimes {
   @Nonnull
   public static LocalDateTime parse(@Nonnull String dateTimeString,
                                     @Nonnull String pattern, @Nonnull Locale locale) {
-    return LocalDateTime.parse(dateTimeString, DateTimeFormatter.ofPattern(pattern, locale));
+    return LocalDateTime.parse(dateTimeString, DateTimeFormatters.getFormatter(pattern, locale));
   }
 
   @Nonnull
