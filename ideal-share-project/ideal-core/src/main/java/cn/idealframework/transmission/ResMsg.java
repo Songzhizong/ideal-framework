@@ -41,6 +41,7 @@ public interface ResMsg {
   String message();
 
   ResMsg SUCCESS = StandardResMsg.SUCCESS;
+  ResMsg NOT_MODIFIED = StandardResMsg.NOT_MODIFIED;
   ResMsg BAD_REQUEST = StandardResMsg.BAD_REQUEST;
   ResMsg UNAUTHORIZED = StandardResMsg.UNAUTHORIZED;
   ResMsg FORBIDDEN = StandardResMsg.FORBIDDEN;
@@ -52,6 +53,7 @@ public interface ResMsg {
   @AllArgsConstructor
   enum StandardResMsg implements ResMsg {
     SUCCESS(200, 200, "Success"),
+    NOT_MODIFIED(304, 304, "Not Modified"),
     BAD_REQUEST(400, 400, "Bad request"),
     UNAUTHORIZED(401, 401, "Unauthorized"),
     FORBIDDEN(403, 403, "Forbidden"),
