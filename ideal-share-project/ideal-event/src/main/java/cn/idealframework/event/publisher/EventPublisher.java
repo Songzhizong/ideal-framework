@@ -17,6 +17,7 @@ package cn.idealframework.event.publisher;
 
 import cn.idealframework.event.message.EventSupplier;
 import cn.idealframework.event.message.EventSuppliers;
+import cn.idealframework.lang.Lists;
 
 import javax.annotation.Nonnull;
 import java.util.Collection;
@@ -40,5 +41,9 @@ public interface EventPublisher {
   default void publish(@Nonnull EventSuppliers suppliers) {
     List<EventSupplier> eventSuppliers = suppliers.get();
     publish(eventSuppliers);
+  }
+
+  default void publish(@Nonnull EventSupplier supplier) {
+    publish(Lists.of(supplier));
   }
 }
