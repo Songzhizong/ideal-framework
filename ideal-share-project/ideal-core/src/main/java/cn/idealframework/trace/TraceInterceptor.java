@@ -40,46 +40,46 @@ public class TraceInterceptor implements HandlerInterceptor {
                               @Nonnull HttpServletResponse response,
                               @Nonnull Object handler, Exception ex) throws Exception {
     Object attribute = request.getAttribute(TraceConstants.REQUEST_ATTR_NAME_TRACE);
-    if (attribute != null) {
-      TraceContext context = (TraceContext) attribute;
-      TraceInfo traceInfo = context.getTraceInfo();
-
-      // 写入异常信息
-      if (ex != null && StringUtils.isBlank(traceInfo.getException())) {
-        String simpleName = ex.getClass().getSimpleName();
-        String message = ex.getMessage();
-        String exceptionMessage;
-        if (StringUtils.isBlank(message)) {
-          exceptionMessage = simpleName;
-        } else {
-          exceptionMessage = simpleName + ": " + message;
-        }
-        traceInfo.setException(exceptionMessage);
-      }
-
-      // 调用日志
-      String method = request.getMethod();
-      String requestURI = request.getRequestURI();
-      long consuming = context.getSurvivalMillis();
-      int status = response.getStatus();
-      HttpStatus httpStatus = HttpStatus.resolve(status);
-      if (httpStatus != null) {
-        log.info(status + " " + httpStatus.getReasonPhrase() + ": " + method + " " + requestURI + " | consuming: " + consuming + "ms");
-      } else {
-        log.info(status + ": " + method + " " + requestURI + " | consuming: " + consuming + "ms");
-      }
-
-      // 执行耗时
-      traceInfo.setConsuming(consuming);
-      if (traceCollector != null) {
-        try {
-          traceCollector.collect(traceInfo);
-        } catch (Exception e) {
-          log.info("save trace log ex: " + e.getMessage());
-        }
-      }
-      request.removeAttribute(TraceConstants.REQUEST_ATTR_NAME_TRACE);
+    if (!(attribute instanceof TraceContext)) {
+      HandlerInterceptor.super.afterCompletion(request, response, handler, ex);
+      return;
     }
-    HandlerInterceptor.super.afterCompletion(request, response, handler, ex);
+    TraceContext context = (TraceContext) attribute;
+    TraceInfo traceInfo = context.getTraceInfo();
+    // 写入异常信息
+    if (ex != null && StringUtils.isBlank(traceInfo.getException())) {
+      String simpleName = ex.getClass().getSimpleName();
+      String message = ex.getMessage();
+      String exceptionMessage;
+      if (StringUtils.isBlank(message)) {
+        exceptionMessage = simpleName;
+      } else {
+        exceptionMessage = simpleName + ": " + message;
+      }
+      traceInfo.setException(exceptionMessage);
+    }
+
+    // 调用日志
+    String method = request.getMethod();
+    String requestURI = request.getRequestURI();
+    long consuming = context.getSurvivalMillis();
+    int status = response.getStatus();
+    HttpStatus httpStatus = HttpStatus.resolve(status);
+    if (httpStatus != null) {
+      log.info(status + " " + httpStatus.getReasonPhrase() + ": " + method + " " + requestURI + " | consuming: " + consuming + "ms");
+    } else {
+      log.info(status + ": " + method + " " + requestURI + " | consuming: " + consuming + "ms");
+    }
+
+    // 执行耗时
+    traceInfo.setConsuming(consuming);
+    if (traceCollector != null) {
+      try {
+        traceCollector.collect(traceInfo);
+      } catch (Exception e) {
+        log.info("save trace log ex: " + e.getMessage());
+      }
+    }
+    request.removeAttribute(TraceConstants.REQUEST_ATTR_NAME_TRACE);
   }
 }
