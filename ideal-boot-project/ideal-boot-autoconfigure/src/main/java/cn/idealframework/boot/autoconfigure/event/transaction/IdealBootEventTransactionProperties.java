@@ -27,4 +27,7 @@ public class IdealBootEventTransactionProperties {
 
   /** 是否开启事务事件发布, 如果没有事务一致性需求建议设为false, 可避免不必要的资源消耗 */
   private boolean enabled = true;
+
+  /** 轮询数据库的间隔时间 */
+  private long pollIntervalMills = 1000;
 }

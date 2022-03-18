@@ -80,6 +80,7 @@ public class IdealBootEventTransactionAutoConfigure {
       throw new IllegalArgumentException("EventPublisher must be not TransactionalEventPublisher");
     }
     log.info("DatabaseAutomaticEventPublisher init");
-    return new DatabaseAutomaticEventPublisher(eventPublisher, dataSource, 500);
+    long pollIntervalMills = properties.getPublisher().getTransaction().getPollIntervalMills();
+    return new DatabaseAutomaticEventPublisher(eventPublisher, dataSource, pollIntervalMills);
   }
 }

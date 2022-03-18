@@ -110,7 +110,7 @@ public class DatabaseAutomaticEventPublisher implements AutomaticEventPublisher 
               log.debug("Read " + size + " messages from the database and publish them, It takes " + consuming + " milliseconds");
             }
           });
-        } catch (SQLException e) {
+        } catch (Exception e) {
           e.printStackTrace();
           log.warn("dataSource.getConnection() ex:", e);
           sleepFlag.set(true);
