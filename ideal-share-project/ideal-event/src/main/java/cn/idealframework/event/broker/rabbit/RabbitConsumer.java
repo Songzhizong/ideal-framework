@@ -31,6 +31,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author 宋志宗 on 2021/4/24
@@ -106,6 +107,8 @@ public class RabbitConsumer implements ChannelAwareMessageListener {
       channel.basicAck(deliveryTag, false);
     } catch (Exception e) {
       log.info("消息交付出现异常: ", e);
+      // 消费出现异常时线程睡眠1秒在nack, 防止死循环导致的资源浪费
+      TimeUnit.SECONDS.sleep(1);
       channel.basicNack(deliveryTag, false, true);
     }
   }
