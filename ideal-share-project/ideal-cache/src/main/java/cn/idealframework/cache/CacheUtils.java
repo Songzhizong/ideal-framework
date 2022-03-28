@@ -23,11 +23,11 @@ import javax.annotation.Nullable;
 public class CacheUtils {
   public static final String NULL_VALUE = "$$ideal$$cache$$null$$value$$";
 
-  public static boolean isNullValue(@Nullable Object value) {
+  public static boolean isNullValue(@Nullable String value) {
     return value == null || NULL_VALUE.equals(value);
   }
 
-  public static boolean isNotNulValue(@Nullable Object value) {
+  public static boolean isNotNulValue(@Nullable String value) {
     return !isNullValue(value);
   }
 }

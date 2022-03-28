@@ -32,17 +32,17 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <java.version>1.8</java.version>
     <kotlin.version>1.6.10</kotlin.version>
-    <spring.boot.version>2.6.3</spring.boot.version>
+    <spring.boot.version>2.6.5</spring.boot.version>
     <spring.cloud.version>2021.0.1</spring.cloud.version>
-    <vertx.version>4.2.5</vertx.version>
+    <vertx.version>4.2.6</vertx.version>
     <commons-io.version>2.11.0</commons-io.version>
     <commons-logging.version>1.2</commons-logging.version>
     <commons-net.version>3.8.0</commons-net.version>
     <easypoi.version>4.4.0</easypoi.version>
     <jsr305.version>3.0.2</jsr305.version>
     <lombok.version>1.18.22</lombok.version>
-    <redisson.version>3.16.8</redisson.version>
-    <zstd-jni.version>1.5.2-1</zstd-jni.version>
+    <redisson.version>3.17.0</redisson.version>
+    <zstd-jni.version>1.5.2-2</zstd-jni.version>
 
     <docker-maven-plugin.version>1.2.2</docker-maven-plugin.version>
     <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
