@@ -34,6 +34,7 @@ import java.util.Optional;
 /**
  * @author 宋志宗 on 2021/6/4
  */
+@SuppressWarnings("DuplicatedCode")
 @CommonsLog
 public class OperationLogStorageWebClientImpl implements OperationLogStorage {
   /** 是否异步执行 */

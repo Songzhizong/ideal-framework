@@ -37,20 +37,21 @@ import java.lang.reflect.Method;
 /**
  * @author 宋志宗 on 2021/6/4
  */
+@SuppressWarnings("DuplicatedCode")
 @Aspect
 @CommonsLog
 public class OperationLogAspect {
   private final boolean enabled;
   @Nonnull
-  private final OperatorContext operatorHolder;
+  private final OperatorContextHolder contextHolder;
   @Nonnull
   private final OperationLogStorage operationLogStorage;
 
   public OperationLogAspect(boolean enabled,
-                            @Nonnull OperatorContext operatorHolder,
+                            @Nonnull OperatorContextHolder contextHolder,
                             @Nonnull OperationLogStorage operationLogStorage) {
     this.enabled = enabled;
-    this.operatorHolder = operatorHolder;
+    this.contextHolder = contextHolder;
     this.operationLogStorage = operationLogStorage;
     if (!enabled) {
       log.info("Operation log is disabled");
@@ -63,7 +64,11 @@ public class OperationLogAspect {
     if (!enabled) {
       return joinPoint.proceed();
     }
-    OperationLog operationLog = OperationLogHolder.get();
+    OperatorContext context = contextHolder.current().orElse(null);
+    if (context == null) {
+      return joinPoint.proceed();
+    }
+    OperationLog operationLog = OperationLogs.init();
     try {
       TraceContextHolder.current()
         .ifPresent(traceContext -> operationLog.setTraceId(traceContext.getTraceId()));
@@ -71,7 +76,7 @@ public class OperationLogAspect {
       if (StringUtils.isNotBlank(system)) {
         operationLog.setSystem(system);
       } else {
-        operationLog.setSystem(operatorHolder.getSystem());
+        operationLog.setSystem(context.getSystem());
       }
       operationLog.setOperation(annotation.operation());
       operationLog.setOperationTime(DateTimes.now());
@@ -87,7 +92,7 @@ public class OperationLogAspect {
           operationLog.setUri(requestURI);
           // clientIp
           String originalIp = ServletUtils.getOriginalIp(request);
-          operationLog.setClientIp(originalIp);
+          operationLog.setOriginalIp(originalIp);
           // UA
           String userAgent = request.getHeader(HttpHeaders.USER_AGENT);
           operationLog.setUserAgent(userAgent);
@@ -95,9 +100,9 @@ public class OperationLogAspect {
       } catch (Exception e) {
         log.warn("get request info ex: ", e);
       }
-      operationLog.setTenantId(operatorHolder.getTenantId());
-      operationLog.setUserId(operatorHolder.getUserId());
-      operationLog.setUsername(operatorHolder.getUserName());
+      operationLog.setTenantId(context.getTenantId());
+      operationLog.setUserId(context.getUserId());
+      operationLog.setUsername(context.getUsername());
       operationLog.setSuccess(true);
       operationLog.setMessage("success");
       try {
@@ -109,7 +114,7 @@ public class OperationLogAspect {
       }
     } finally {
       try {
-        String description = operationLog.getDescription();
+        String description = operationLog.getDetails();
         String desc = annotation.desc();
         if (StringUtils.isBlank(description) && StringUtils.isNotBlank(desc)) {
           MethodSignature signature = (MethodSignature) joinPoint.getSignature();
@@ -117,7 +122,7 @@ public class OperationLogAspect {
           Object[] args = joinPoint.getArgs();
           String parseDesc = SpelUtils.parseSpel(desc, method, args);
           if (parseDesc != null) {
-            operationLog.setDescription(parseDesc);
+            operationLog.setDetails(parseDesc);
           }
         }
       } catch (Exception e) {
@@ -128,7 +133,7 @@ public class OperationLogAspect {
       } catch (Exception e) {
         log.warn("Save operation log ex: ", e);
       }
-      OperationLogHolder.release();
+      OperationLogs.release();
     }
   }
 }

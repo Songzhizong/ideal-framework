@@ -41,7 +41,7 @@ public class OperationLog {
   private String operation;
 
   /** 操作描述 */
-  private String description;
+  private String details;
 
   /** 请求地址 */
   @Nullable
@@ -49,18 +49,17 @@ public class OperationLog {
 
   /** 租户id */
   @Nullable
-  private String tenantId;
+  private Long tenantId;
 
   /** 用户id */
-  @Nonnull
-  private String userId;
+  private long userId;
 
   /** 用户姓名 */
   @Nullable
   private String username;
 
-  /** 客户端ip */
-  private String clientIp;
+  /** 原始请求ip */
+  private String originalIp;
 
   /** 客户端浏览器UA */
   private String userAgent;
@@ -73,6 +72,5 @@ public class OperationLog {
   private String message;
 
   /** 操作时间 */
-  @Nonnull
   private LocalDateTime operationTime;
 }

@@ -17,21 +17,32 @@ package cn.idealframework.operation;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Optional;
 
 /**
  * @author 宋志宗 on 2021/6/4
  */
-public final class OperationLogHolder {
-  private static final ThreadLocal<OperationLog> OPERATION_LOG_THREAD_LOCAL = ThreadLocal.withInitial(OperationLog::new);
+public final class OperationLogs {
+  private static final ThreadLocal<OperationLog> OPERATION_LOG_THREAD_LOCAL = new ThreadLocal<>();
+
+  private OperationLogs() {
+  }
 
   /** 获取日志对象 */
   @Nonnull
-  public static OperationLog get() {
-    return OPERATION_LOG_THREAD_LOCAL.get();
+  public static Optional<OperationLog> current() {
+    return Optional.ofNullable(OPERATION_LOG_THREAD_LOCAL.get());
   }
 
   static void release() {
     OPERATION_LOG_THREAD_LOCAL.remove();
+  }
+
+  @Nonnull
+  static OperationLog init() {
+    OperationLog operationLog = new OperationLog();
+    OPERATION_LOG_THREAD_LOCAL.set(operationLog);
+    return operationLog;
   }
 
   /**
@@ -41,23 +52,19 @@ public final class OperationLogHolder {
    * @author 宋志宗 on 2021/6/4
    */
   public static void markFailure(@Nullable String message) {
-    OperationLog operationLog = get();
-    operationLog.setSuccess(false);
-    operationLog.setMessage(message);
+    current().ifPresent(operationLog -> {
+      operationLog.setSuccess(false);
+      operationLog.setMessage(message);
+    });
   }
 
   /**
-   * 设置操作描述
+   * 设置操作详情
    *
-   * @param description 操作描述
+   * @param details 操作详情
    * @author 宋志宗 on 2021/6/4
    */
-  public static void description(@Nonnull String description) {
-    OperationLog operationLog = get();
-    operationLog.setDescription(description);
-  }
-
-
-  private OperationLogHolder() {
+  public static void details(@Nonnull String details) {
+    current().ifPresent(operationLog -> operationLog.setDetails(details));
   }
 }

@@ -25,9 +25,8 @@ import lombok.Setter;
 @Setter
 public class WebClientStorageProperties {
 
-  private boolean async = true;
-
   private boolean loadBalance = false;
 
+  /** 远程写入完整地址 */
   private String url;
 }

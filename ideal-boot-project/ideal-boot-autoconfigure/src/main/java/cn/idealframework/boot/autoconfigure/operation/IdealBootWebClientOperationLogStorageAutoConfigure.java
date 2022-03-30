@@ -50,17 +50,16 @@ public class IdealBootWebClientOperationLogStorageAutoConfigure {
   @ConditionalOnMissingBean
   public OperationLogStorage operationLogStorage() {
     StorageProperties storage = properties.getStorage();
-    StorageType storageType = storage.getStorageType();
+    StorageType storageType = storage.getType();
     if (storageType == StorageType.WEB_CLIENT) {
       WebClientStorageProperties webClientStorageProperties = storage.getWebClient();
       boolean loadBalance = webClientStorageProperties.isLoadBalance();
       if (!loadBalance) {
-        boolean async = webClientStorageProperties.isAsync();
         String url = webClientStorageProperties.getUrl();
         WebClient webClient = Reactors
           .webClient(ops -> ops.setResponseTimeout(Duration.ofSeconds(5)));
         log.info("Initializing OperationLogStorageWebClientImpl");
-        return new OperationLogStorageWebClientImpl(async, url, webClient);
+        return new OperationLogStorageWebClientImpl(true, url, webClient);
       }
     }
     return null;

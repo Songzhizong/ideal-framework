@@ -54,7 +54,7 @@ public class IdealBootDefaultOperationLogStorageAutoConfigure {
   public OperationLogStorage operationLogStorage(@Nullable @Autowired(required = false)
                                                      DataSource dataSource) {
     StorageProperties storage = properties.getStorage();
-    StorageType storageType = storage.getStorageType();
+    StorageType storageType = storage.getType();
     if (storageType == StorageType.LOG) {
       log.info("Initializing OperationLogStorageLogImpl");
       return new OperationLogStorageLogImpl();

@@ -58,16 +58,15 @@ public class IdealBootLbWebClientOperationLogStorageAutoConfigure {
       throw new IllegalArgumentException("ReactorLoadBalancerExchangeFilterFunction is null");
     }
     StorageProperties storage = properties.getStorage();
-    StorageType storageType = storage.getStorageType();
+    StorageType storageType = storage.getType();
     if (storageType == StorageType.WEB_CLIENT) {
       WebClientStorageProperties webClientStorageProperties = storage.getWebClient();
-      boolean async = webClientStorageProperties.isAsync();
       String url = webClientStorageProperties.getUrl();
       log.info("Initializing loadBalanced OperationLogStorageWebClientImpl");
       WebClient webClient = Reactors
         .webClientBuilder(ops -> ops.setResponseTimeout(Duration.ofSeconds(5)))
         .filter(lbFunction).build();
-      return new OperationLogStorageWebClientImpl(async, url, webClient);
+      return new OperationLogStorageWebClientImpl(true, url, webClient);
     }
     return null;
   }

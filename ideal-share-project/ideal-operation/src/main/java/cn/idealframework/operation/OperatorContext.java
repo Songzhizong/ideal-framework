@@ -15,7 +15,6 @@
  */
 package cn.idealframework.operation;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
@@ -34,18 +33,17 @@ public interface OperatorContext {
   /**
    * @return 用户唯一ID
    */
-  @Nonnull
-  String getUserId();
+  long getUserId();
 
   /**
    * @return 用户姓名
    */
   @Nullable
-  String getUserName();
+  String getUsername();
 
   /**
    * @return 租户id
    */
   @Nullable
-  String getTenantId();
+  Long getTenantId();
 }

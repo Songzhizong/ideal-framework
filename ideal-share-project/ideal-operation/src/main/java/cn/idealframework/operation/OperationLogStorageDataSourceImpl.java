@@ -32,6 +32,7 @@ import java.util.Map;
 /**
  * @author 宋志宗 on 2021/6/4
  */
+@SuppressWarnings("DuplicatedCode")
 @CommonsLog
 public class OperationLogStorageDataSourceImpl implements OperationLogStorage {
   private final Map<DatabaseType, String> sqlmap = new HashMap<>();
@@ -82,7 +83,7 @@ public class OperationLogStorageDataSourceImpl implements OperationLogStorage {
         operation = "";
       }
       statement.setString(3, operation);
-      String description = operationLog.getDescription();
+      String description = operationLog.getDetails();
       if (StringUtils.isBlank(description)) {
         description = "";
       }
@@ -92,22 +93,19 @@ public class OperationLogStorageDataSourceImpl implements OperationLogStorage {
         uri = "";
       }
       statement.setString(5, uri);
-      String tenantId = operationLog.getTenantId();
-      if (StringUtils.isBlank(tenantId)) {
-        tenantId = "";
+      Long tenantId = operationLog.getTenantId();
+      if (tenantId == null) {
+        tenantId = -1L;
       }
-      statement.setString(6, tenantId);
-      String userId = operationLog.getUserId();
-      if (StringUtils.isBlank(userId)) {
-        userId = "";
-      }
-      statement.setString(7, userId);
+      statement.setLong(6, tenantId);
+      long userId = operationLog.getUserId();
+      statement.setLong(7, userId);
       String username = operationLog.getUsername();
       if (StringUtils.isBlank(username)) {
         username = "";
       }
       statement.setString(8, username);
-      String clientIp = operationLog.getClientIp();
+      String clientIp = operationLog.getOriginalIp();
       if (StringUtils.isBlank(clientIp)) {
         clientIp = "";
       }

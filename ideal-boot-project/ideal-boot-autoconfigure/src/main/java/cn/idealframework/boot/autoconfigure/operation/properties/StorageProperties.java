@@ -26,7 +26,7 @@ import org.springframework.boot.context.properties.NestedConfigurationProperty;
 @Setter
 public class StorageProperties {
 
-  private StorageType storageType = StorageType.LOG;
+  private StorageType type = StorageType.LOG;
 
   @NestedConfigurationProperty
   private WebClientStorageProperties webClient = new WebClientStorageProperties();
