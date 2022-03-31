@@ -16,6 +16,7 @@
 ### 🐞 Bug Fixes
 
 - 修复未启用事件消费幂等时服务启动失败的问题
+- 修复joiner传入的集合为空时抛出异常的问题
 
 ### 🔨 Dependency Upgrades
 

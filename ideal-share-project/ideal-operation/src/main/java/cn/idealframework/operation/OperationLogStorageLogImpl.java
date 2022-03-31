@@ -15,6 +15,7 @@
  */
 package cn.idealframework.operation;
 
+import cn.idealframework.json.JsonUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.apachecommons.CommonsLog;
 
@@ -30,7 +31,7 @@ public class OperationLogStorageLogImpl implements OperationLogStorage {
   @Override
   public void save(@Nonnull OperationLog operationLog) {
     if (log.isInfoEnabled()) {
-      log.info("OperationLog: " + operationLog);
+      log.info("OperationLog: " + JsonUtils.toJsonString(operationLog));
     }
   }
 }

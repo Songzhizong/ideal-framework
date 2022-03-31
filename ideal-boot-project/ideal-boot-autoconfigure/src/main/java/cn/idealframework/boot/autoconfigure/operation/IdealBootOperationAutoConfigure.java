@@ -19,7 +19,7 @@ import cn.idealframework.boot.autoconfigure.operation.properties.IdealBootOperat
 import cn.idealframework.boot.starter.module.operation.OperationModule;
 import cn.idealframework.operation.OperationLogAspect;
 import cn.idealframework.operation.OperationLogStorage;
-import cn.idealframework.operation.OperatorContext;
+import cn.idealframework.operation.OperatorContextHolder;
 import cn.idealframework.util.Asserts;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.apachecommons.CommonsLog;
@@ -47,11 +47,11 @@ public class IdealBootOperationAutoConfigure {
   /** 操作日志切面 */
   @Bean
   @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
-  public OperationLogAspect operationLogAspect(@Nonnull OperatorContext operatorContext,
+  public OperationLogAspect operationLogAspect(@Nonnull OperatorContextHolder contextHolder,
                                                @Nonnull OperationLogStorage operationLogStorage) {
     log.info("Initializing OperationLogAspect");
-    Asserts.nonnull(operatorContext, "OperatorContext is null");
+    Asserts.nonnull(contextHolder, "OperatorContextHolder is null");
     Asserts.nonnull(operationLogStorage, "OperationLogStorage is null");
-    return new OperationLogAspect(properties.isEnabled(), operatorContext, operationLogStorage);
+    return new OperationLogAspect(properties.isEnabled(), contextHolder, operationLogStorage);
   }
 }

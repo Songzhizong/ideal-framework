@@ -104,33 +104,28 @@ public class Joiner {
                                         @Nullable String prefix,
                                         @Nullable String postfix,
                                         boolean skipNull) {
+    boolean separatorAppended = false;
     if (prefix != null) {
       stringBuilder.append(prefix);
     }
-    if (parts.hasNext()) {
-      CharSequence part = toString(parts.next());
-      if (part == null) {
-        if (!skipNull) {
-          stringBuilder.append(separator);
-        }
-      } else {
-        stringBuilder.append(part);
-        stringBuilder.append(separator);
-      }
-    }
     while (parts.hasNext()) {
-      CharSequence part = toString(parts.next());
+      Object next = parts.next();
+      CharSequence part = toString(next);
       if (part == null) {
         if (!skipNull) {
           stringBuilder.append(separator);
+          separatorAppended = true;
         }
       } else {
         stringBuilder.append(part);
         stringBuilder.append(separator);
+        separatorAppended = true;
       }
     }
     int builderLength = stringBuilder.length();
-    stringBuilder.delete(builderLength - separator.length(), builderLength);
+    if (separatorAppended) {
+      stringBuilder.delete(builderLength - separator.length(), builderLength);
+    }
     if (postfix != null) {
       stringBuilder.append(postfix);
     }
@@ -152,6 +147,7 @@ public class Joiner {
     return join(Arrays.asList(parts));
   }
 
+  @Nullable
   private static CharSequence toString(Object object) {
     if (object == null) {
       return null;

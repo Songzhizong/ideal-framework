@@ -46,4 +46,13 @@ public class JoinerTest {
     String join4 = joiner.join(intList);
     Assert.assertEquals("{, 1, 2, 3, , 5, }", join4);
   }
+
+  @Test
+  public void testEmpty() {
+    List<String> list = Lists.of();
+    String join = Joiner.join(list, ",", "{", "}");
+    Assert.assertEquals(join, "{}");
+    String joinSkipNull = Joiner.joinSkipNull(list, ",", "{", "}");
+    Assert.assertEquals(joinSkipNull, "{}");
+  }
 }
