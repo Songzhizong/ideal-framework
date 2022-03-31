@@ -10,7 +10,6 @@ import javax.annotation.Nullable;
 @Setter
 public class OperatorContextImpl implements OperatorContext {
   private String platform;
-  private String system;
   private long userId;
   private String username;
   private Long tenantId;
@@ -20,12 +19,6 @@ public class OperatorContextImpl implements OperatorContext {
   @Override
   public String platform() {
     return platform;
-  }
-
-  @Nullable
-  @Override
-  public String getSystem() {
-    return system;
   }
 
   @Override

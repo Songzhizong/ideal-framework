@@ -29,14 +29,6 @@ public interface OperatorContext {
   String platform();
 
   /**
-   * 获取系统名称, 优先从注解中获取
-   *
-   * @return 系统名称
-   */
-  @Nullable
-  String getSystem();
-
-  /**
    * @return 用户唯一ID
    */
   long getUserId();

@@ -70,8 +70,6 @@ public class OperationLogAspect {
       String system = annotation.system();
       if (StringUtils.isNotBlank(system)) {
         operationLogInfo.setSystemName(system);
-      } else {
-        operationLogInfo.setSystemName(context.getSystem());
       }
       operationLogInfo.setOperation(annotation.operation());
       operationLogInfo.setOperationTime(DateTimes.now());
