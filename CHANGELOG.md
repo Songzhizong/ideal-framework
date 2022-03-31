@@ -20,11 +20,12 @@
 
 ### 🔨 Dependency Upgrades
 
-- spring.boot.version -> 2.6.5
+- spring.boot.version -> 2.6.6
 - spring.cloud.version -> 2021.0.1
 - vertx.version -> 4.2.6
 - zstd-jni.version -> 1.5.2-2
 - redisson.version -> 3.17.0
+- maven-compiler-plugin.version -> 3.10.1
 
 ### ⚠️ Compatibility
 
