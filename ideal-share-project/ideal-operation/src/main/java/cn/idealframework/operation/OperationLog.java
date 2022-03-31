@@ -15,62 +15,27 @@
  */
 package cn.idealframework.operation;
 
-import lombok.Getter;
-import lombok.Setter;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.time.LocalDateTime;
+import java.lang.annotation.*;
 
 /**
  * @author 宋志宗 on 2021/6/4
  */
-@Getter
-@Setter
-public class OperationLog {
-  /** 追踪id */
-  @Nullable
-  private String traceId;
+@Target({ElementType.METHOD})
+@Retention(RetentionPolicy.RUNTIME)
+@Documented
+public @interface OperationLog {
+  /**
+   * 操作名称
+   */
+  String operation();
 
-  /** 所属系统 */
-  @Nullable
-  private String system;
+  /**
+   * 系统名称
+   */
+  String system() default "";
 
-  /** 操作名称 */
-  @Nonnull
-  private String operation;
-
-  /** 操作描述 */
-  private String details;
-
-  /** 请求地址 */
-  @Nullable
-  private String uri;
-
-  /** 租户id */
-  @Nullable
-  private Long tenantId;
-
-  /** 用户id */
-  private long userId;
-
-  /** 用户姓名 */
-  @Nullable
-  private String username;
-
-  /** 原始请求ip */
-  private String originalIp;
-
-  /** 客户端浏览器UA */
-  private String userAgent;
-
-  /** 是否执行成功 */
-  private boolean success;
-
-  /** 执行信息, 可用于记录错误信息 */
-  @Nullable
-  private String message;
-
-  /** 操作时间 */
-  private LocalDateTime operationTime;
+  /**
+   * 操作描述,spel表达式
+   */
+  String desc() default "";
 }

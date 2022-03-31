@@ -75,12 +75,12 @@ public class OperationLogStorageWebClientImpl implements OperationLogStorage {
   }
 
   @Override
-  public void save(@Nonnull OperationLog operationLog) {
+  public void save(@Nonnull OperationLogInfo operationLogInfo) {
     Optional<TraceContext> current = TraceContextHolder.current();
     Mono<String> mono = webClient.post().uri(url)
       .contentType(MediaType.APPLICATION_JSON)
       .headers(headers -> current.ifPresent(WebClientTraceUtils.setTraceHeaders(headers)))
-      .body(BodyInserters.fromValue(operationLog))
+      .body(BodyInserters.fromValue(operationLogInfo))
       .retrieve()
       .bodyToMono(String.class)
       .doOnNext(r -> log.debug("Save operation log result: " + r));

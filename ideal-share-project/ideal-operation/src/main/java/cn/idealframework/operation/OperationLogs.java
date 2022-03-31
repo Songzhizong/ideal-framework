@@ -23,14 +23,14 @@ import java.util.Optional;
  * @author 宋志宗 on 2021/6/4
  */
 public final class OperationLogs {
-  private static final ThreadLocal<OperationLog> OPERATION_LOG_THREAD_LOCAL = new ThreadLocal<>();
+  private static final ThreadLocal<OperationLogInfo> OPERATION_LOG_THREAD_LOCAL = new ThreadLocal<>();
 
   private OperationLogs() {
   }
 
   /** 获取日志对象 */
   @Nonnull
-  public static Optional<OperationLog> current() {
+  public static Optional<OperationLogInfo> current() {
     return Optional.ofNullable(OPERATION_LOG_THREAD_LOCAL.get());
   }
 
@@ -39,10 +39,10 @@ public final class OperationLogs {
   }
 
   @Nonnull
-  static OperationLog init() {
-    OperationLog operationLog = new OperationLog();
-    OPERATION_LOG_THREAD_LOCAL.set(operationLog);
-    return operationLog;
+  static OperationLogInfo init() {
+    OperationLogInfo operationLogInfo = new OperationLogInfo();
+    OPERATION_LOG_THREAD_LOCAL.set(operationLogInfo);
+    return operationLogInfo;
   }
 
   /**

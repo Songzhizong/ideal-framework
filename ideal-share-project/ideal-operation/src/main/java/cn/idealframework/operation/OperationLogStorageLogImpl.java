@@ -29,9 +29,9 @@ import javax.annotation.Nonnull;
 public class OperationLogStorageLogImpl implements OperationLogStorage {
 
   @Override
-  public void save(@Nonnull OperationLog operationLog) {
+  public void save(@Nonnull OperationLogInfo operationLogInfo) {
     if (log.isInfoEnabled()) {
-      log.info("OperationLog: " + JsonUtils.toJsonString(operationLog));
+      log.info("OperationLog: " + JsonUtils.toJsonString(operationLogInfo));
     }
   }
 }

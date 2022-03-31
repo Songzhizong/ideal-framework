@@ -61,68 +61,68 @@ public class OperationLogStorageDataSourceImpl implements OperationLogStorage {
 
 
   @Override
-  public void save(@Nonnull OperationLog operationLog) throws Exception {
+  public void save(@Nonnull OperationLogInfo operationLogInfo) throws Exception {
     String sql = sqlmap.get(databaseType);
     if (StringUtils.isBlank(sql)) {
       throw new IllegalArgumentException(databaseType + " sql is blank");
     }
     try (Connection connection = dataSource.getConnection();
          PreparedStatement statement = connection.prepareStatement(sql)) {
-      String traceId = operationLog.getTraceId();
+      String traceId = operationLogInfo.getTraceId();
       if (StringUtils.isBlank(traceId)) {
         traceId = "";
       }
       statement.setString(1, traceId);
-      String system = operationLog.getSystem();
+      String system = operationLogInfo.getSystem();
       if (StringUtils.isBlank(system)) {
         system = "";
       }
       statement.setString(2, system);
-      String operation = operationLog.getOperation();
+      String operation = operationLogInfo.getOperation();
       if (StringUtils.isBlank(operation)) {
         operation = "";
       }
       statement.setString(3, operation);
-      String description = operationLog.getDetails();
+      String description = operationLogInfo.getDetails();
       if (StringUtils.isBlank(description)) {
         description = "";
       }
       statement.setString(4, description);
-      String uri = operationLog.getUri();
+      String uri = operationLogInfo.getUri();
       if (StringUtils.isBlank(uri)) {
         uri = "";
       }
       statement.setString(5, uri);
-      Long tenantId = operationLog.getTenantId();
+      Long tenantId = operationLogInfo.getTenantId();
       if (tenantId == null) {
         tenantId = -1L;
       }
       statement.setLong(6, tenantId);
-      long userId = operationLog.getUserId();
+      long userId = operationLogInfo.getUserId();
       statement.setLong(7, userId);
-      String username = operationLog.getUsername();
+      String username = operationLogInfo.getUsername();
       if (StringUtils.isBlank(username)) {
         username = "";
       }
       statement.setString(8, username);
-      String clientIp = operationLog.getOriginalIp();
+      String clientIp = operationLogInfo.getOriginalIp();
       if (StringUtils.isBlank(clientIp)) {
         clientIp = "";
       }
       statement.setString(9, clientIp);
-      String userAgent = operationLog.getUserAgent();
+      String userAgent = operationLogInfo.getUserAgent();
       if (StringUtils.isBlank(userAgent)) {
         userAgent = "";
       }
       statement.setString(10, userAgent);
-      boolean success = operationLog.isSuccess();
+      boolean success = operationLogInfo.isSuccess();
       statement.setInt(11, success ? 1 : 0);
-      String message = operationLog.getMessage();
+      String message = operationLogInfo.getMessage();
       if (StringUtils.isBlank(message)) {
         message = "";
       }
       statement.setString(12, message);
-      LocalDateTime operationTime = operationLog.getOperationTime();
+      LocalDateTime operationTime = operationLogInfo.getOperationTime();
       statement.setTimestamp(13, Timestamp.valueOf(operationTime));
       boolean autoCommit = connection.getAutoCommit();
       try {

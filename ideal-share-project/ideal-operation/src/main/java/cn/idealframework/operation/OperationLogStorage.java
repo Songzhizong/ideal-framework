@@ -22,6 +22,6 @@ import javax.annotation.Nonnull;
  */
 public interface OperationLogStorage {
 
-  void save(@Nonnull OperationLog operationLog) throws Exception;
+  void save(@Nonnull OperationLogInfo operationLogInfo) throws Exception;
 
 }

@@ -60,7 +60,7 @@ public class OperationLogAspect {
 
 
   @Around("@annotation(annotation)")
-  public Object around(@Nonnull ProceedingJoinPoint joinPoint, Operation annotation) throws Throwable {
+  public Object around(@Nonnull ProceedingJoinPoint joinPoint, OperationLog annotation) throws Throwable {
     if (!enabled) {
       return joinPoint.proceed();
     }
@@ -68,18 +68,18 @@ public class OperationLogAspect {
     if (context == null) {
       return joinPoint.proceed();
     }
-    OperationLog operationLog = OperationLogs.init();
+    OperationLogInfo operationLogInfo = OperationLogs.init();
     try {
       TraceContextHolder.current()
-        .ifPresent(traceContext -> operationLog.setTraceId(traceContext.getTraceId()));
+        .ifPresent(traceContext -> operationLogInfo.setTraceId(traceContext.getTraceId()));
       String system = annotation.system();
       if (StringUtils.isNotBlank(system)) {
-        operationLog.setSystem(system);
+        operationLogInfo.setSystem(system);
       } else {
-        operationLog.setSystem(context.getSystem());
+        operationLogInfo.setSystem(context.getSystem());
       }
-      operationLog.setOperation(annotation.operation());
-      operationLog.setOperationTime(DateTimes.now());
+      operationLogInfo.setOperation(annotation.operation());
+      operationLogInfo.setOperationTime(DateTimes.now());
       // requestURI clientIp
       try {
         RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();
@@ -89,32 +89,32 @@ public class OperationLogAspect {
           HttpServletRequest request = ((ServletRequestAttributes) requestAttributes).getRequest();
           // requestURI
           String requestURI = request.getRequestURI();
-          operationLog.setUri(requestURI);
+          operationLogInfo.setUri(requestURI);
           // clientIp
           String originalIp = ServletUtils.getOriginalIp(request);
-          operationLog.setOriginalIp(originalIp);
+          operationLogInfo.setOriginalIp(originalIp);
           // UA
           String userAgent = request.getHeader(HttpHeaders.USER_AGENT);
-          operationLog.setUserAgent(userAgent);
+          operationLogInfo.setUserAgent(userAgent);
         }
       } catch (Exception e) {
         log.warn("get request info ex: ", e);
       }
-      operationLog.setTenantId(context.getTenantId());
-      operationLog.setUserId(context.getUserId());
-      operationLog.setUsername(context.getUsername());
-      operationLog.setSuccess(true);
-      operationLog.setMessage("success");
+      operationLogInfo.setTenantId(context.getTenantId());
+      operationLogInfo.setUserId(context.getUserId());
+      operationLogInfo.setUsername(context.getUsername());
+      operationLogInfo.setSuccess(true);
+      operationLogInfo.setMessage("success");
       try {
         return joinPoint.proceed();
       } catch (Throwable throwable) {
-        operationLog.setSuccess(false);
-        operationLog.setMessage(throwable.getMessage());
+        operationLogInfo.setSuccess(false);
+        operationLogInfo.setMessage(throwable.getMessage());
         throw throwable;
       }
     } finally {
       try {
-        String description = operationLog.getDetails();
+        String description = operationLogInfo.getDetails();
         String desc = annotation.desc();
         if (StringUtils.isBlank(description) && StringUtils.isNotBlank(desc)) {
           MethodSignature signature = (MethodSignature) joinPoint.getSignature();
@@ -122,14 +122,14 @@ public class OperationLogAspect {
           Object[] args = joinPoint.getArgs();
           String parseDesc = SpelUtils.parseSpel(desc, method, args);
           if (parseDesc != null) {
-            operationLog.setDetails(parseDesc);
+            operationLogInfo.setDetails(parseDesc);
           }
         }
       } catch (Exception e) {
         log.warn("Parse operation desc ex: ", e);
       }
       try {
-        operationLogStorage.save(operationLog);
+        operationLogStorage.save(operationLogInfo);
       } catch (Exception e) {
         log.warn("Save operation log ex: ", e);
       }
