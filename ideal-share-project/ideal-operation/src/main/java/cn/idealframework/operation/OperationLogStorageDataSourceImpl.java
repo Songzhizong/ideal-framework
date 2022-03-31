@@ -68,12 +68,7 @@ public class OperationLogStorageDataSourceImpl implements OperationLogStorage {
     }
     try (Connection connection = dataSource.getConnection();
          PreparedStatement statement = connection.prepareStatement(sql)) {
-      String traceId = operationLogInfo.getTraceId();
-      if (StringUtils.isBlank(traceId)) {
-        traceId = "";
-      }
-      statement.setString(1, traceId);
-      String system = operationLogInfo.getSystem();
+      String system = operationLogInfo.getSystemName();
       if (StringUtils.isBlank(system)) {
         system = "";
       }

@@ -23,6 +23,12 @@ import javax.annotation.Nullable;
 public interface OperatorContext {
 
   /**
+   * 所属平台
+   */
+  @Nullable
+  String platform();
+
+  /**
    * 获取系统名称, 优先从注解中获取
    *
    * @return 系统名称

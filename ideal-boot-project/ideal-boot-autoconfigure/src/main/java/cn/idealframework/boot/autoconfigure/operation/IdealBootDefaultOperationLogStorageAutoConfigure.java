@@ -44,7 +44,7 @@ import javax.sql.DataSource;
 @Configuration
 @RequiredArgsConstructor
 @ConditionalOnClass({OperationLogAspect.class, OperationModule.class})
-@ConditionalOnExpression("!'${ideal.operation.storage.storage-type}'.equalsIgnoreCase('web_client')")
+@ConditionalOnExpression("!'${ideal.operation.storage.type}'.equalsIgnoreCase('web_client')")
 public class IdealBootDefaultOperationLogStorageAutoConfigure {
   private final IdealBootOperationProperties properties;
   private final IdealBootDatabaseProperties databaseProperties;

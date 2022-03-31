@@ -28,13 +28,13 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 public class OperationLogInfo {
-  /** 追踪id */
-  @Nullable
-  private String traceId;
 
-  /** 所属系统 */
   @Nullable
-  private String system;
+  private String platform;
+
+  /** 所属系统名称 */
+  @Nullable
+  private String systemName;
 
   /** 操作名称 */
   @Nonnull

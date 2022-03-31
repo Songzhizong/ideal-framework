@@ -5,7 +5,6 @@ DROP TABLE IF EXISTS `ideal_user_operation_log`;
 CREATE TABLE `ideal_user_operation_log`
 (
   `id`             bigint        NOT NULL AUTO_INCREMENT COMMENT '主键',
-  `trace_id`       varchar(64)   NOT NULL COMMENT '操作事务id',
   `system`         varchar(64)   NOT NULL COMMENT '所属系统',
   `operation`      varchar(100)  NOT NULL COMMENT '操作名称',
   `description`    varchar(4096) NOT NULL COMMENT '操作描述',
@@ -19,7 +18,6 @@ CREATE TABLE `ideal_user_operation_log`
   `message`        varchar(4096) NOT NULL COMMENT '执行信息, 可用于记录错误信息',
   `operation_time` datetime      NOT NULL COMMENT '操作时间',
   PRIMARY KEY (`id`),
-  KEY `trace_id` (`trace_id`) USING BTREE,
   KEY `tenant_id` (`tenant_id`) USING BTREE,
   KEY `user_id` (`user_id`) USING BTREE
 ) ENGINE = InnoDB;

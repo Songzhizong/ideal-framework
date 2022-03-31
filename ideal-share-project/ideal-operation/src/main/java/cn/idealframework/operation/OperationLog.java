@@ -34,8 +34,8 @@ public @interface OperationLog {
    */
   String system() default "";
 
-  /**
-   * 操作描述,spel表达式
-   */
-  String desc() default "";
+//  /**
+//   * 操作描述,spel表达式
+//   */
+//  String desc() default "";
 }

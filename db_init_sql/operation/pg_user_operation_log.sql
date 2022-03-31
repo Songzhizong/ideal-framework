@@ -1,9 +1,11 @@
-CREATE SEQUENCE "public"."ideal_user_operation_log_id_sequence" INCREMENT 1 MINVALUE 1 MAXVALUE 9223372036854775807 START 1 CACHE 1;
+CREATE
+SEQUENCE "public"."ideal_user_operation_log_id_sequence" INCREMENT 1 MINVALUE 1 MAXVALUE 9223372036854775807 START
+1 CACHE
+1;
 
 CREATE TABLE "public"."ideal_user_operation_log"
 (
   "id" int8 NOT NULL DEFAULT nextval('ideal_user_operation_log_id_sequence'::regclass),
-  "trace_id"       varchar(64) COLLATE "pg_catalog"."default"   NOT NULL,
   "system"         varchar(64) COLLATE "pg_catalog"."default"   NOT NULL,
   "operation"      varchar(100) COLLATE "pg_catalog"."default"  NOT NULL,
   "description"    varchar(4096) COLLATE "pg_catalog"."default" NOT NULL,
@@ -19,8 +21,6 @@ CREATE TABLE "public"."ideal_user_operation_log"
 );
 COMMENT
   ON COLUMN "public"."ideal_user_operation_log"."id" IS '主键';
-COMMENT
-  ON COLUMN "public"."ideal_user_operation_log"."trace_id" IS '操作事务id';
 COMMENT
   ON COLUMN "public"."ideal_user_operation_log"."system" IS '所属系统';
 COMMENT

@@ -42,7 +42,7 @@ import java.time.Duration;
 @Configuration
 @RequiredArgsConstructor
 @ConditionalOnClass({OperationLogAspect.class, OperationModule.class})
-@ConditionalOnExpression("'${ideal.operation.storage.storage-type}'.equalsIgnoreCase('web_client')&&!${ideal.operation.storage.web-client.load-balance:false}")
+@ConditionalOnExpression("'${ideal.operation.storage.type}'.equalsIgnoreCase('web_client')&&!${ideal.operation.storage.web-client.load-balance:false}")
 public class IdealBootWebClientOperationLogStorageAutoConfigure {
   private final IdealBootOperationProperties properties;
 

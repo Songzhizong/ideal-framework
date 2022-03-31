@@ -17,14 +17,11 @@ package cn.idealframework.operation;
 
 import cn.idealframework.date.DateTimes;
 import cn.idealframework.extensions.ServletUtils;
-import cn.idealframework.extensions.spring.SpelUtils;
 import cn.idealframework.lang.StringUtils;
-import cn.idealframework.trace.TraceContextHolder;
 import lombok.extern.apachecommons.CommonsLog;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.http.HttpHeaders;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -32,7 +29,6 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.annotation.Nonnull;
 import javax.servlet.http.HttpServletRequest;
-import java.lang.reflect.Method;
 
 /**
  * @author 宋志宗 on 2021/6/4
@@ -69,14 +65,13 @@ public class OperationLogAspect {
       return joinPoint.proceed();
     }
     OperationLogInfo operationLogInfo = OperationLogs.init();
+    //noinspection CommentedOutCode
     try {
-      TraceContextHolder.current()
-        .ifPresent(traceContext -> operationLogInfo.setTraceId(traceContext.getTraceId()));
       String system = annotation.system();
       if (StringUtils.isNotBlank(system)) {
-        operationLogInfo.setSystem(system);
+        operationLogInfo.setSystemName(system);
       } else {
-        operationLogInfo.setSystem(context.getSystem());
+        operationLogInfo.setSystemName(context.getSystem());
       }
       operationLogInfo.setOperation(annotation.operation());
       operationLogInfo.setOperationTime(DateTimes.now());
@@ -100,6 +95,7 @@ public class OperationLogAspect {
       } catch (Exception e) {
         log.warn("get request info ex: ", e);
       }
+      operationLogInfo.setPlatform(context.platform());
       operationLogInfo.setTenantId(context.getTenantId());
       operationLogInfo.setUserId(context.getUserId());
       operationLogInfo.setUsername(context.getUsername());
@@ -113,21 +109,21 @@ public class OperationLogAspect {
         throw throwable;
       }
     } finally {
-      try {
-        String description = operationLogInfo.getDetails();
-        String desc = annotation.desc();
-        if (StringUtils.isBlank(description) && StringUtils.isNotBlank(desc)) {
-          MethodSignature signature = (MethodSignature) joinPoint.getSignature();
-          Method method = signature.getMethod();
-          Object[] args = joinPoint.getArgs();
-          String parseDesc = SpelUtils.parseSpel(desc, method, args);
-          if (parseDesc != null) {
-            operationLogInfo.setDetails(parseDesc);
-          }
-        }
-      } catch (Exception e) {
-        log.warn("Parse operation desc ex: ", e);
-      }
+//      try {
+//        String description = operationLogInfo.getDetails();
+//        String desc = annotation.desc();
+//        if (StringUtils.isBlank(description) && StringUtils.isNotBlank(desc)) {
+//          MethodSignature signature = (MethodSignature) joinPoint.getSignature();
+//          Method method = signature.getMethod();
+//          Object[] args = joinPoint.getArgs();
+//          String parseDesc = SpelUtils.parseSpel(desc, method, args);
+//          if (parseDesc != null) {
+//            operationLogInfo.setDetails(parseDesc);
+//          }
+//        }
+//      } catch (Exception e) {
+//        log.warn("Parse operation desc ex: ", e);
+//      }
       try {
         operationLogStorage.save(operationLogInfo);
       } catch (Exception e) {
