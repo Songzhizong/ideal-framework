@@ -20,15 +20,20 @@ import javax.annotation.Nonnull;
 /**
  * @author 宋志宗 on 2021/7/10
  */
-public class StringDeserializer<V> implements Deserializer<V> {
+public class StringDeserializer implements Deserializer<String> {
+  private static final StringDeserializer INSTANCE = new StringDeserializer();
+
+  private StringDeserializer() {
+  }
+
+  @Nonnull
+  public static StringDeserializer instance() {
+    return INSTANCE;
+  }
+
   @Nonnull
   @Override
-  public V deserialize(@Nonnull String value) {
-    try {
-      //noinspection unchecked
-      return (V) value;
-    } catch (Exception e) {
-      throw new IllegalArgumentException("Cache value type is not instance of String");
-    }
+  public String deserialize(@Nonnull String value) {
+    return value;
   }
 }

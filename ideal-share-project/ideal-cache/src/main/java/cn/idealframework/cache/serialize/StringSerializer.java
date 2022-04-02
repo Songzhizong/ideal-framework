@@ -23,14 +23,20 @@ import javax.annotation.Nonnull;
  * @author 宋志宗 on 2021/7/10
  */
 @CommonsLog
-public class StringSerializer<V> implements Serializer<V> {
+public class StringSerializer implements Serializer<String> {
+  private static final StringSerializer INSTANCE = new StringSerializer();
+
+  private StringSerializer() {
+  }
+
+  @Nonnull
+  public static StringSerializer instance() {
+    return INSTANCE;
+  }
+
   @Nonnull
   @Override
-  public String serialize(@Nonnull V value) {
-    if (value instanceof String) {
-      return (String) value;
-    }
-    log.error("非字符串类型缓存值, 请使用JsonSerializer而非StringSerializer, 输入类型: " + value.getClass().getName());
-    throw new IllegalArgumentException("Cache value type is not instance of String");
+  public String serialize(@Nonnull String value) {
+    return value;
   }
 }
