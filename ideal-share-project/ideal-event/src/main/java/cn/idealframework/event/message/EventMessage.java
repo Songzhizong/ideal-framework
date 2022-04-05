@@ -16,6 +16,7 @@
 package cn.idealframework.event.message;
 
 import cn.idealframework.event.message.impl.SimpleEventMessage;
+import cn.idealframework.json.JsonUtils;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -36,6 +37,11 @@ public interface EventMessage<T> extends EventSupplier {
   static <T extends Event> EventMessage<T> of(@Nonnull T event,
                                               @Nullable EventHeaders headers) {
     return SimpleEventMessage.of(event, headers);
+  }
+
+  @Nonnull
+  static <T> EventMessage<T> parse(@Nonnull String messageStr, Class<T> tClass) {
+    return JsonUtils.parse(messageStr, SimpleEventMessage.class, tClass);
   }
 
   /**

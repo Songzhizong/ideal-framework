@@ -15,9 +15,11 @@
  */
 package cn.idealframework.transmission.exception;
 
+import cn.idealframework.lang.StringUtils;
 import cn.idealframework.transmission.ResMsg;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author 宋志宗 on 2020/12/20
@@ -31,5 +33,23 @@ public class BadRequestException extends VisibleRuntimeException {
 
   public BadRequestException(@Nonnull String message) {
     super(ResMsg.BAD_REQUEST.httpStatus(), ResMsg.BAD_REQUEST.code(), message);
+  }
+
+  public static void throwIf(boolean expression, @Nonnull String message) {
+    if (expression) {
+      throw new BadRequestException(message);
+    }
+  }
+
+  public static void throwIfBlank(@Nullable CharSequence charSequence, @Nonnull String message) {
+    if (StringUtils.isBlank(charSequence)) {
+      throw new BadRequestException(message);
+    }
+  }
+
+  public static void throwIfNull(@Nullable Object o, @Nonnull String message) {
+    if (o == null) {
+      throw new BadRequestException(message);
+    }
   }
 }

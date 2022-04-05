@@ -22,6 +22,7 @@ import cn.idealframework.transmission.PageResult;
 import cn.idealframework.transmission.Result;
 import cn.idealframework.transmission.exception.ResultException;
 import lombok.extern.apachecommons.CommonsLog;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.reactive.function.client.ClientResponse;
 import reactor.core.publisher.Mono;
 
@@ -41,14 +42,18 @@ public final class ReactorResults {
   @Nonnull
   public static <T extends BasicResult> Function<ClientResponse, Mono<T>> result(@Nonnull TypeReference<T> reference) {
     return resp -> {
-      int statusCode = resp.rawStatusCode();
+      int rawStatusCode = resp.rawStatusCode();
+      HttpStatus status = resp.statusCode();
       return resp.bodyToMono(String.class)
         .map(result -> {
           log.debug("响应结果: " + result);
           T parse = JsonUtils.parse(result, reference);
           int httpStatus = parse.getHttpStatus();
-          if (httpStatus != statusCode) {
-            parse.setHttpStatus(statusCode);
+          if (httpStatus != rawStatusCode) {
+            parse.setHttpStatus(rawStatusCode);
+          }
+          if (!status.is2xxSuccessful()) {
+            parse.setSuccess(false);
           }
           return parse;
         })
@@ -64,6 +69,7 @@ public final class ReactorResults {
   public static <T> Function<ClientResponse, Mono<Result<T>>> result(@Nonnull Class<T> clazz) {
     return resp -> {
       int statusCode = resp.rawStatusCode();
+      HttpStatus status = resp.statusCode();
       return resp.bodyToMono(String.class)
         .map(result -> {
           log.debug("响应结果: " + result);
@@ -71,6 +77,9 @@ public final class ReactorResults {
           int httpStatus = parse.getHttpStatus();
           if (httpStatus != statusCode) {
             parse.setHttpStatus(statusCode);
+          }
+          if (!status.is2xxSuccessful()) {
+            parse.setSuccess(false);
           }
           return parse;
         })
@@ -86,6 +95,7 @@ public final class ReactorResults {
   public static <E> Function<ClientResponse, Mono<PageResult<E>>> pageResult(@Nonnull Class<E> clazz) {
     return resp -> {
       int statusCode = resp.rawStatusCode();
+      HttpStatus status = resp.statusCode();
       return resp.bodyToMono(String.class)
         .map(result -> {
           log.debug("响应结果: " + result);
@@ -93,6 +103,9 @@ public final class ReactorResults {
           int httpStatus = parse.getHttpStatus();
           if (httpStatus != statusCode) {
             parse.setHttpStatus(statusCode);
+          }
+          if (!status.is2xxSuccessful()) {
+            parse.setSuccess(false);
           }
           return parse;
         })
